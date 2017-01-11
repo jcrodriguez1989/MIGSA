@@ -1,0 +1,115 @@
+Package: MIGSA
+Type: Package
+Title: Massive and Integrative Gene Set Analysis
+Version: 0.99.0
+Date: 2016-03-02
+Author: Juan C. Rodriguez, Cristobal Fresno, Andrea S. Llera and Elmer A. 
+    Fernandez
+Maintainer: Juan C. Rodriguez <jcrodriguez@bdmg.com.ar>
+Description: Massive and Integrative Gene Set Analysis.
+    The MIGSA package permits to develop an extensive gene set enrichment 
+    analysis over multiple datasets. It provides a common gene expression 
+    analytic framework that grants a comprehensive and coherent analysis. Only 
+    a minimal user parameter setting is required, since the best SEA/GSEA 
+    alternatives are integrated, i.e. dEnricher and mGSZ respectively.
+    MIGSA's greatest strengths are its big data tools, as it provides several 
+    functions to explore, analyze and visualize its results in order to 
+    facilitate the data mining task over huge information sources.
+URL: http://www.bdmg.com.ar/
+biocViews: Software, GeneSetEnrichment, Visualization, GeneExpression, 
+    Microarray, RNASeq, KEGG
+License: GPL (>= 2)
+Depends:
+    R (>= 3.4),
+    methods,
+    BiocGenerics
+Suggests:
+    breastCancerMAINZ,
+    breastCancerNKI,
+    breastCancerTRANSBIG,
+    breastCancerUNT,
+    breastCancerUPP,
+    breastCancerVDX,
+    pbcmc
+Imports:
+    AnnotationDbi,
+    Biobase,
+    BiocParallel,
+    data.table,
+    edgeR,
+    futile.logger,
+    ggplot2,
+    GO.db,
+    GOstats,
+    gplots,
+    graph,
+    graphics,
+    grDevices,
+    limma,
+    matrixStats,
+    mGSZ,
+    org.Hs.eg.db,
+    RBGL,
+    Rgraphviz,
+    RJSONIO,
+    stats,
+    utils,
+    vegan
+Collate:
+    'Geneset-class.R'
+    'Geneset.R'
+    'Genesets-class.R'
+    'Genesets.R'
+    'GenesetRes.R'
+    'GSEAres.R'
+    'SEAres.R'
+    'SEAparams-class.R'
+    'SEAparams.R'
+    'GSEAparams-class.R'
+    'GSEAparams.R'
+    'FitOptions-class.R'
+    'ExprData-class.R'
+    'IGSAinput-class.R'
+    'IGSAinput.R'
+    'FitOptions.R'
+    'DEnricher.R'
+    'FitOptions-constructor.R'
+    'GSEAparams-common.R'
+    'Genesets-asGenesets.R'
+    'Genesets-enrichrGeneSets.R'
+    'Genesets-downloadEnrichrGeneSets.R'
+    'Genesets-geneSetsFromFile.R'
+    'Genesets-getterSetters.R'
+    'Genesets-loadGo.R'
+    'GenesetsRes.R'
+    'GoAnalysis.R'
+    'GoAnalysis-getHeights.R'
+    'IGSAres.R'
+    'MIGSAres-class.R'
+    'MIGSAres.R'
+    'GoAnalysis-migsaGoTree.R'
+    'MGSZ.R'
+    'IGSAinput-getterSetters.R'
+    'IGSA.R'
+    'IGSAinput-common.R'
+    'IGSAinput-getDEGenes.R'
+    'MIGSAinput-class.R'
+    'MIGSAinput-getterSetters.R'
+    'MIGSA.R'
+    'MIGSAPackage.R'
+    'MIGSAinput-common.R'
+    'MIGSAmGSZ.R'
+    'MIGSAres-common.R'
+    'MIGSAres-setEnrCutoff.R'
+    'MIGSAres-genesInSets.R'
+    'MIGSAres-filterByGenes.R'
+    'MIGSAres-geneSetBarplot.R'
+    'MIGSAres-genesBarplot.R'
+    'MIGSAres-genesHeatmap.R'
+    'MIGSAres-getAdditionalInfo.R'
+    'MIGSAres-migsaHeatmap.R'
+    'SEAparams-common.R'
+    'data-bcMigsaRes.R'
+    'data-migsaRes.R'
+    'dataDownloaders.R'
+RoxygenNote: 5.0.1
