@@ -21,7 +21,6 @@ setReplaceMethod(f="id", signature="Geneset",
     }
 )
 
-# backslah because it is internal
 setGeneric(name="getName", def=function(object) {
     standardGeneric("getName")
 })

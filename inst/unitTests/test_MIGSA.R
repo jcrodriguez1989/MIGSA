@@ -436,7 +436,7 @@ test_Genesets_downloadEnrichrGeneSets_ok_keggGoCC <- function() {
         checkTrue(TRUE);
     }
     
-    libNames <- c("KEGG_2013", "GO_Cellular_Component_2013");
+    libNames <- c("KEGG_2016", "GO_Cellular_Component_2013");
     libs <- downloadEnrichrGeneSets(libNames);
     
     checkEquals(length(libs), 2);

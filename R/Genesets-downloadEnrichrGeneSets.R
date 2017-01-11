@@ -70,6 +70,13 @@ setMethod(
                 actName <- actGS[[2]];
                 entrez <- lapply(actGS[2:length(actGS)], function(symbol) {
                     translates <- symbol2entrez[[symbol]];
+                    
+                    if (is.null(translates)) {
+                        # some times Enrichr returns gene symbols followed by a 
+                        # ',1.0' , this is some kind of fixing it.
+                        translates <- symbol2entrez[[gsub(",1.0", "", symbol)]];
+                    }
+                    
                     if (length(translates) > 1 && deleteMultipleEntrez) {
                         translates <- NULL;
                     }
