@@ -46,8 +46,10 @@ setMethod(
         stopifnot(validObject(migsaRes));
         stopifnot(length(genes) > 0);
         
+        # we must have a cutoff for this function
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
+        # lets get just gene sets enriched in at least one dataset
         actRes <- migsaRes[ rowSums(migsaRes[,-(1:3)], na.rm=!FALSE) > 0, ];
         
         if (!is(actRes, "MIGSAres")) {
@@ -57,13 +59,19 @@ setMethod(
         migsaRes_genes <- genesInSets(actRes);
         
         if (any(genes %in% colnames(migsaRes_genes))) {
+            # if we have any of our interest genes in the enriching ones,
+            # then remove the other genes
             migsaRes_genes <- migsaRes_genes[, genes, drop=FALSE];
+            
+            # keet just the gene sets enriched by at least one of these genes
             migsaRes_genes <- migsaRes_genes[
                         rowSums(migsaRes_genes, na.rm=!FALSE)>0,, drop=FALSE];
             
+            # complete gene sets names
             gsNames <- paste(migsaRes[,3,drop=TRUE],
                                 migsaRes[,1,drop=TRUE], sep="_");
             
+            # so return the subsetted MIGSAres object
             res <- migsaRes[ gsNames %in% rownames(migsaRes_genes),,
                                 drop=FALSE];
             

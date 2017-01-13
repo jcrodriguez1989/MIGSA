@@ -69,11 +69,13 @@ SEAparams <- setClass(
         adjust_method_ok <- object@adjust_method %in% p.adjust.methods;
         br_ok <- object@br[[1]] %in% c("bri", "briii");
         
+        # br must be bri, briii or a list of genes
         if (!br_ok) {
             br_ok <- length(unique(object@br)) > 0 && 
                         any(!unique(object@br) == "");
         }
         
+        # checking if test is valid
         test_ok <- length(object@test) == 1 && 
             object@test %in% c("FisherTest", "HypergeoTest", "BinomialTest");
         

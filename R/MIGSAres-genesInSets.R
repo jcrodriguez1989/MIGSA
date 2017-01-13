@@ -48,18 +48,22 @@ setMethod(
         data_frame_all <- migsaRes@migsa_res_all;
         setkey(data_frame_all, gene_set_name, id);
         
+        # we must have a cutoff for this function
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         enr_cutoff <- enrCutoff(migsaRes);
         
         # when cutoff is 1 then it must enrich everything.
         enr_cutoff <- ifelse(enr_cutoff == 1, 1.1, enr_cutoff);
         
+        # get the gene sets name and id
         gsets <- apply(unique(data_frame_all[,list(gene_set_name, id)]),2,
                         as.character);
         res <- lapply(split(gsets, seq(nrow(gsets))), function(gset) {
+            # for each gene set get the data
             actData <- data_frame_all[ gene_set_name == gset[[1]] &
                                         id == gset[[2]], ]
             enr_genes <- apply(actData, 1, function(y) {
+                # for each gene set data
                 gsea_enr_genes <- NULL;
                 sea_enr_genes <- NULL;
                 
@@ -67,12 +71,14 @@ setMethod(
                 sea_pval  <- as.numeric(y[["SEA_pval"]]);
                 
                 if (!is.na(gsea_pval) && gsea_pval < enr_cutoff) {
+                    # if was enriched by gsea get its enriching genes
                     gsea_enr_genes <- gsub(" ", "", unlist(
                         strsplit(as.character(y[["GSEA_enriching_genes"]]),
                                 ",")));
                 }
                 
                 if (!is.na(sea_pval) && sea_pval < enr_cutoff) {
+                    # if was enriched by sea get its enriching genes
                     sea_enr_genes <- gsub(" ", "", unlist(
                         strsplit(as.character(y[["SEA_enriching_genes"]]),
                                 ",")));
@@ -90,6 +96,7 @@ setMethod(
             
             res <- NA;
             if (length(enr_genes) > 0) {
+                # if there was any gene then sort them
                 res <- sort(table(enr_genes), decreasing=!FALSE);
             }
             
@@ -98,11 +105,11 @@ setMethod(
         names(res) <- paste(gsets[,1], gsets[,2], sep="_");
         
         gsets <- unique(unlist(lapply(res, names)));
+        # lets turn these results (list) into a data frame
         finalRes <- do.call(rbind, lapply(names(res), function(y) {
             actRes <- res[[y]];
             newRes <- rep(0, length(gsets));
             if (!is.na(actRes[[1]])) {
-            print(actRes)
                 names(newRes) <- gsets;
                 newRes[ names(actRes) ] <- actRes;
             }

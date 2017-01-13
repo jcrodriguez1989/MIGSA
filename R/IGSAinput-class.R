@@ -63,13 +63,19 @@ IGSAinput <- setClass(
         use_voom=FALSE
     ),
     validity=function(object) {
+        # must have name
         name_ok <- length(object@name) == 1 && object@name != "";
+        
+        # must have genes and samples
         expr_data_ok <- (!is.null(object@expr_data)) &&
                             ncol(object@expr_data) > 1 &&
                             nrow(object@expr_data) > 1;
+        
+        # gene_sets_list is a list of Genesets
         gene_sets_list_ok <- all(unlist(lapply(object@gene_sets_list,
                                     function(x) is(x, "Genesets"))));
         
+        # Genesets names must be unique
         if (gene_sets_list_ok) {
             gss_names <- unlist(lapply(object@gene_sets_list, function(x)
                                 return(name(x))));
@@ -80,6 +86,7 @@ IGSAinput <- setClass(
             }
         }
         
+        # check that the FitOptions and the ExprData are concordant
         fit_opts_ok <- nrow(designMatrix(object@fit_options)) ==
                                                     ncol(object@expr_data);
         

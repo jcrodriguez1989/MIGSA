@@ -33,23 +33,24 @@
 summary.IGSAinput <- function(object, ...) {
     validObject(object);
     
-    aux <- getDEGenes(object);
-    ctrst <- table(col_data(aux@fit_options));
-    sea_params <- summary(aux@sea_params);
-    gsea_params <- summary(aux@gsea_params);
+    deGenes <- getDEGenes(object);
+    # number of samples of each contrast
+    ctrst <- table(col_data(deGenes@fit_options));
+    sea_params <- summary(deGenes@sea_params);
+    gsea_params <- summary(deGenes@gsea_params);
     
-    res <- c(aux@name,
-            ncol(aux@expr_data),
+    res <- c(deGenes@name,
+            ncol(deGenes@expr_data),
             paste(names(ctrst), collapse="VS"),
             ctrst[[1]],
             ctrst[[2]],
-            length(aux@gene_sets_list),
-            aux@use_voom,
-            nrow(aux@expr_data),
+            length(deGenes@gene_sets_list),
+            deGenes@use_voom,
+            nrow(deGenes@expr_data),
             sea_params,
             gsea_params,
             round(100*(as.numeric(sea_params[[4]]) / 
-                nrow(aux@expr_data)), 2)
+                nrow(deGenes@expr_data)), 2)
     );
     names(res) <- c("exp_name",
                     "#samples",

@@ -19,16 +19,21 @@ setMethod(
                 "BiocParallelParam"),
     definition=function(params, M, fit_options, genesets, use_voom,
                         bp_param) {
+        # mGSZ uses the gene sets as a list
         mgsz.gene.sets <- asList(genesets);
+        
+        # check the ranking function depending if we use voom or not
         if(use_voom) {
             rankFunc <- voomLimaRank;
         } else {
             rankFunc <- mGszEbayes;
         }
         
+        # run faster version of mGSZ
         mgszRes <- MIGSA_mGSZ(M, fit_options, mgsz.gene.sets, rankFunc, params,
                                 bp_param);
         
+        # convert mGSZ results (data.frame) to GenesetRes
         mgszRes <- lapply(geneSets(genesets), function(actGset) {
             mgszGSres <- mgszRes[ mgszRes$gene.sets == id(actGset), ];
             if (nrow(mgszGSres) == 0) {
@@ -39,7 +44,7 @@ setMethod(
                 pval <- mgszGSres$pvalue;
                 actScore <- mgszGSres$mGszScore;
                 actImpGenes <- as.character(mgszGSres$impGenes);
-                # todo: put genes separator
+                # todo: put better genes separator
                 actImpGenes <- strsplit(actImpGenes, "_sep_")[[1]];
             }
             
@@ -49,6 +54,7 @@ setMethod(
                                 enriching_genes=actImpGenes);
         })
         
+        # this is a GSEAres
         gseaRes <- GSEAres(gene_sets_res=mgszRes);
         
         return(gseaRes);
@@ -83,6 +89,9 @@ setMethod(
         if (is(M, "DGEList")) {
             stopifnot(all(rownames(M$samples) == colnames(M$counts)));
         }
+        
+        ## all this code is from mGSZ, with some improvements
+        
         expr.data <- M;
         min.cl.sz <- minSz(params); # min gene set size
         pre.var <- pv(params);
@@ -96,6 +105,7 @@ setMethod(
         flog.debug(paste("mGSZ: gene.sets number=", length(gene.sets)));
         
         expr.dat.sz <- dim(expr.data)
+        # convert the gene sets list to a data.frame (genes x genesets)
         gene.sets <- toMatrix(expr.data, gene.sets)
         num.genes <- nrow(gene.sets)
         if(!(num.genes == expr.dat.sz[1])){
@@ -104,20 +114,21 @@ setMethod(
         }
         rm(expr.dat.sz);
         
-        ## Remove genes which are not in any term
+        # Remove genes which are not in any term
         data <- rowSums(gene.sets) > 0;
         expr.data <- expr.data[data, ];
         gene.sets <- gene.sets[data, ];
         rm(data);
         
-        ##Remove too small gene sets
+        # Remove too small gene sets
         aux <- ncol(gene.sets);
         gene.sets <- rm.small.genesets(gene.sets, min.cl.sz)
         flog.debug(paste("mGSZ: Not analyzed gene sets:",
                     aux-ncol(gene.sets)));
         rm(aux);
+        
+        # now convert it to data.table to make it much faster
         gene.sets <- data.table(gene.sets)
-        # genes x genesets
         
         if (ncol(expr.data) < 1 || nrow(expr.data) < 1 || 
             ncol(gene.sets) < 1 || nrow(gene.sets) < 1) {
@@ -129,7 +140,7 @@ setMethod(
         num.genes <- nrow(expr.data)
         geneset.class.sizes <- colSums(gene.sets)
         
-        ##Calculation of gene scores
+        # Calculation of gene scores
         tmp = MIGSA_diffScore(expr.data, fit_options, perm.number, 
                         rankFunction, bp_param);
         
@@ -137,6 +148,7 @@ setMethod(
         perm.number = tmp$perm.number
         diff.expr.dat.sz <- dim(tmp.expr.data)
         
+        # calculate hyge and prob (mGSZ stuff)
         set_sz <- geneset.class.sizes;
         hyge_stat <- count_hyge_var_mean(nrow(gene.sets), unique(set_sz));
         prob_sum <- lapply(1:length(unique(set_sz)), function(j) {
@@ -144,7 +156,7 @@ setMethod(
                 hyge_stat$var[, j])
         });
         
-        ## mGSZ score for positive data ####
+        # mGSZ score for real data
         pos.scores <- MIGSA_mGSZ.test.score2(tmp.expr.data[,1], gene.sets,
                                             rownames(expr.data), wgt1, wgt2,
                                             pre.var, var.constant, start.val,
@@ -153,6 +165,8 @@ setMethod(
         pos.mGSZ.scores <- as.numeric(pos.scores$mgszScore);
         
         flog.info(paste("Running score at cores:", bp_param$workers));
+        
+        # mGSZ score for permuted data
         col.perm.mGSZ <- do.call(rbind, 
             bplapply(1:(diff.expr.dat.sz[2] -1), function(k) {
         #   lapply(1:(diff.expr.dat.sz[2] -1), function(k) {
@@ -160,15 +174,13 @@ setMethod(
                                         wgt1, wgt2, pre.var, var.constant,
                                         start.val, set_sz, hyge_stat,
                                         prob_sum);
-                # Time difference of 24.99471 secs
                 flog.debug(paste("Finnished perm n:", k));
                 return(tmp);
         #   })
             }, BPPARAM=bp_param)
-        #   })
         );
         
-        # p-value calculation for the gene set scores with sample permutation
+        # p-value calculation for the gene set scores
         mGSZ.p.vals.col.perm <- mGSZ.p.values(pos.mGSZ.scores,col.perm.mGSZ)
         
         # preparing output table
@@ -182,7 +194,7 @@ setMethod(
             row.names=NULL
         )
         
-        # Ordering of the tables
+        # sorting the results table
         out <- mGSZ.table.col[order(mGSZ.table.col$pvalue,decreasing=FALSE),]
         
         return(out)
@@ -213,6 +225,7 @@ setMethod(
         dime2 <- dim(data)
         pit <- ncol(data)
         
+        # generate permutations
         all_perms <- replicate(perm.number, sample(1:pit, replace=FALSE));
         
         # it deletes duplicate permutations
@@ -226,20 +239,23 @@ setMethod(
         dime2 <- dim(data)
         rankings = array(0, c(dime2[1], dime[2] + 1))
         
+        # gene scores for real data
         rankings[,1] <- rankFunction(data, fit_options);
         
         flog.info(paste("Getting ranking at cores:", bp_param$workers));
+        
+        # gene scores for permuted data
         calcRes <- bplapply(1:ncol(all_perms), function(i) {
-        #     calcRes <- mclapply(1:ncol(all_perms), function(i) {
         #     calcRes <- lapply(1:ncol(all_perms), function(i) {
+            # modify the design matrix using the order given by the permutation
             permDesign <- designMatrix(fit_options)[all_perms[,i],];
             new_fit_options <- fit_options;
             designMatrix(new_fit_options) <- permDesign;
             
             actRank <- rankFunction(data, new_fit_options);
             
-            ## todo: quizas la mejor alternativa seria borrar el gen de todos
-            ## lados, pero es mas complicado.
+            # todo: maybe the best alternative would be delete the gene from
+            # everywhere
             if (any(is.na(actRank))) {
                 warning(paste(sum(is.na(actRank)), 
                     "genes generated NAs when estimating fit for perm", i));
@@ -250,7 +266,6 @@ setMethod(
             
             return(actRank);
         }, BPPARAM=bp_param);
-        #     }, mc.cores=bp_param$workers)
         #     })
         calcRes <- matrix(unlist(calcRes), ncol=ncol(all_perms));
         
@@ -306,26 +321,31 @@ setMethod(
     definition=function(expr.data, gene.sets, genes, wgt1, wgt2, pre.var,
                     var.constant, start.val, set_sz, hyge_stat, prob_sum) {
         num.genes <- length(expr.data)
+        # order the data by genes decreasing value
         ord_out <- order(expr.data, decreasing=TRUE)
         expr.data <- expr.data[ord_out]
         genes <- genes[ord_out];
         gene.sets <- gene.sets[ord_out,] 
-
+        
         expr.data.ud <- expr.data[num.genes:1]
         num.classes=ncol(gene.sets)
         unique_class_sz_ln <- length(unique(set_sz))
-
+        
+        # calculating some mGSZ stuff
         pre_z_var.1 <- MIGSA_sumVarMean_calc(expr.data, gene.sets, pre.var,
                                             set_sz, hyge_stat, prob_sum)
         pre_z_var.2 <- MIGSA_sumVarMean_calc(expr.data.ud, gene.sets, pre.var,
                                             set_sz, hyge_stat, prob_sum)
-
+        
+        # calculating some mGSZ stuff
         Z_var1 = MIGSA_calc_z_var(num.genes, unique_class_sz_ln,
                                 pre_z_var.1$Z_var, wgt2, var.constant)
         Z_var2 = MIGSA_calc_z_var(num.genes, unique_class_sz_ln,
                                 pre_z_var.2$Z_var, wgt2, var.constant)
         
+        # for each gene set calculate enrichment score
         out <- do.call(rbind, lapply(1:num.classes, function(k) {
+            # genes in set and out set
             po1 <- which(gene.sets[[k]] == 1)
             po0 <- which(gene.sets[[k]] == 0)
             
@@ -351,6 +371,9 @@ setMethod(
             maxPoint <- which.max(abs(c(A,B)));
             rawMgsz <- eScores[[maxPoint]];
             
+            # important genes are the ones until the top of the enrichment 
+            # score. If ES is positive then the fst ones, if negative, the last 
+            # ones
             if (maxPoint <= length(A)) {
                 impGenes <- intersect(genes[po1], genes[1:maxPoint]);
             } else {
@@ -384,27 +407,28 @@ setMethod(
     definition=function(expr.data, gene.sets, wgt1, wgt2, pre.var, 
             var.constant, start.val, set_sz, hyge_stat, prob_sum) {
         num.genes <- length(expr.data)
+        # order the data by genes decreasing value
         ord_out <- order(expr.data, decreasing=TRUE)
         expr.data <- expr.data[ord_out]
-        
-        ## gene.sets_bak <- gene.sets;
-        gene.sets <- gene.sets[ord_out, ] # Time difference of 1.93042 secs
+        gene.sets <- gene.sets[ord_out, ]
         
         expr.data.ud <- expr.data[num.genes:1]
         num.classes = ncol(gene.sets)
         unique_class_sz_ln <- length(unique(set_sz))
         
+        # calculating some mGSZ stuff
         pre_z_var.1 <- MIGSA_sumVarMean_calc(expr.data, gene.sets, pre.var,
                                         set_sz, hyge_stat, prob_sum)
         pre_z_var.2 <- MIGSA_sumVarMean_calc(expr.data.ud, gene.sets, pre.var,
                                         set_sz, hyge_stat, prob_sum)
         
+        # calculating some mGSZ stuff
         Z_var1 = MIGSA_calc_z_var(num.genes, unique_class_sz_ln,
                                 pre_z_var.1$Z_var, wgt2, var.constant)
         Z_var2 = MIGSA_calc_z_var(num.genes, unique_class_sz_ln,
                                 pre_z_var.2$Z_var, wgt2, var.constant)
         
-        # for each gene set do:
+        # for each gene set calculate enrichment score
         out <- unlist(lapply(1:num.classes, function(k) {
             po1 <- which(gene.sets[[k]] == 1)
             po0 <- which(gene.sets[[k]] == 0)
@@ -423,6 +447,8 @@ setMethod(
             result1[1:start.val] <- 0
             result2[1:start.val] <- 0
             
+            # A genes are in the same order as expr.data
+            # b genes are backwards
             A = result1/Z_var1[, pre_z_var.1$class_size_index[k]]
             B = result2/Z_var2[, pre_z_var.2$class_size_index[k]]
             
@@ -443,6 +469,7 @@ setMethod(
     signature=c("numeric", "data.frame", "numeric", "numeric", "list", "list"),
     definition=function(expr_data, gene.sets, pre.var, set_sz, hyge_stat,
                         prob_sum) {
+        # this is a mGSZ function, I just put lapply instead of for loop
         dim_sets <- dim(gene.sets)
         unique_class_sz <- unique(set_sz)
         num_genes <- length(expr_data)
@@ -488,6 +515,7 @@ setMethod(
     signature=c("integer", "integer", "matrix", "numeric", "numeric"),
     definition=function(num.genes, unique_class_sz_ln, pre_z_var, wgt2,
                         var.constant) {
+        # this is a mGSZ function, I just put colMedias instead of for loop
         ones_matrix = matrix(1, num.genes, unique_class_sz_ln)
         ones_tmatrix = t(ones_matrix)
         median_matrix = colMedians(pre_z_var)

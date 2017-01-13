@@ -45,11 +45,15 @@ setMethod(
     signature=c("character"),
     definition=function(geneSetNames,
     deleteMultipleEntrez=!FALSE) {
-        
+        # enrichr url
         downloadUrlFst <-
 "http://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=";
+        
+        # just for filtering if user desired gene sets are valid. Maybe it 
+        # would be faster just to put a try catch when downloading each.
         libraries <- enrichrGeneSets()[,1];
         
+        # filtering invalid gene sets
         geneSetNames <- intersect(geneSetNames, libraries);
         if (length(geneSetNames) < 1) {
             stop("No gene sets found to download from Enrichr");
@@ -57,10 +61,12 @@ setMethod(
         
         if (!testBioCConnection()) stop("You must have internet connection.");
         
+        # to translate Symbols to Entrez
         symbol2entrez <- as.list(org.Hs.egALIAS2EG);
         
         libraries <- lapply(geneSetNames, function(libName) {
             actUrl <- paste(downloadUrlFst, libName, sep="");
+            # downloading gene set
             tmp <- readLines(actUrl);
             flog.info(paste("Downloaded", libName));
             tmp <- strsplit(tmp, "\t");
@@ -69,6 +75,7 @@ setMethod(
                 actId <- actGS[[1]];
                 actName <- actGS[[2]];
                 entrez <- lapply(actGS[2:length(actGS)], function(symbol) {
+                    # trying to convert from Symbol to Entrez
                     translates <- symbol2entrez[[symbol]];
                     
                     if (is.null(translates)) {
@@ -77,6 +84,7 @@ setMethod(
                         translates <- symbol2entrez[[gsub(",1.0", "", symbol)]];
                     }
                     
+                    # if multiple Entrez returned then delete them or not
                     if (length(translates) > 1 && deleteMultipleEntrez) {
                         translates <- NULL;
                     }
@@ -87,6 +95,7 @@ setMethod(
                 
                 res <- NA;
                 
+                # if returned any gene, then create the Geneset
                 if (length(entrez) > 0) {
                     res <- Geneset(id=actId, name=actName, genes=entrez);
                 }
@@ -94,8 +103,11 @@ setMethod(
                 return(res);
             })
             
+            # filter invalid gene sets
             geneSets <- geneSets[!is.na(geneSets)];
             res <- NA;
+            
+            # if name starts with GO then is_GO true
             is_GO <- grepl("^GO_", libName);
             if (length(geneSets) > 0) {
                 res <- Genesets(name=libName, gene_sets=geneSets, is_GO=is_GO);

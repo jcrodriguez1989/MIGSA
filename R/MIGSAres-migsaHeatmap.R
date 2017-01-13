@@ -54,9 +54,12 @@ setMethod(
     col.dist="jaccard", row.dist=col.dist, ... ) {
         otherParams <- list(...);
         
+        # we must have a cutoff for this function
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
         allRes <- get_summary(migsaRes);
+        
+        # experiment names (present in migsaRes)
         exp_cols <- setdiff(colnames(allRes), c("id", "Name", "GS_Name"));
         
         # terms filtering by flevel and penrich
@@ -71,7 +74,7 @@ setMethod(
         flog.debug(paste("In migsaHeatmap, after filtering, dim=",
                         dim(allRes)));
         
-        # get color for each different database
+        # get color for each different gene set
         rowColors <- rep("white", nrow(allRes));
         if ("GS_Name" %in% colnames(allRes)) {
             rowColors <- as.character(allRes$GS_Name);
@@ -84,7 +87,6 @@ setMethod(
 #           rowColors <- RowSideColors; ## ojo! ver si funca
         }
         
-        # jaccard clustering per column (database)
         numRes <- apply(allRes[,exp_cols], 2, as.numeric);
         
         colColors <- rep("white", length(exp_cols));
@@ -101,22 +103,24 @@ setMethod(
 #           colColors <- ColSideColors; ## ojo! ver si funca
         }
         
+        # jaccard clustering per column (experiment)
         dd.s <- suppressWarnings(vegdist(t(numRes), col.dist, na.rm=!FALSE));
         dd.s[is.na(dd.s)] <- 0;
         h.s <- hclust(dd.s, method="average");
         
-        # jaccard clustering per row (term)
+        # jaccard clustering per row (gene set)
         ddr.s <- suppressWarnings(vegdist(numRes, row.dist, na.rm=!FALSE));
         ddr.s[is.na(ddr.s)] <- 0;
         hr.s <- hclust(ddr.s, method="average");
         
+        # we use values -1 NA (not analyzed), 0 not enriched, 1 enriched
         numRes[is.na(numRes)] <- -1;
         p <- heatmap.2(as.matrix(numRes), Rowv=as.dendrogram(hr.s),
                     labRow=rep("", nrow(numRes)), Colv=as.dendrogram(h.s),
                     colsep=1:(ncol(numRes)-1), sepwidth=c(0.025, 0.025),
                     RowSideColors=rowColors, ColSideColors=colColors, ...);
         p$data <- numRes;
-        # ver como agregar legends
+        # how to add legends:
         # http://stackoverflow.com/questions/17041246/
         #    how-to-add-an-inset-subplot-to-topright-of-an-r-plot
         

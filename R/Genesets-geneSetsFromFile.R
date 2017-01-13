@@ -53,14 +53,16 @@ setMethod(
     signature=c("character"),
     definition=function(filePath, name, is_GO=FALSE) {
         stopifnot(length(filePath) == 1);
+        
+        # check if file exists, its not a directory, its readable
         if (!file.exists(filePath) || dir.exists(filePath)
                             || (file.access(filePath, 4) == -1)) {
-            # check if exists, its not a directory, its readable
             flog.error("Gene sets file path error, check if it is readable.");
         }
         
         tmp <- readLines(filePath);
         gsets <- lapply(tmp, function(actLine) {
+            # for each line, fst item is id, snd is name, rest are genes
             t <- strsplit(actLine,'\t')[[1]]
             actGS <- Geneset(id=t[[1]], name=t[[2]],
                                 genes=unique(t[3:length(t)]));

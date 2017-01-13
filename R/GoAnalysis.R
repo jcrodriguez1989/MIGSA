@@ -148,9 +148,7 @@ setMethod(
     definition=function(ontologies) {
         GOparents <- c(BP=GOBPPARENTS, CC=GOCCPARENTS, MF=GOMFPARENTS)
         
-        # For each ontology 
-        # UpDown layout. Can't make it more parallel due to RSQLite connection
-        # issues
+        # For each ontology create the GO graph
         GOgraph <- lapply(ontologies, function(ontology, GOparents) {
             graph <- GOGraph(
                 rownames(ontology)[ontology$Enriched | ontology$Important],
@@ -158,11 +156,12 @@ setMethod(
                                         Ontology(row.names(ontology)))))]]
             )
             
-            # Remove all node if present
+            # Remove "all" node if present
             if("all" %in% nodes(graph)){
                 graph <- removeNode("all", graph);
             }
             
+            # invert the graph (if not it plots it 180 degrees)
             graph <- nodeLevel(invertGraph(graph));
             return(graph);
         }, GOparents);
@@ -184,20 +183,28 @@ setMethod(
     definition=function(graph) {
         invEdges <- do.call(rbind, 
             lapply(names(edges(graph)), function(nodeto) {
+            # for each edge, get its starting node
             do.call(rbind, lapply(edges(graph)[[nodeto]], function(nodefrom) {
+                # for each destination, return the other way round
                 return(c(nodefrom, nodeto));
             }));
         }));
         fromNodes <- unique(invEdges[,1]);
+        
+        # return it as a list
         invEdges <- lapply(fromNodes, function(nodefrom) {
             invEdges[ invEdges[,1] == nodefrom, 2];
         });
         names(invEdges) <- lapply(invEdges, function(x) names(x)[[1]]);
         
+        # dont give the edges to graphNEL, so it creates also the edges of the 
+        # nodes with no children
         ginv <- new("graphNEL", edgemode="directed", nodes=nodes(graph));
         newEdges <- edges(ginv);
+        # over write edges that we inverted
         newEdges[ names(invEdges) ] <- invEdges;
         
+        # create the new graph with the complete edges structure
         ginv <- new("graphNEL", edgemode="directed", nodes=nodes(graph),
             edgeL=newEdges);
         
@@ -218,10 +225,10 @@ setMethod(
     f="nodeLevel",
     signature=c("graphNEL"),
     definition=function(graph, root=NULL) {
-        # Default attribute "-1"
+        # default attribute "-1"
         nodeDataDefaults(graph, "level") <- -1;
         
-        # Inicialization
+        # inicialization
         if (is.null(root)) {
             root <- names(which(degree(graph)$inDegree == 0));
             if (length(root) > 1){
@@ -271,10 +278,11 @@ setMethod(
         gotree <- graph$gotree;
         GOgraph <- graph$graph;
         
-        # name.height: alto del nodo
-        # name.width: ancho del nodo
-        # name.fontsize: tamaño del nombre del nodo
-        # name.lwd: ancho de los vertices
+        # name.height: node height
+        # name.width: node width
+        # name.fontsize: node name size
+        # name.lwd: vert spessor
+        # this is for pretty printing, well the best I could do :P
         vertSpessor <- 100/checkEnrichment(gotree)[[ont]];
         fontSize <- max(11, checkEnrichment(gotree)[[ont]] / 16);
         size <- c(name.legend.pt=8, name.legend.text=3, name.height=1.9,
@@ -301,16 +309,16 @@ setMethod(
         size=c(name.lwd=3, name.height=1.9, name.width=0.9,
         name.fontsize=30)) {
         
-        # Only nodes to plot
+        # only nodes to plot
         plotNodes <- rownames(ontology)[ontology$Enriched | 
                                         ontology$Important];
         
-        # Add terms
+        # change the id for the Name
         terms <- sapply(plotNodes, function(id) {
             if(!is.null(GOTERM[[id]])) {
                 Term(GOTERM[[id]]);
             } else {
-                id; # Database version issue!!!!
+                id; # database version issue!!!!
             }
         })
         terms <- gsub("\nor"," or",
@@ -318,13 +326,13 @@ setMethod(
                         gsub("\nof"," of",
                             gsub(" ","\n", terms))));
         
-        # Add GO root name
+        # add GO root name
         root <- unlist(nodeData(graph, attr="level"))[
                     unlist(nodeData(graph,attr="level")) == 0];
         root[1] <- lroot; 
         terms <- c(terms,root);
         
-        # Color look up
+        # color look up
         color <- ontology$Color;
         names(color) <- rownames(ontology);
         if (!(names(root[1]) %in% names(color))) {
@@ -333,11 +341,10 @@ setMethod(
         }
         color <- color[names(terms)];
         
-        node <- list();
-        
-        # If no letters are needed, just a circule for the nodes
+        # if no letters are needed, just a circule for the nodes
         stopifnot(size[["name.fontsize.full"]] > 0)
-        # Size
+        
+        # size
         width <- sapply(terms, function(term) {
             max(nchar((unlist(strsplit(term, split="\n")))))
         })*size["name.width"];
@@ -346,24 +353,27 @@ setMethod(
             length(unlist(strsplit(term, split="\n")))
         })*size["name.height"];
         
+        # not in use right now, but if we have important nodes then change the 
+        # shape
         importantGO <- rownames(ontology[ontology$Important,]);
         shapes <- ifelse(names(terms) %in% importantGO, "box", "ellipse");
         names(width) <- names(height) <- names(shapes) <- names(terms);
         
         nodeAttrs <- list(width=width, height=height, shape=shapes);
         
+        node <- list();
         node$node <- list(fixedsize=FALSE);
         graph <- layoutGraph(graph, nodeAttrs=nodeAttrs, attrs=node);
         edgeRenderInfo(graph) <- list(lwd=size[["name.lwd"]], 
                                         arrowhead="none");
         
-        # Others
+        # others
         nodeRenderInfo(graph) <- list(label=terms, fill=color,
                                     fontsize=size[["name.fontsize"]],
                                     lwd=size[["name.lwd"]]/2);
         
         graphRenderInfo(graph) <- list(main=lroot);
-        # Rendering at last
+        # rendering at last
         graph <- renderGraph(graph);
         
         return(graph)
@@ -378,7 +388,8 @@ setMethod(
     f="getHeight",
     signature=c("character", "logical", "list"),
     definition=function(term, minHeight, allParents) {
-        fstTerms <- c("GO:0008150", "GO:0003674", "GO:0005575"); # bp, mf, cc
+        # bp, mf and cc ids
+        fstTerms <- c("GO:0008150", "GO:0003674", "GO:0005575");
         actualHeight <- 1;
         actualParents <- unlist(allParents[term]);
         
@@ -389,6 +400,9 @@ setMethod(
         }
         
         if (minHeight) {
+            # while we dont get to the root node sum 1 to the result.
+            # remember we are starting from our node, finding its parents 
+            # pseudo recursively
             while ((!fstTerms %in% actualParents) && 
                     (actualParents != "all")) {
                 actualHeight <- actualHeight +1;

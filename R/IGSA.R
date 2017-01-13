@@ -25,29 +25,34 @@ setMethod(
             stop("No gene sets provided.");
         }
         
-        # merging all datasets; its a Genesets object
+        # merging all gene sets in order to run just one mGSZ and one dEnricher,
+        # its much faster, but after we will have to split these results
         merged_gene_sets <- merge_gene_sets(actGeneSets);
         flog.info(paste(length(geneSets(merged_gene_sets)), "Gene Sets."));
         
         flog.info(paste(name(igsaInput), ": dEnricher starting."));
+        # run DEnricher
         deRes <- DEnricher(seaParams(igsaInput), expr_data, fit_options,
                         merged_gene_sets, useVoom(igsaInput), bp_param);
         flog.info(paste(name(igsaInput), ": dEnricher finnished."));
         
         flog.info(paste(name(igsaInput), ": mGSZ starting."));
+        # run MGSZ
         mgszRes <- MGSZ(gseaParams(igsaInput), expr_data, fit_options,
                         merged_gene_sets, useVoom(igsaInput), bp_param);
         flog.info(paste(name(igsaInput), ": mGSZ finnished."));
         
-        # splitting all results; its a list of GenesetsRes objects
+        # splitting all results. it is a list of GenesetsRes objects
         splitted_res <- split_results(deRes, mgszRes, actGeneSets);
         
+        # get the genes rank to give more information in the results object
         genes_rank <- get_fit(expr_data, fit_options, useVoom(igsaInput),
                                 SEAparams());
         genes_rank <- data.frame(geneID=rownames(genes_rank),
                                     rank=genes_rank$t);
         colnames(genes_rank)[2] <- name(igsaInput);
         
+        # create the IGSAres object
         igsaRes <- IGSAres(name=name(igsaInput), gene_sets_res=splitted_res,
                             genes_rank=genes_rank);
         
@@ -72,6 +77,9 @@ setMethod(
         stopifnot(all(unlist(lapply(geneSetsList, function(x)
                     is(x, "Genesets")))));
         
+        # each individual gene set id will be its gene set name "_MIGSA_"
+        # its id. e.g. BP gene set GO:10000 will be BP_MIGSA_GO:10000
+        # Not the best idea haha
         merged <- Reduce(function(...) append(...),
             lapply(geneSetsList, function(gene_sets) {
                 act_name <- name(gene_sets);
@@ -102,9 +110,14 @@ setMethod(
     f="split_results",
     signature=c("SEAres", "GSEAres", "list"),
     definition=function(sea_res, gsea_res, geneSetsList) {
+        
+        # So now lets split the merged results!!
+        # and return to each its additional info they had (as is_GO)
+        
         splitted_res <- lapply(geneSetsList, function(act_GS) {
             act_name <- name(act_GS);
             act_is_GO <- isGO(act_GS);
+            # grep the ones which start with gene set name followed by "_MIGSA_"
             act_pattern <- paste("^", act_name, "_MIGSA_", sep="");
             act_sea_res <- lapply(gene_sets_res(sea_res), function(act_res) {
                 if (grepl(act_pattern, id(act_res))) {

@@ -20,33 +20,44 @@ setMethod(
     definition=function(params, M, fit_options, gene_sets, use_voom, 
                         bp_param) {
         if (length(de_genes(params)) == 1 && is.na(de_genes(params)[[1]])) {
+            # if there are not set the DE genes then calculate them
             dif <- igsaGetDEGenes(params, M, fit_options, use_voom);
         } else {
+            # otherwise we use them
             dif <- de_genes(params);
             flog.info(paste("DE genes", length(dif), "of a total of", nrow(M),
                             "(", round(length(dif)/nrow(M)*100,2), "%)"));
         }
         
         br <- br(params);
+        # get all the genes present in the gene sets
         allGenes <- unique(unlist(asList(gene_sets)));
         
         if (length(br) > 1) {
+            # if its a user provided br, then filter the genes that are in the
+            # gene sets (statistical importance)
             br <- intersect(br, allGenes);
             flog.info(paste("Using user provided BR:", length(br), "genes."));
             if (length(br) < 2) {
                 stop("No genes in br after intersecting with experiment genes");
             }
         } else if (br == "bri") {
+            # bri is the genome, however we use gene sets genes as genome
+            # (statistical importance)
             br <- allGenes;
             flog.info(paste("Using BRI:", length(br), "genes."));
         } else if (br == "briii") {
+            # briii are the reliably detected genes by the experiment
             br <- unique(rownames(M));
             flog.info(paste("Using BRIII:", length(br), "genes."));
         } else {
             stop("Incorrect br option.");
         }
         
+        # DE genes must be in the br (statistical importance)
         dif <- intersect(dif, br);
+        
+        # so we filter gene sets that dont have genes in this br
         validGSets <- lapply(geneSets(gene_sets), function(actGs) {
             validGenes <- intersect(genes(actGs), br);
             if (length(validGenes) == 0) {
@@ -59,6 +70,8 @@ setMethod(
         geneSets(gene_sets) <- validGSets;
         
         test <- test(params);
+        
+        # and run dEnricher
         seaRes <- runDEnricher(dif, gene_sets, br, test=test, bp_param);
         
         seaRes <- SEAres(gene_sets_res=seaRes);
@@ -85,12 +98,15 @@ setMethod(
     signature=c("character", "Genesets", "character", "character",
                                                     "BiocParallelParam"),
     definition=function(dif, genesets, br, test, bp_param) {
+        # most of this function is copied from dEnricher function
+        
         GeneID <- dif;
         genes.group <- GeneID[!is.na(GeneID)];
         
         gs <- genesets;
         nSet <- length(geneSets(gs))
         
+        # defining the three tests
         doFisherTest <- function(genes.group, genes.term, genes.universe) {
             genes.hit <- intersect(genes.group, genes.term)
             X <- length(genes.hit)
@@ -148,6 +164,7 @@ setMethod(
                 BinomialTest = doBinomialTest(genes.group, genes.term,
                                                             genes.universe))
             
+            # important genes are the DE that are in the term
             impGenes <- intersect(genes.group, genes.term);
             actRes <- GenesetRes(id=id(actGset), name=getName(actGset),
                                 pvalue=p.value, genes=genes(actGset),

@@ -22,6 +22,8 @@
 summary.GSEAparams <- function(object, ...) {
     stopifnot(validObject(object));
     
+    # not showing the other params, as they are from mGSZ, I dont know if 
+    # anyone uses them
     res <- object@perm_number;
     names(res) <- "perm_number";
     

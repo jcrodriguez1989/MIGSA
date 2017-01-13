@@ -42,6 +42,7 @@ FitOptions <- function(x, ...) {
 #'fit_options <- FitOptions(l);
 #'
 FitOptions.default <- function(x, ...) {
+    # checking that exactly two conditions are present
     if (length(x) < 2) {
         stop("More than two labels required.");
     }
@@ -49,6 +50,7 @@ FitOptions.default <- function(x, ...) {
         stop("Exactly two possible conditions required.");
     }
     
+    # creating the model from the two conditions
     act_col_data <- data.frame(cond=factor(x));
     act_formula  <- ~cond-1;
     
@@ -75,7 +77,8 @@ FitOptions.data.frame <- function(x, formula, contrast, ...) {
     stopifnot(is(x, "data.frame"));
     stopifnot(is(formula, "formula"));
     stopifnot(is(contrast, "numeric"));
-
+    
+    # completing the model
     act_design <- model.matrix(formula, data=x);
     .Object <- new("FitOptions", col_data=x, formula=formula, 
                     contrast=contrast, design_matrix=act_design);

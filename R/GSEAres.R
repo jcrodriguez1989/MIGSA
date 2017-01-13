@@ -19,10 +19,13 @@ setMethod(
     f="as.data.table",
     signature=c("GSEAres"),
     definition=function(x, wGenesInfo=FALSE, ...) {
+        # convert each gene set result to character vector
         to <- do.call(rbind, lapply(x@gene_sets_res, function(res) {
             actInfo <- asCharacter(res, wGenesInfo=wGenesInfo);
             return(actInfo);
         }))
+        
+        # make it a data.table and put the colname
         to <- data.table(to);
         if (wGenesInfo) {
             colnames(to) <- c("id", "name", "GSEA_enriched", "GSEA_score",
@@ -32,6 +35,7 @@ setMethod(
             colnames(to) <- c("id", "name", "GSEA_enriched", "GSEA_score",
                                 "GSEA_pval");
         }
+        # set data.table keys, to merge faster
         setkey(to, id, name);
 
         return(to)

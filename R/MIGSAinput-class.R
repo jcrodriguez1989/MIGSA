@@ -59,10 +59,12 @@ MIGSAinput <- setClass(
         bp_param=bpparam()
     ),
     validity=function(object) {
+        # experiments is a list of IGSAinputs
         experiments_ok <- all(unlist(lapply(object@experiments, function(x)
                                                         is(x, "IGSAinput"))));
         experiments_ok <- experiments_ok && length(object@experiments) > 0;
         
+        # IGSAinput names must be unique
         if (experiments_ok) {
             exprs_names <- unlist(lapply(object@experiments, function(x)
                                                             return(name(x))));
@@ -73,9 +75,11 @@ MIGSAinput <- setClass(
             }
         }
         
+        # gene_sets_list is a list of Genesets
         gene_sets_list_ok <- all(unlist(lapply(object@gene_sets_list,
                                     function(x) is(x, "Genesets"))));
         
+        # Genesets names must be unique
         if (gene_sets_list_ok) {
             gss_names <- unlist(lapply(object@gene_sets_list, function(x)
                                 return(name(x))));

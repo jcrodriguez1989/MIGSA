@@ -10,9 +10,10 @@ IGSAres <- setClass(
         genes_rank=data.frame()
     ),
     validity=function(object) {
-        gene_sets_resError <- all(unlist(lapply(object@gene_sets_res,
+        # gene_sets_res is a list of GenesetsRes
+        gene_sets_res_ok <- all(unlist(lapply(object@gene_sets_res,
             function(x) is(x, "GenesetsRes"))));
-        return(gene_sets_resError);
+        return(gene_sets_res_ok);
     }
 )
 
@@ -25,11 +26,15 @@ setMethod(
     f="as.data.table",
     signature=c("IGSAres"),
     definition=function(x, wGenesInfo=FALSE, ...) {
+        # convert to data.table each GenesetsRes
         to <- do.call(rbind, lapply(x@gene_sets_res, function(gsetsRes) {
             actRes <- as.data.table(gsetsRes, wGenesInfo=wGenesInfo);
             return(actRes);
         }));
+        
+        # add some IGSA information
         to <- data.table(experiment_name=x@name, to);
+        # set this keys for faster merging
         setkey(to, experiment_name, gene_set_name, id, name);
         
         return(to);

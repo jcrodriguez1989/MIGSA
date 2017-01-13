@@ -3,25 +3,24 @@
 #'This S4 class represents the results of one MIGSA execution in R.
 #'
 #'@importClassesFrom BiocParallel BiocParallelParam
-#'@importFrom BiocParallel bpparam
 #'@importFrom data.table data.table
 #'@name MIGSAres-class
 #'@rdname MIGSAres-class
 #'@exportClass MIGSAres
+#'
 setClass(
     Class="MIGSAres",
     slots=c(
         migsa_res_all="data.table",
         migsa_res_summary="data.frame",
         enr_cutoff="numeric",
-        genes_rank="list",
-        bp_param="BiocParallelParam"
+        genes_rank="list"
     ),
     prototype=list(
-        enr_cutoff=as.numeric(NA),
-        bp_param=bpparam()
+        enr_cutoff=as.numeric(NA)
     ),
     validity=function(object) {
+        # check that data frames are correct
         migsa_res_all_ok <- all(colnames(object@migsa_res_all) %in%
         c("experiment_name", "gene_set_name", "id", "name", "SEA_GS_genes",
             "SEA_enriched", "SEA_score", "SEA_pval", "SEA_enriching_genes",

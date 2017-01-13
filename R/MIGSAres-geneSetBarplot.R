@@ -47,8 +47,10 @@ setMethod(
     definition=function(migsaRes, enrFilter=0) {
         stopifnot(validObject(migsaRes));
         
+        # we must have a cutoff for this function
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
+        # keep gene sets enriched in more than enrFilter experiments
         actRes <- migsaRes[ rowSums(migsaRes[,-(1:3)], na.rm=!FALSE) >
                                 enrFilter, ];
         plotRes <- data.frame(actRes[,1:3],

@@ -44,8 +44,10 @@ setMethod(
             stop("The list must have all unique names.");
         }
         act_gss <- lapply(names(x), function(act_id) {
+            # these are the genes
             act_genes <- unique(x[[act_id]]);
             
+            # if there is any gene then create the Geneset
             if (length(act_genes) == 0 ||
                 (length(act_genes) == 1 && act_genes == "")) {
                 act_gs <- NULL;
@@ -54,6 +56,7 @@ setMethod(
             }
             return(act_gs);
         })
+        # delete invalid genesets
         act_gss <- act_gss[!unlist(lapply(act_gss, is.null))];
         
         if (length(act_gss) < 1) {

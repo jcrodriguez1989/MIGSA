@@ -38,6 +38,7 @@
 summary.MIGSAinput <- function(object, ...) {
     validObject(object);
     
+    # rbind the summary of each IGSAinput
     res <- do.call(rbind, lapply(object@experiments,
                                 function(igsaInput) summary(igsaInput)));
     return(res);

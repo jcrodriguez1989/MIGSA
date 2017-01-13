@@ -144,14 +144,17 @@ setMethod("[",
     signature=c("MIGSAres"),
     function(x, i, j, drop=FALSE) {
         stopifnot(validObject(x));
+        # subset from the results summary
         data_frame <- x@migsa_res_summary[i, j, drop=drop];
         
         if (is.null(dim(data_frame)) || ncol(data_frame) == 0 || 
             nrow(data_frame) == 0) {
+            # if the structure has broken then return a non MIGSAres object
             res <- get_summary(x)[i, j, drop=drop];
             return(res);
         }
         
+        # present experiments in the subsetted object
         act_methods <- setdiff(colnames(data_frame),
                                     c("id", "GS_Name", "Name"));
         data_frame_all <- x@migsa_res_all;
@@ -163,6 +166,8 @@ setMethod("[",
             res <- get_summary(x)[i, j, drop=drop];
             return(res);
         }
+        
+        # filter the removed experiments from the all results data frame
         data_frame_all <- data_frame_all[
             data_frame_all$experiment_name %in%  act_methods &
             data_frame_all$id %in% data_frame$id &
@@ -202,12 +207,14 @@ setMethod("summary",
         pvals <- object@migsa_res_summary[,-(1:3)];
         
         if (is.na(object@enr_cutoff)) {
+            # if there is no cutoff then give results with these three cutoffs
             res <- rbind(
                 enr_at_0_01=colSums(pvals < 0.01, na.rm=!FALSE),
                 enr_at_0_05=colSums(pvals < 0.05, na.rm=!FALSE),
                 enr_at_0_1=colSums(pvals < 0.1, na.rm=!FALSE)
             )
         } else {
+            # if we have a cutoff set then give some statistics
             consGsets <- table(rowSums(pvals < object@enr_cutoff,
                 na.rm=!FALSE));
             invisible(lapply(names(consGsets), function(actName) {
@@ -216,6 +223,7 @@ setMethod("summary",
             }))
             
             numExps <- ncol(pvals);
+            # lets get the gene sets enriched between each pair of experiments
             enrInters <- do.call(rbind, 
             lapply(1:ncol(pvals), function(actExp1) {
                 lapply(1:ncol(pvals), function(actExp2) {
@@ -296,6 +304,7 @@ setMethod(
         
         merged_all <- rbind(x_all, y_all);
         
+        # checking that we dont have experiment names repeated between x and y
         if (nrow(unique(merged_all[,list(experiment_name,gene_set_name, id)])) 
             != nrow(merged_all[,list(experiment_name,gene_set_name, id)])) {
             stop("Merging: Experiment names can not be the same");
@@ -303,7 +312,7 @@ setMethod(
         newGenesRank <- unique(c(x@genes_rank, y@genes_rank));
         
         .Object <- MIGSAres(merged_all, 
-            genes_rank=newGenesRank, bp_param=x@bp_param);
+            genes_rank=newGenesRank);
         return(.Object);
     }
 )

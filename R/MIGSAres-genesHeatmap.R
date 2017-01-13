@@ -46,6 +46,7 @@ setMethod(f="genesHeatmap",
     definition=function(migsaRes, enrFilter=0, gsFilter=0, ...) {
         stopifnot(validObject(migsaRes));
         
+        # we must have a cutoff for this function
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
         # keep gene sets enriched in more than enrFilter experiments

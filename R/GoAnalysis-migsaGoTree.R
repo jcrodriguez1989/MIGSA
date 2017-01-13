@@ -27,7 +27,6 @@ is_GO = NULL;
 #'@importFrom futile.logger flog.info
 #'@importFrom graphics par
 #'@importFrom grDevices colorRampPalette
-#'@importFrom GO.db GOTERM
 #'@include MIGSAres.R
 #'@include GoAnalysis.R
 #'@examples
@@ -47,38 +46,46 @@ setMethod(
     definition=function(migsaRes) {
         stopifnot(validObject(migsaRes));
         
+        # we must have a cutoff for this function
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
-        aux <- unique(as.data.frame(migsaResAll(migsaRes)[,
+        # get gene set names and if they are GO
+        goGsets <- unique(as.data.frame(migsaResAll(migsaRes)[,
                                             list(gene_set_name, is_GO)]));
         
-        if (!any(aux$is_GO)) {
+        if (!any(goGsets$is_GO)) {
             stop("No Gene Ontology gene set to plot.");
         }
         
-        aux <- aux[ aux$is_GO, "gene_set_name" ];
+        # get only the GO gene sets
+        goGsets <- goGsets[ goGsets$is_GO, "gene_set_name" ];
         
         # at least one gene set must be from GO
-        stopifnot(length(aux) > 0);
+        stopifnot(length(goGsets) > 0);
         
-        actRes <- migsaRes[ migsaRes[, "GS_Name", drop=!FALSE] %in% aux, ];
+        # and filter the MIGSAres object with only the GO gene sets
+        actRes <- migsaRes[ migsaRes[, "GS_Name", drop=!FALSE] %in% goGsets, ];
         
+        # get the gene sets and the number of enriched experiments
         plotRes <- data.frame(id=actRes[,1], gs_name=actRes[,3],
                                 number=rowSums(actRes[,-(1:3)], na.rm=!FALSE));
-        # I think I can change Ontology(GOTERM)[ as.character(plotRes$id) ] for
-        # Ontology(as.character(plotRes$id))
+        
+        # get the real ontology, I could use GS_Name, but this is more trustable
         plotRes <- cbind(plotRes,
-                        ont=Ontology(GOTERM)[as.character(plotRes$id) ]);
+                        ont=Ontology(as.character(plotRes$id)));
         
         ontsPresent <- unique(as.character(plotRes$ont));
         flog.info("Ontologies to plot.");
         flog.info(ontsPresent);
         
+        # give different color depending of number of enriched datasets.
+        # 0 enriched dataset is white, every enriched dataset is red
         colfunc <- colorRampPalette(c("white", "red"));
         myColors <- colfunc(max(plotRes$number)+1);
         plotRes$colors <- myColors[ (plotRes$number)+1 ];
         
         treeData <- lapply(ontsPresent, function(actOnt) {
+            # for each ontology create the structure needed
             actualResults <- plotRes[ plotRes$ont == actOnt, ];
             out <- data.frame(matrix(!FALSE, nrow=nrow(actualResults), 
                                     ncol=3));

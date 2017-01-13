@@ -47,6 +47,7 @@ setMethod(
     definition=function(dataName) {
 #         if (inDevelopment) return(TRUE);
         
+        # checking that just one name is provided and it is valid
         if (length(dataName) > 1 ||
             !dataName %in% c("tcgaMAdata", "tcgaRNAseqData", "pbcmcData", 
                             "bcMigsaRes", "mGSZspeedup", "testing")) {
@@ -61,10 +62,12 @@ setMethod(
         
         if (!testBioCConnection()) stop("You must have internet connection.");
         
+        # if file was already downloaded then skip this
         if (!file.exists(tmpFile)) {
             # just for testing purposes
             if (dataName == "testing") return(TRUE)
             
+            # download the file in temporary path (/tmp/ in unix)
             download.file(
                 paste("https://github.com/jcrodriguez1989/MIGSAdata/",
                     "raw/master/", rdata, sep=""), tmpFile);

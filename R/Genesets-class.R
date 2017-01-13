@@ -41,12 +41,15 @@ Genesets <- setClass(
         # name cant be empty
         name_ok <- object@name != "" && length(object@name) == 1;
         
+        # gene_sets must be a list of Geneset
         gene_sets_ok <- all(unlist(lapply(object@gene_sets, function(x)
                                                         is(x, "Geneset"))));
         
+        # must have at least one Geneset
         gene_sets_ok <- gene_sets_ok && length(object@gene_sets) > 0;
         
         if (gene_sets_ok) {
+            # Geneset names must be unique
             gs_ids <- unlist(lapply(object@gene_sets, function(x)
                                                             return(id(x))));
             

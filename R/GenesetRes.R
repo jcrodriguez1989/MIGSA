@@ -31,12 +31,15 @@ setMethod(
     f="asCharacter",
     signature=c("GenesetRes"),
     definition=function(x, wGenesInfo=FALSE, ...) {
+        # translate a gene set result into a character vector
         actName <- ifelse(length(x@name) == 0, "", x@name);
         to <- c(x@id, actName, x@enriched, x@score, x@pvalue);
         if (wGenesInfo) {
             to <- c(to, paste(x@enriching_genes, collapse=", "),
                         paste(x@genes, collapse=", "));
         }
+        
+        # to avoid rare characters
         to <- iconv(to, to="ASCII", sub="");
         
         return(to)

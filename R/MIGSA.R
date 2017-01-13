@@ -93,14 +93,17 @@ setMethod(
         bp_param <- bpParam(migsaInput);
         geneSets <- geneSetsList(migsaInput);
         
-        actRes <- lapply(experiments(migsaInput), function(x) {
+        # for each IGSAinput
+        actRes <- lapply(experiments(migsaInput), function(igsaInput) {
+            # if migsaInput had gene sets then these must be used
             if (length(geneSets) > 0) {
-                geneSetsList(x) <- geneSets;
+                geneSetsList(igsaInput) <- geneSets;
             }
             
-            igsaRes <- try({ IGSA(x, bp_param); });
+            igsaRes <- try({ IGSA(igsaInput, bp_param); });
             if (inherits(igsaRes, 'try-error')) return(NA);
             
+            # if intermediate results must be saved
             if (saveResults) {
                 dir.create("migsaResults", showWarnings=FALSE);
                 save(igsaRes, file=paste("migsaResults/", getName(igsaRes),
@@ -109,11 +112,13 @@ setMethod(
             return(igsaRes);
         });
         
+        # delete results which gave errors
         actRes <- actRes[!is.na(unlist(actRes))];
         
         migsaRes <- NA;
-        if (length(actRes)) {
-            migsaRes <- MIGSAres(actRes, bp_param);
+        if (length(actRes) > 0) {
+            # if we have any result then create the MIGSAres
+            migsaRes <- MIGSAres(actRes);
         }
         
         return(migsaRes);

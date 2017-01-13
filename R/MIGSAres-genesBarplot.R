@@ -52,6 +52,7 @@ setMethod(
     definition=function(migsaRes, enrFilter=0, gsFilter=0) {
         stopifnot(validObject(migsaRes));
         
+        # we must have a cutoff for this function
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
         # keep gene sets enriched in more than enrFilter experiments
@@ -65,6 +66,7 @@ setMethod(
         # count 1 disregard if the gene enriched in more than 1 experiment
         plotGenes <- data.frame(id=colnames(plotGenes),
                                 number=colSums(plotGenes > 0));
+        
         ## todo: add symbol to plotGenes
         # plotGenes$symbol <- entrez2symbol(plotGenes$id);
         

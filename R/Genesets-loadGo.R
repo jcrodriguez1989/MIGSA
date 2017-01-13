@@ -39,10 +39,12 @@ setMethod(
             stop("Ontology must be one of: 'BP', 'CC', 'MF'.");
         }
         
+        # download GO gene sets
         go <- org.Hs.egGO2ALLEGS;
         go <- as.list(go);
         go <- lapply(go, unique);
         
+        # filter the desired ontology
         go <- go[Ontology(names(go)) == ontology];
         gsets <- lapply(names(go), function(x) {
             return(Geneset(id=x, name=Term(x), genes=go[[x]]));

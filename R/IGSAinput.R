@@ -16,9 +16,11 @@ setMethod(f="get_fit",
         act_contrast <- contrast(fit_options);
         act_adj_meth <- adjust_method(params);
         
+        # apply voom
         if (use_voom) {
             M <- voom(M, design=act_design);
         }
+        
         # Adjust the model
         fit <- lmFit(M, act_design);
         # treat correction
@@ -43,9 +45,11 @@ setMethod(
     f="igsaGetDEGenes",
     signature=c("SEAparams", "ExprData", "FitOptions", "logical"),
     definition=function(seaParams, exprData, fitOptions, useVoom) {
+        # get the fit
         act_fit <- get_fit(exprData, fitOptions, useVoom, seaParams);
         
         de_coff <- de_cutoff(seaParams);
+        # get the DE genes depending on the cutoff value
         dif <- act_fit$p.adjust[,,drop=FALSE] <= de_coff;
         dif <- unique(rownames(dif)[dif]);
         
