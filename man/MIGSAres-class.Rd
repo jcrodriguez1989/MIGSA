@@ -7,4 +7,21 @@
 \description{
 This S4 class represents the results of one MIGSA execution in R.
 }
+\seealso{
+\code{\link{MIGSA}}
+
+\code{\link{getAdditionalInfo}}
+
+\code{\link{MIGSAres-common}}
+
+\code{\link{MIGSAres-genes}}
+
+\code{\link{MIGSAres-GOanalysis}}
+
+\code{\link{MIGSAres-plots}}
+
+\code{\link{setEnrCutoff}}
+
+\code{\link{summary}}
+}
 

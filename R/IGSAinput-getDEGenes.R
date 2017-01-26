@@ -1,16 +1,17 @@
-#'Calculate differentialy expressed genes of an IGSAinput object.
+#'Calculate differentialy expressed genes of an IGSAinput object
 #'
 #'\code{getDEGenes} calculates the differentialy expressed genes of an 
-#'IGSAinput object using the expression matrix, the fit options and the SEA 
-#'parameters.
+#'IGSAinput object using the expression matrix, the FitOtions and the 
+#'SEAparams..
 #'
 #'@param igsaInput a valid IGSAinput object.
 #'
-#'@return a IGSAinput object with the updated slots and DE genes calculated.
+#'@return A IGSAinput object with the updated slots and DE genes calculated.
 #'
 #'@docType methods
 #'@name getDEGenes
 #'@rdname IGSAinput-getDEGenes
+#'@seealso \code{\link{IGSAinput-class}}
 #'
 #'@include IGSAinput-class.R
 #'@include IGSAinput.R

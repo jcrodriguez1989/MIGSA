@@ -7,11 +7,13 @@
 # BiocGenerics:::testPackage("MIGSA")
 
 rOpts <- getOption("RUnit");
-rOpts$silent <- !F;
+rOpts$silent <- !FALSE;
 options("RUnit"=rOpts);
 
 require(Biobase);
 hasInternet <- testBioCConnection();
+
+testAll <- FALSE;
 
 ######## dataDownloaders tests
 
@@ -19,15 +21,15 @@ hasInternet <- testBioCConnection();
 
 #### Correct ones
 
-test_dataDownloaders_ok <- function() {
-    checkTrue(loadMIGSAdata("testing"));
-}
+# test_dataDownloaders_ok <- function() {
+#     checkTrue(loadMIGSAdata("testing"));
+# }
 
 #### Incorrect ones
 
-test_dataDownloaders_wrong_wrongName <- function() {
-    checkException(loadMIGSAdata("wrongName"));
-}
+# test_dataDownloaders_wrong_wrongName <- function() {
+#     checkException(loadMIGSAdata("wrongName"));
+# }
 
 ######## FitOptions tests
 
@@ -88,48 +90,48 @@ test_FitOptions.default_wrong_threeCond <- function() {
 
 #### Correct ones
 
-test_Geneset_ok_complete <- function() {
-    id <- "fakeId";
-    name <- "fakeName";
-    genes <- as.character(1:10);
-    
-    checkTrue(validObject(Geneset(id=id, name=name, genes=genes)));
-}
-
-test_Geneset_ok_noName <- function() {
-    id <- "fakeId";
-    genes <- as.character(1:10);
-    
-    checkTrue(validObject(Geneset(id=id, genes=genes)));
-}
+# test_Geneset_ok_complete <- function() {
+#     id <- "fakeId";
+#     name <- "fakeName";
+#     genes <- as.character(1:10);
+#     
+#     checkTrue(validObject(Geneset(id=id, name=name, genes=genes)));
+# }
+# 
+# test_Geneset_ok_noName <- function() {
+#     id <- "fakeId";
+#     genes <- as.character(1:10);
+#     
+#     checkTrue(validObject(Geneset(id=id, genes=genes)));
+# }
 
 #### Incorrect ones
 
-test_Geneset_wrong_noId <- function() {
-    genes <- as.character(1:10);
-    
-    checkException(Geneset(genes=genes));
-}
-
-test_Geneset_wrong_emptyId <- function() {
-    id <- "";
-    genes <- as.character(1:10);
-    
-    checkException(Geneset(id=id, genes=genes));
-}
-
-test_Geneset_wrong_noGenes <- function() {
-    id <- "fakeId";
-    
-    checkException(Geneset(id=id));
-}
-
-test_Geneset_wrong_emptyGenes <- function() {
-    id <- "fakeId";
-    genes <- "";
-    
-    checkException(Geneset(id=id, genes=genes));
-}
+# test_Geneset_wrong_noId <- function() {
+#     genes <- as.character(1:10);
+#     
+#     checkException(Geneset(genes=genes));
+# }
+# 
+# test_Geneset_wrong_emptyId <- function() {
+#     id <- "";
+#     genes <- as.character(1:10);
+#     
+#     checkException(Geneset(id=id, genes=genes));
+# }
+# 
+# test_Geneset_wrong_noGenes <- function() {
+#     id <- "fakeId";
+#     
+#     checkException(Geneset(id=id));
+# }
+# 
+# test_Geneset_wrong_emptyGenes <- function() {
+#     id <- "fakeId";
+#     genes <- "";
+#     
+#     checkException(Geneset(id=id, genes=genes));
+# }
 
 ###### Geneset tests
 
@@ -141,88 +143,88 @@ test_Geneset_wrong_emptyGenes <- function() {
 
 #### Correct ones
 
-test_Genesets_ok <- function() {
-    name <- "myGenesets";
-    myGs1 <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
-    myGs2 <- Geneset(id="fakeId2", name="fakeName2", genes=as.character(7:15));
-    myGs3 <- Geneset(id="fakeId3", name="fakeName2", genes=as.character(20:28));
-    
-    checkTrue(validObject(
-        Genesets(name=name, gene_sets=list(myGs1, myGs2, myGs3))));
-}
+# test_Genesets_ok <- function() {
+#     name <- "myGenesets";
+#     myGs1 <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
+#     myGs2 <- Geneset(id="fakeId2", name="fakeName2", genes=as.character(7:15));
+#     myGs3 <- Geneset(id="fakeId3", name="fakeName2", genes=as.character(20:28));
+#     
+#     checkTrue(validObject(
+#         Genesets(name=name, gene_sets=list(myGs1, myGs2, myGs3))));
+# }
 
 #### Incorrect ones
 
-test_Genesets_wrong_noName <- function() {
-    myGs1 <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
-    myGs2 <- Geneset(id="fakeId2", name="fakeName2", genes=as.character(7:15));
-    myGs3 <- Geneset(id="fakeId3", name="fakeName2", genes=as.character(20:28));
-    
-    checkException(
-        Genesets(gene_sets=list(myGs1, myGs2, myGs3)));
-}
+# test_Genesets_wrong_noName <- function() {
+#     myGs1 <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
+#     myGs2 <- Geneset(id="fakeId2", name="fakeName2", genes=as.character(7:15));
+#     myGs3 <- Geneset(id="fakeId3", name="fakeName2", genes=as.character(20:28));
+#     
+#     checkException(
+#         Genesets(gene_sets=list(myGs1, myGs2, myGs3)));
+# }
 
-test_Genesets_wrong_emptyName <- function() {
-    name <- "";
-    myGs1 <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
-    myGs2 <- Geneset(id="fakeId2", name="fakeName2", genes=as.character(7:15));
-    myGs3 <- Geneset(id="fakeId3", name="fakeName2", genes=as.character(20:28));
-    
-    checkException(
-        Genesets(name=name, gene_sets=list(myGs1, myGs2, myGs3)));
-}
+# test_Genesets_wrong_emptyName <- function() {
+#     name <- "";
+#     myGs1 <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
+#     myGs2 <- Geneset(id="fakeId2", name="fakeName2", genes=as.character(7:15));
+#     myGs3 <- Geneset(id="fakeId3", name="fakeName2", genes=as.character(20:28));
+#     
+#     checkException(
+#         Genesets(name=name, gene_sets=list(myGs1, myGs2, myGs3)));
+# }
 
-test_Genesets_wrong_noGenesets <- function() {
-    name <- "myGenesets";
-    checkException(
-        Genesets(name=name));
-}
+# test_Genesets_wrong_noGenesets <- function() {
+#     name <- "myGenesets";
+#     checkException(
+#         Genesets(name=name));
+# }
 
-test_Genesets_wrong_emptyGenesets <- function() {
-    name <- "myGenesets";
-    checkException(
-        Genesets(name=name, gene_sets=list()));
-}
+# test_Genesets_wrong_emptyGenesets <- function() {
+#     name <- "myGenesets";
+#     checkException(
+#         Genesets(name=name, gene_sets=list()));
+# }
 
-test_Genesets_wrong_repeatedGenesets <- function() {
-    name <- "myGenesets";
-    myGs1 <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
-    checkException(
-        Genesets(name=name, gene_sets=list(myGs1, myGs1)));
-}
+# test_Genesets_wrong_repeatedGenesets <- function() {
+#     name <- "myGenesets";
+#     myGs1 <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
+#     checkException(
+#         Genesets(name=name, gene_sets=list(myGs1, myGs1)));
+# }
 
-test_Genesets_wrong_repeatedGenesetsIds <- function() {
-    name <- "myGenesets";
-    myGs1 <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
-    myGs1_1 <- 
-        Geneset(id="fakeId1", name="fakeName2", genes=as.character(7:15));
-    
-    checkException(
-        Genesets(name=name, gene_sets=list(myGs1, myGs1_1)));
-}
+# test_Genesets_wrong_repeatedGenesetsIds <- function() {
+#     name <- "myGenesets";
+#     myGs1 <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
+#     myGs1_1 <- 
+#         Geneset(id="fakeId1", name="fakeName2", genes=as.character(7:15));
+#     
+#     checkException(
+#         Genesets(name=name, gene_sets=list(myGs1, myGs1_1)));
+# }
 
 ###### Genesets-getterSetters tests
 
-test_Genesets_getterSetters_ok <- function() {
-    nGSets <- 10;
-    gSets <- lapply(1:nGSets, function(i) sample(as.character(1:100),
-        size=10));
-    names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    gsets <- as.Genesets(gSets, name=myGSsName);
-    
-    checkEquals(name(gsets), myGSsName);
-    name(gsets) <- "fakeName";
-    checkEquals(name(gsets), "fakeName");
-    
-    checkEquals(length(geneSets(gsets)), nGSets);
-    geneSets(gsets) <- geneSets(gsets)[1:5];
-    checkEquals(length(geneSets(gsets)), 5);
-    
-    checkTrue(!isGO(gsets));
-    isGO(gsets) <- TRUE;
-    checkTrue(isGO(gsets));
-}
+# test_Genesets_getterSetters_ok <- function() {
+#     nGSets <- 10;
+#     gSets <- lapply(1:nGSets, function(i) sample(as.character(1:100),
+#         size=10));
+#     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
+#     myGSsName <- "myGeneSets";
+#     gsets <- as.Genesets(gSets, name=myGSsName);
+#     
+#     checkEquals(name(gsets), myGSsName);
+#     name(gsets) <- "fakeName";
+#     checkEquals(name(gsets), "fakeName");
+#     
+#     checkEquals(length(geneSets(gsets)), nGSets);
+#     geneSets(gsets) <- geneSets(gsets)[1:5];
+#     checkEquals(length(geneSets(gsets)), 5);
+#     
+#     checkTrue(!isGO(gsets));
+#     isGO(gsets) <- TRUE;
+#     checkTrue(isGO(gsets));
+# }
 
 ###### Genesets-geneSetsFromFile tests
 
@@ -239,17 +241,20 @@ test_Genesets_geneSetsFromFile_ok_simpleFile <- function() {
         col.names=FALSE, row.names=FALSE, quote=FALSE);
     
     # Now lets load this tsv file as a Genesets object.
-    myGsets <- geneSetsFromFile("fakeGsets.tsv", "fakeGsets");
-    myGsetsGO <- geneSetsFromFile("fakeGsets.tsv", "fakeGsets", is_GO=TRUE);
+    myGsets <- geneSetsFromFile("fakeGsets.tsv");
+    myGsetsGO <- geneSetsFromFile("fakeGsets.tsv", is_GO=TRUE);
     
-    checkTrue(isGO(myGsetsGO));
+    require(GSEABase);
+    
+    checkTrue(all(unlist(lapply(myGsetsGO, function(x) 
+        is(collectionType(x), "GOCollection")))));
     
     # Lets delete this tsv file
     unlink("fakeGsets.tsv");
     
-    checkEquals(name(myGsets), "fakeGsets");
-    checkTrue(!isGO(myGsets));
-    checkEquals(length(geneSets(myGsets)), 10);
+    checkTrue(all(unlist(lapply(myGsets, function(x) 
+        is(collectionType(x), "NullCollection")))));
+    checkEquals(length(myGsets), 10);
     checkEquals(names(MIGSA:::asList(myGsets)), as.character(gsets$IDs));
     checkTrue(all(unlist(MIGSA:::asList(myGsets)) == genes));
 }
@@ -285,31 +290,16 @@ test_Genesets_geneSetsFromFile_wrong_wrongPath <- function() {
 #### Correct ones
 
 test_Genesets_asGenesets_ok_complete <- function() {
-    name <- "myGenesets";
-    myGs1 <- Geneset(id="fakeId1", genes=as.character(1:10));
-    myGs2 <- Geneset(id="fakeId2", genes=as.character(7:15));
-    myGs3 <- Geneset(id="fakeId3", genes=as.character(20:28));
+    require(GSEABase);
     
-    constGsets <- Genesets(name=name, gene_sets=list(myGs1, myGs2, myGs3));
+    myGs1 <- GeneSet(as.character(1:10), setName="fakeId1", setIdentifier="");
+    myGs2 <- GeneSet(as.character(7:15), setName="fakeId2", setIdentifier="");
+    myGs3 <- GeneSet(as.character(20:28), setName="fakeId3", setIdentifier="");
     
-    listGsets <- list(myGs1@genes, myGs2@genes, myGs3@genes);
-    names(listGsets) <- c(myGs1@id, myGs2@id, myGs3@id);
+    constGsets <- GeneSetCollection(list(myGs1, myGs2, myGs3));
     
-    asGsets <- as.Genesets(listGsets, name=name);
-    
-    checkEquals(constGsets, asGsets);
-}
-
-test_Genesets_asGenesets_ok_noName <- function() {
-    name <- "no_name";
-    myGs1 <- Geneset(id="fakeId1", genes=as.character(1:10));
-    myGs2 <- Geneset(id="fakeId2", genes=as.character(7:15));
-    myGs3 <- Geneset(id="fakeId3", genes=as.character(20:28));
-    
-    constGsets <- Genesets(name=name, gene_sets=list(myGs1, myGs2, myGs3));
-    
-    listGsets <- list(myGs1@genes, myGs2@genes, myGs3@genes);
-    names(listGsets) <- c(myGs1@id, myGs2@id, myGs3@id);
+    listGsets <- list(geneIds(myGs1), geneIds(myGs2), geneIds(myGs3));
+    names(listGsets) <- c(setName(myGs1), setName(myGs2), setName(myGs3));
     
     asGsets <- as.Genesets(listGsets);
     
@@ -325,16 +315,16 @@ test_Genesets_asGenesets_wrong_emptyGsetRemoved <- function() {
     names(listGsets) <- c("myGs1", "myGs2", "myGs3");
     
     asGsets <- as.Genesets(listGsets);
-    checkEqualsNumeric(length(asGsets@gene_sets), 2);
+    checkEqualsNumeric(length(asGsets), 2);
     
-    fstGset <- asGsets@gene_sets[[1]];
-    sndGset <- asGsets@gene_sets[[2]];
+    fstGset <- asGsets[[1]];
+    sndGset <- asGsets[[2]];
     
-    checkEquals(fstGset@id, "myGs1");
-    checkEquals(sndGset@id, "myGs3"); # myGs2 must be deleted
+    checkEquals(setName(fstGset), "myGs1");
+    checkEquals(setName(sndGset), "myGs3"); # myGs2 must be deleted
     
-    checkEquals(fstGset@genes, myGs1);
-    checkEquals(sndGset@genes, myGs3); # myGs2 must be deleted
+    checkEquals(geneIds(fstGset), myGs1);
+    checkEquals(geneIds(sndGset), myGs3); # myGs2 must be deleted
 }
 
 #### Incorrect ones
@@ -373,142 +363,158 @@ test_Genesets_asGenesets_wrong_noGenes <- function() {
 
 ###### Genesets-enrichrGeneSets tests
 
-test_Genesets_enrichrGeneSets_ok_wellListed <- function() {
-    # if we dont have internet then dont fail the test
-    require(Biobase);
-    if (!hasInternet) {
-        checkTrue(TRUE);
+if (testAll) {
+    test_Genesets_enrichrGeneSets_ok_wellListed <- function() {
+        # if we dont have internet then dont fail the test
+        require(Biobase);
+        if (!hasInternet) {
+            checkTrue(TRUE);
+        }
+        
+        enrichrList <- enrichrGeneSets();
+        
+        checkEquals(class(enrichrList), "data.frame");
+        checkTrue(ncol(enrichrList) > 0);
+        checkTrue(nrow(enrichrList) > 0);
     }
-    
-    enrichrList <- enrichrGeneSets();
-    
-    checkEquals(class(enrichrList), "data.frame");
-    checkTrue(ncol(enrichrList) > 0);
-    checkTrue(nrow(enrichrList) > 0);
 }
 
 ###### Genesets-downloadEnrichrGeneSets tests
 
 #### Correct ones
 
-# test_Genesets_downloadEnrichrGeneSets_ok_goCC <- function() {
-#     # if we dont have internet then dont fail the test
-#     require(Biobase);
-#     if (!hasInternet) {
-#         checkTrue(TRUE);
-#     }
-#     
-#     goCcName <- "GO_Cellular_Component_2013";
-#     goCc <- downloadEnrichrGeneSets(goCcName);
-#     
-#     checkEquals(length(goCc), 1);
-#     checkEquals(names(goCc), goCcName);
-#     goCc <- goCc[[1]];
-#     
-#     checkEquals(goCc@name, goCcName);
-#     checkTrue(goCc@is_GO);
-#     checkTrue(length(goCc@gene_sets) > 0);
-# }
-# 
-# test_Genesets_downloadEnrichrGeneSets_ok_kegg <- function() {
-#     # if we dont have internet then dont fail the test
-#     require(Biobase);
-#     if (!hasInternet) {
-#         checkTrue(TRUE);
-#     }
-#     
-#     keggName <- "KEGG_2013";
-#     kegg <- downloadEnrichrGeneSets(keggName);
-#     
-#     checkEquals(length(kegg), 1);
-#     checkEquals(names(kegg), keggName);
-#     kegg <- kegg[[1]];
-#     
-#     checkEquals(kegg@name, keggName);
-#     checkTrue(!kegg@is_GO);
-#     checkTrue(length(kegg@gene_sets) > 0);
-# }
-
-test_Genesets_downloadEnrichrGeneSets_ok_keggGoCC <- function() {
-    # if we dont have internet then dont fail the test
-    require(Biobase);
-    if (!hasInternet) {
-        checkTrue(TRUE);
+if (testAll) {
+    test_Genesets_downloadEnrichrGeneSets_ok_goCC <- function() {
+        # if we dont have internet then dont fail the test
+        require(Biobase);
+        if (!hasInternet) {
+            checkTrue(TRUE);
+        }
+        
+        goCcName <- "GO_Cellular_Component_2013";
+        goCc <- downloadEnrichrGeneSets(goCcName);
+        
+        checkEquals(length(goCc), 1);
+        checkEquals(names(goCc), goCcName);
+        goCc <- goCc[[1]];
+        
+        checkEquals(goCc@name, goCcName);
+        checkTrue(goCc@is_GO);
+        checkTrue(length(goCc@gene_sets) > 0);
     }
-    
-    libNames <- c("KEGG_2016", "GO_Cellular_Component_2013");
-    libs <- downloadEnrichrGeneSets(libNames);
-    
-    checkEquals(length(libs), 2);
-    checkEquals(names(libs), libNames);
-    kegg <- libs[[1]];
-    goCc <- libs[[2]];
-    
-    checkEquals(kegg@name, libNames[[1]]);
-    checkTrue(!kegg@is_GO);
-    checkTrue(length(kegg@gene_sets) > 0);
-    
-    checkEquals(goCc@name, libNames[[2]]);
-    checkTrue(goCc@is_GO);
-    checkTrue(length(goCc@gene_sets) > 0);
 }
 
-test_Genesets_downloadEnrichrGeneSets_ok_keggOneFakeLib <- function() {
-    # if we dont have internet then dont fail the test
-    require(Biobase);
-    if (!hasInternet) {
-        checkTrue(TRUE);
+if (testAll) {
+    test_Genesets_downloadEnrichrGeneSets_ok_kegg <- function() {
+        # if we dont have internet then dont fail the test
+        require(Biobase);
+        if (!hasInternet) {
+            checkTrue(TRUE);
+        }
+        
+        keggName <- "KEGG_2013";
+        kegg <- downloadEnrichrGeneSets(keggName);
+        
+        checkEquals(length(kegg), 1);
+        checkEquals(names(kegg), keggName);
+        kegg <- kegg[[1]];
+        
+        checkEquals(kegg@name, keggName);
+        checkTrue(!kegg@is_GO);
+        checkTrue(length(kegg@gene_sets) > 0);
     }
-    
-    libNames <- c("KEGG_2013", "fakeLib");
-    libs <- downloadEnrichrGeneSets(libNames);
-    
-    checkEquals(length(libs), 1);
-    checkEquals(names(libs), libNames[[1]]);
-    kegg <- libs[[1]];
-    
-    checkEquals(kegg@name, libNames[[1]]);
-    checkTrue(!kegg@is_GO);
-    checkTrue(length(kegg@gene_sets) > 0);
+}
+
+if (testAll) {
+    test_Genesets_downloadEnrichrGeneSets_ok_keggGoCC <- function() {
+        # if we dont have internet then dont fail the test
+        require(Biobase);
+        if (!hasInternet) {
+            checkTrue(TRUE);
+        }
+        
+        libNames <- c("KEGG_2016", "GO_Cellular_Component_2013");
+        libs <- downloadEnrichrGeneSets(libNames);
+        
+        checkEquals(length(libs), 2);
+        checkEquals(names(libs), libNames);
+        kegg <- libs[[1]];
+        goCc <- libs[[2]];
+        
+        checkEquals(kegg@name, libNames[[1]]);
+        checkTrue(!kegg@is_GO);
+        checkTrue(length(kegg@gene_sets) > 0);
+        
+        checkEquals(goCc@name, libNames[[2]]);
+        checkTrue(goCc@is_GO);
+        checkTrue(length(goCc@gene_sets) > 0);
+    }
+}
+
+if (testAll) {
+    test_Genesets_downloadEnrichrGeneSets_ok_keggOneFakeLib <- function() {
+        # if we dont have internet then dont fail the test
+        require(Biobase);
+        if (!hasInternet) {
+            checkTrue(TRUE);
+        }
+        
+        libNames <- c("KEGG_2013", "fakeLib");
+        libs <- downloadEnrichrGeneSets(libNames);
+        
+        checkEquals(length(libs), 1);
+        checkEquals(names(libs), libNames[[1]]);
+        kegg <- libs[[1]];
+        
+        checkEquals(kegg@name, libNames[[1]]);
+        checkTrue(!kegg@is_GO);
+        checkTrue(length(kegg@gene_sets) > 0);
+    }
 }
 
 #### Incorrect ones
 
-test_Genesets_downloadEnrichrGeneSets_wrong_noLibs <- function() {
-    # if we dont have internet then dont fail the test
-    require(Biobase);
-    if (!hasInternet) {
-        checkTrue(TRUE);
+if (testAll) {
+    test_Genesets_downloadEnrichrGeneSets_wrong_noLibs <- function() {
+        # if we dont have internet then dont fail the test
+        require(Biobase);
+        if (!hasInternet) {
+            checkTrue(TRUE);
+        }
+        
+        libNames <- "";
+        checkException(
+            downloadEnrichrGeneSets(libNames));
     }
-    
-    libNames <- "";
-    checkException(
-        downloadEnrichrGeneSets(libNames));
 }
 
-test_Genesets_downloadEnrichrGeneSets_wrong_fakeLibs <- function() {
-    # if we dont have internet then dont fail the test
-    require(Biobase);
-    if (!hasInternet) {
-        checkTrue(TRUE);
+if (testAll) {
+    test_Genesets_downloadEnrichrGeneSets_wrong_fakeLibs <- function() {
+        # if we dont have internet then dont fail the test
+        require(Biobase);
+        if (!hasInternet) {
+            checkTrue(TRUE);
+        }
+        
+        libNames <- c("fakeLib1", "fakeLib2");
+        checkException(
+            downloadEnrichrGeneSets(libNames));
     }
-    
-    libNames <- c("fakeLib1", "fakeLib2");
-    checkException(
-        downloadEnrichrGeneSets(libNames));
 }
 
 ###### Genesets-loadGo tests
 
 #### Correct ones
 
-test_Genesets_loadGo_ok_cc <- function() {
-    ccName <- "CC";
-    goCc <- loadGo(ccName);
-    
-    checkEquals(goCc@name, ccName);
-    checkTrue(goCc@is_GO);
-    checkTrue(length(goCc@gene_sets) > 0);
+if (testAll) {
+    test_Genesets_loadGo_ok_cc <- function() {
+        ccName <- "CC";
+        goCc <- loadGo(ccName);
+        
+        checkEquals(goCc@name, ccName);
+        checkTrue(goCc@is_GO);
+        checkTrue(length(goCc@gene_sets) > 0);
+    }
 }
 
 #### Incorrect ones
@@ -653,17 +659,19 @@ test_IGSAinput_ok_complete <- function() {
 }
 
 test_IGSAinput_ok_oneGSet <- function() {
+    require(GSEABase);
+    
     name <- "myIgsaInput";
     nSamples <- 4;
     nGenes <- 10;
     exprData <- new("MAList", list(M=matrix(0, ncol=nSamples, nrow=nGenes)));
     fitOpts <- FitOptions(c(rep("C1", nSamples/2), rep("C2", nSamples/2)));
     
-    gsName <- "myGenesets";
-    myGs <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
+    myGs <- GeneSet(as.character(1:10), setName="fakeName1", 
+        setIdentifier="fakeId1");
     
-    gsets <- list(
-        Genesets(name=gsName, gene_sets=list(myGs)));
+    gsets <- list(myGenesets=
+        GeneSetCollection(list(myGs)));
     
     checkTrue(
         validObject(IGSAinput(
@@ -675,6 +683,8 @@ test_IGSAinput_ok_oneGSet <- function() {
 }
 
 test_IGSAinput_ok_twoGSets <- function() {
+    require(GSEABase);
+    
     name <- "myIgsaInput";
     nSamples <- 4;
     nGenes <- 10;
@@ -683,11 +693,12 @@ test_IGSAinput_ok_twoGSets <- function() {
     
     gsName1 <- "myGenesets1";
     gsName2 <- "myGenesets2";
-    myGs <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
+    myGs <- GeneSet(as.character(1:10), setName="fakeName1", 
+        setIdentifier="fakeId1");
     
     gsets <- list(
-        Genesets(name=gsName1, gene_sets=list(myGs)),
-        Genesets(name=gsName2, gene_sets=list(myGs)));
+        myGenesets1=GeneSetCollection(list(myGs)),
+        myGenesets2=GeneSetCollection(list(myGs)));
     
     checkTrue(
         validObject(IGSAinput(
@@ -782,12 +793,12 @@ test_IGSAinput_wrong_repGSets <- function() {
     exprData <- new("MAList", list(M=matrix(0, ncol=nSamples, nrow=nGenes)));
     fitOpts <- FitOptions(c(rep("C1", nSamples/2), rep("C2", nSamples/2)));
     
-    gsName <- "myGenesets";
-    myGs <- Geneset(id="fakeId1", name="fakeName1", genes=as.character(1:10));
+    myGs <- GeneSet(as.character(1:10), setIdentifier="fakeId1", 
+        setName="fakeName1");
     
     gsets <- list(
-        Genesets(name=gsName, gene_sets=list(myGs)),
-        Genesets(name=gsName, gene_sets=list(myGs)));
+        myGenesets=GeneSetCollection(list(myGs)),
+        myGenesets=GeneSetCollection(list(myGs)));
     
     checkException(
         IGSAinput(
@@ -828,9 +839,8 @@ test_IGSAinput_getterSetters_ok <- function() {
     gSets <- lapply(1:nGSets, function(i) sample(as.character(1:100),
         size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
-    geneSetsList(igsaInput) <- list(myGSs);
+    myGSs <- as.Genesets(gSets);
+    geneSetsList(igsaInput) <- list(myGeneSets=myGSs);
     checkEquals(length(MIGSA::geneSetsList(igsaInput)), 1);
     
     checkTrue(!useVoom(igsaInput));
@@ -996,134 +1006,133 @@ test_MIGSAmGSZ_ok_validWithVoom <- function() {
 
 #### Correct ones
 
-test_MIGSAinput_ok_oneExp <- function() {
-    igsaName <- "myIgsaInput";
-    nSamples <- 4;
-    nGenes <- 10;
-    exprData <- new("MAList", list(M=matrix(0, ncol=nSamples, nrow=nGenes)));
-    fitOpts <- FitOptions(c(rep("C1", nSamples/2), rep("C2", nSamples/2)));
-    
-    myIgsa <- IGSAinput(name=igsaName, 
-                        expr_data=exprData, fit_options=fitOpts);
-    
-    checkTrue(
-        validObject(MIGSAinput(
-            experiments=list(myIgsa)
-        )));
-}
+# test_MIGSAinput_ok_oneExp <- function() {
+#     igsaName <- "myIgsaInput";
+#     nSamples <- 4;
+#     nGenes <- 10;
+#     exprData <- new("MAList", list(M=matrix(0, ncol=nSamples, nrow=nGenes)));
+#     fitOpts <- FitOptions(c(rep("C1", nSamples/2), rep("C2", nSamples/2)));
+#     
+#     myIgsa <- IGSAinput(name=igsaName, 
+#                         expr_data=exprData, fit_options=fitOpts);
+#     
+#     checkTrue(
+#         validObject(MIGSAinput(
+#             experiments=list(myIgsa)
+#         )));
+# }
 
-test_MIGSAinput_ok_twoExp <- function() {
-    igsaName1 <- "myIgsaInput1";
-    igsaName2 <- "myIgsaInput2";
-    nSamples <- 4;
-    nGenes <- 10;
-    exprData <- new("MAList", list(M=matrix(0, ncol=nSamples, nrow=nGenes)));
-    fitOpts <- FitOptions(c(rep("C1", nSamples/2), rep("C2", nSamples/2)));
-    
-    myIgsa1 <- IGSAinput(name=igsaName1, 
-                        expr_data=exprData, fit_options=fitOpts);
-    myIgsa2 <- IGSAinput(name=igsaName2, 
-                        expr_data=exprData, fit_options=fitOpts);
-    
-    checkTrue(
-        validObject(MIGSAinput(
-            experiments=list(myIgsa1, myIgsa2)
-        )));
-}
+# test_MIGSAinput_ok_twoExp <- function() {
+#     igsaName1 <- "myIgsaInput1";
+#     igsaName2 <- "myIgsaInput2";
+#     nSamples <- 4;
+#     nGenes <- 10;
+#     exprData <- new("MAList", list(M=matrix(0, ncol=nSamples, nrow=nGenes)));
+#     fitOpts <- FitOptions(c(rep("C1", nSamples/2), rep("C2", nSamples/2)));
+#     
+#     myIgsa1 <- IGSAinput(name=igsaName1, 
+#                         expr_data=exprData, fit_options=fitOpts);
+#     myIgsa2 <- IGSAinput(name=igsaName2, 
+#                         expr_data=exprData, fit_options=fitOpts);
+#     
+#     checkTrue(
+#         validObject(MIGSAinput(
+#             experiments=list(myIgsa1, myIgsa2)
+#         )));
+# }
 
 #### Incorrect ones
 
-test_MIGSAinput_wrong_noExp <- function() {
-    checkException(validObject(MIGSAinput()));
-}
+# test_MIGSAinput_wrong_noExp <- function() {
+#     checkException(validObject(MIGSAinput()));
+# }
 
-test_MIGSAinput_wrong_emptyExp <- function() {
-    checkException(
-        MIGSAinput(experiments=list()));
-}
+# test_MIGSAinput_wrong_emptyExp <- function() {
+#     checkException(
+#         MIGSAinput(experiments=list()));
+# }
 
-test_MIGSAinput_wrong_repExp <- function() {
-    igsaName <- "myIgsaInput";
-    nSamples <- 4;
-    nGenes <- 10;
-    exprData <- new("MAList", list(M=matrix(0, ncol=nSamples, nrow=nGenes)));
-    fitOpts <- FitOptions(c(rep("C1", nSamples/2), rep("C2", nSamples/2)));
-    
-    myIgsa1 <- IGSAinput(name=igsaName, 
-                        expr_data=exprData, fit_options=fitOpts);
-    myIgsa2 <- IGSAinput(name=igsaName, 
-                        expr_data=exprData, fit_options=fitOpts);
-    
-    checkException(
-        MIGSAinput(
-            experiments=list(myIgsa1, myIgsa2)
-        ));
-}
+# test_MIGSAinput_wrong_repExp <- function() {
+#     igsaName <- "myIgsaInput";
+#     nSamples <- 4;
+#     nGenes <- 10;
+#     exprData <- new("MAList", list(M=matrix(0, ncol=nSamples, nrow=nGenes)));
+#     fitOpts <- FitOptions(c(rep("C1", nSamples/2), rep("C2", nSamples/2)));
+#     
+#     myIgsa1 <- IGSAinput(name=igsaName, 
+#                         expr_data=exprData, fit_options=fitOpts);
+#     myIgsa2 <- IGSAinput(name=igsaName, 
+#                         expr_data=exprData, fit_options=fitOpts);
+#     
+#     checkException(
+#         MIGSAinput(
+#             experiments=list(myIgsa1, myIgsa2)
+#         ));
+# }
 
 ###### MIGSAinput-common tests
 
-test_MIGSAinput_common_ok_summary <- function() {
-    set.seed(8818);
-    nGenes <- 200;
-    nSamples <- 6;
-    geneNames <- paste("g", 1:nGenes, sep = "");
-    
-    exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
-    rownames(exprData) <- geneNames;
-    exprData <- new("MAList",list(M=exprData));
-    
-    conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
-    
-    nGSets <- 10;
-    gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
-    names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
-    
-    fitOpts <- FitOptions(conditions);
-    
-    # to get some DE genes
-    seaParams <- SEAparams(de_cutoff=0.3);
-    gseaParams <- GSEAparams(perm_number=5);
-    
-    igsaInputName <- "igsaInput";
-    igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
-        sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput <- MIGSAinput(experiments=list(igsaInput));
-    
-    migsaSumm <- summary(migsaInput);
-    checkTrue(all(migsaSumm == c("igsaInput","6","C1VSC2","3","3","1","FALSE",
-        "200","0","0.3","fdr","1","briii","5","0.5")));
-}
+# test_MIGSAinput_common_ok_summary <- function() {
+#     require(GSEABase);
+#     set.seed(8818);
+#     nGenes <- 200;
+#     nSamples <- 6;
+#     geneNames <- paste("g", 1:nGenes, sep = "");
+#     
+#     exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
+#     rownames(exprData) <- geneNames;
+#     exprData <- new("MAList",list(M=exprData));
+#     
+#     conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
+#     
+#     nGSets <- 10;
+#     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
+#     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
+#     myGSs <- as.Genesets(gSets);
+#     
+#     fitOpts <- FitOptions(conditions);
+#     
+#     # to get some DE genes
+#     seaParams <- SEAparams(de_cutoff=0.3);
+#     gseaParams <- GSEAparams(perm_number=5);
+#     
+#     igsaInputName <- "igsaInput";
+#     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
+#         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
+#         gene_sets_list=list(myGeneSets=GeneSetCollection(myGSs)));
+#     migsaInput <- MIGSAinput(experiments=list(igsaInput));
+#     
+#     migsaSumm <- summary(migsaInput);
+#     checkTrue(all(migsaSumm == c("igsaInput","6","C1VSC2","3","3","1","FALSE",
+#         "200","0","0.3","fdr","1","briii","5","0.5")));
+# }
 
 ###### MIGSAinput-getterSetters tests
 
-test_MIGSAinput_getterSetters_ok <- function() {
-    require(BiocParallel);
-    igsaInput <- IGSAinput();
-    
-    migsaInput <- MIGSAinput(experiments=list(igsaInput));
-    
-    bpParam(migsaInput) <- SnowParam();
-    checkTrue(is(bpParam(migsaInput), "SnowParam"));
-    bpParam(migsaInput) <- MulticoreParam();
-    checkTrue(is(bpParam(migsaInput), "MulticoreParam"));
-    
-    checkEquals(length(experiments(migsaInput)), 1);
-    experiments(migsaInput) <- list(igsaInput, igsaInput);
-    checkEquals(length(experiments(migsaInput)), 2);
-    
-    checkEquals(length(MIGSA::geneSetsList(migsaInput)), 0);
-    nGSets <- 10;
-    gSets <- lapply(1:nGSets, function(i) sample(as.character(1:100),
-        size=10));
-    names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
-    geneSetsList(migsaInput) <- list(myGSs);
-    checkEquals(length(MIGSA::geneSetsList(migsaInput)), 1);
-}
+# test_MIGSAinput_getterSetters_ok <- function() {
+#     require(BiocParallel);
+#     igsaInput <- IGSAinput();
+#     
+#     migsaInput <- MIGSAinput(experiments=list(igsaInput));
+#     
+#     bpParam(migsaInput) <- SnowParam();
+#     checkTrue(is(bpParam(migsaInput), "SnowParam"));
+#     bpParam(migsaInput) <- MulticoreParam();
+#     checkTrue(is(bpParam(migsaInput), "MulticoreParam"));
+#     
+#     checkEquals(length(experiments(migsaInput)), 1);
+#     experiments(migsaInput) <- list(igsaInput, igsaInput);
+#     checkEquals(length(experiments(migsaInput)), 2);
+#     
+#     checkEquals(length(MIGSA::geneSetsList(migsaInput)), 0);
+#     nGSets <- 10;
+#     gSets <- lapply(1:nGSets, function(i) sample(as.character(1:100),
+#         size=10));
+#     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
+#     myGSs <- as.Genesets(gSets);
+#     geneSetsList(migsaInput) <- list(myGeneSets=myGSs);
+#     checkEquals(length(MIGSA::geneSetsList(migsaInput)), 1);
+# }
 
 ###### MIGSAinput tests
 
@@ -1150,8 +1159,7 @@ test_MIGSA_ok_oneExp <- function() {
     nGSets <- 10;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
+    myGSs <- as.Genesets(gSets);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1162,16 +1170,16 @@ test_MIGSA_ok_oneExp <- function() {
     igsaInputName <- "igsaInput";
     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput <- MIGSAinput(experiments=list(igsaInput));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(migsaInput);
+    migsaRes <- MIGSA(experiments);
     
     checkEquals(ncol(migsaRes), 4);
     checkEquals(nrow(migsaRes), nGSets);
     
     checkTrue(length(unique(migsaRes$GS_Name))==1);
-    checkTrue(unique(migsaRes$GS_Name)==myGSsName);
+    checkTrue(unique(migsaRes$GS_Name) == "myGeneSets");
     
     checkTrue(all(names(gSets) %in% migsaRes$id));
     
@@ -1197,8 +1205,7 @@ test_MIGSA_ok_twoExp <- function() {
     nGSets <- 10;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
+    myGSs <- as.Genesets(gSets);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1209,22 +1216,22 @@ test_MIGSA_ok_twoExp <- function() {
     igsaInput1Name <- "igsaInput1";
     igsaInput1 <- IGSAinput(name=igsaInput1Name, expr_data=exprData1,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
+        gene_sets_list=list(myGeneSets=myGSs));
     
     igsaInput2Name <- "igsaInput2";
     igsaInput2 <- IGSAinput(name=igsaInput2Name, expr_data=exprData2,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
+        gene_sets_list=list(myGeneSets=myGSs));
     
-    migsaInput <- MIGSAinput(experiments=list(igsaInput1, igsaInput2));
+    experiments <- list(igsaInput1, igsaInput2);
     
-    migsaRes <- MIGSA(migsaInput);
+    migsaRes <- MIGSA(experiments);
     
     checkEquals(ncol(migsaRes), 5);
     checkEquals(nrow(migsaRes), nGSets);
     
     checkTrue(length(unique(migsaRes$GS_Name))==1);
-    checkTrue(unique(migsaRes$GS_Name)==myGSsName);
+    checkTrue(unique(migsaRes$GS_Name) == "myGeneSets");
     
     checkTrue(all(names(gSets) %in% migsaRes$id));
     
@@ -1248,13 +1255,11 @@ test_MIGSA_ok_twoGSs <- function() {
     
     gSets1 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets1) <- paste("set", as.character(1:nGSets), sep="");
-    myGSs1Name <- "myGeneSets1";
-    myGSs1 <- as.Genesets(gSets1, name=myGSs1Name);
+    myGSs1 <- as.Genesets(gSets1);
     
     gSets2 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets2) <- paste("set", as.character(1:nGSets), sep="");
-    myGSs2Name <- "myGeneSets2";
-    myGSs2 <- as.Genesets(gSets2, name=myGSs2Name);
+    myGSs2 <- as.Genesets(gSets2);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1265,17 +1270,17 @@ test_MIGSA_ok_twoGSs <- function() {
     igsaInputName <- "igsaInput";
     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs1, myGSs2));
-    migsaInput <- MIGSAinput(experiments=list(igsaInput));
+        gene_sets_list=list(myGeneSets1=myGSs1, myGeneSets2=myGSs2));
+    experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(migsaInput);
+    migsaRes <- MIGSA(experiments);
     
     checkEquals(ncol(migsaRes), 4);
     checkEquals(nrow(migsaRes), 2*nGSets);
     
     checkTrue(length(unique(migsaRes$GS_Name))==2);
-    checkTrue(unique(migsaRes$GS_Name)[[1]] == myGSs1Name);
-    checkTrue(unique(migsaRes$GS_Name)[[2]] == myGSs2Name);
+    checkTrue(unique(migsaRes$GS_Name)[[1]] == "myGeneSets1");
+    checkTrue(unique(migsaRes$GS_Name)[[2]] == "myGeneSets2");
     
     checkTrue(all(names(gSets1) %in% migsaRes$id));
     checkTrue(all(names(gSets2) %in% migsaRes$id));
@@ -1303,13 +1308,11 @@ test_MIGSA_ok_twoExptwoGSs <- function() {
     
     gSets1 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets1) <- paste("set", as.character(1:nGSets), sep="");
-    myGSs1Name <- "myGeneSets1";
-    myGSs1 <- as.Genesets(gSets1, name=myGSs1Name);
+    myGSs1 <- as.Genesets(gSets1);
     
     gSets2 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets2) <- paste("set", as.character(1:nGSets), sep="");
-    myGSs2Name <- "myGeneSets2";
-    myGSs2 <- as.Genesets(gSets2, name=myGSs2Name);
+    myGSs2 <- as.Genesets(gSets2);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1320,23 +1323,23 @@ test_MIGSA_ok_twoExptwoGSs <- function() {
     igsaInput1Name <- "igsaInput1";
     igsaInput1 <- IGSAinput(name=igsaInput1Name, expr_data=exprData1,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs1, myGSs2));
+        gene_sets_list=list(myGeneSets1=myGSs1, myGeneSets2=myGSs2));
     
     igsaInput2Name <- "igsaInput2";
     igsaInput2 <- IGSAinput(name=igsaInput2Name, expr_data=exprData2,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs1, myGSs2));
+        gene_sets_list=list(myGeneSets1=myGSs1, myGeneSets2=myGSs2));
     
-    migsaInput <- MIGSAinput(experiments=list(igsaInput1, igsaInput2));
+    experiments <- list(igsaInput1, igsaInput2);
     
-    migsaRes <- MIGSA(migsaInput);
+    migsaRes <- MIGSA(experiments);
     
     checkEquals(ncol(migsaRes), 5);
     checkEquals(nrow(migsaRes), 2*nGSets);
     
     checkTrue(length(unique(migsaRes$GS_Name))==2);
-    checkTrue(unique(migsaRes$GS_Name)[[1]] == myGSs1Name);
-    checkTrue(unique(migsaRes$GS_Name)[[2]] == myGSs2Name);
+    checkTrue(unique(migsaRes$GS_Name)[[1]] == "myGeneSets1");
+    checkTrue(unique(migsaRes$GS_Name)[[2]] == "myGeneSets2");
     
     checkTrue(all(names(gSets1) %in% migsaRes$id));
     checkTrue(all(names(gSets2) %in% migsaRes$id));
@@ -1365,23 +1368,19 @@ test_MIGSA_ok_twoExpFourGSs <- function() {
     
     gSets1 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets1) <- paste("set", as.character(1:nGSets), sep="");
-    myGSs1Name <- "myGeneSets1";
-    myGSs1 <- as.Genesets(gSets1, name=myGSs1Name);
+    myGSs1 <- as.Genesets(gSets1);
     
     gSets2 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets2) <- paste("set", as.character(1:nGSets), sep="");
-    myGSs2Name <- "myGeneSets2";
-    myGSs2 <- as.Genesets(gSets2, name=myGSs2Name);
+    myGSs2 <- as.Genesets(gSets2);
     
     gSets3 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets3) <- paste("set", as.character((nGSets+1):(2*nGSets)), sep="");
-    myGSs3Name <- "myGeneSets3";
-    myGSs3 <- as.Genesets(gSets3, name=myGSs3Name);
+    myGSs3 <- as.Genesets(gSets3);
     
     gSets4 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets4) <- paste("set", as.character((nGSets+1):(2*nGSets)), sep="");
-    myGSs4Name <- "myGeneSets4";
-    myGSs4 <- as.Genesets(gSets4, name=myGSs4Name);
+    myGSs4 <- as.Genesets(gSets4);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1392,25 +1391,25 @@ test_MIGSA_ok_twoExpFourGSs <- function() {
     igsaInput1Name <- "igsaInput1";
     igsaInput1 <- IGSAinput(name=igsaInput1Name, expr_data=exprData1,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs1, myGSs3));
+        gene_sets_list=list(myGeneSets1=myGSs1, myGeneSets3=myGSs3));
     
     igsaInput2Name <- "igsaInput2";
     igsaInput2 <- IGSAinput(name=igsaInput2Name, expr_data=exprData2,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs2, myGSs4));
+        gene_sets_list=list(myGeneSets2=myGSs2, myGeneSets4=myGSs4));
     
-    migsaInput <- MIGSAinput(experiments=list(igsaInput1, igsaInput2));
+    experiments <- list(igsaInput1, igsaInput2);
     
-    migsaRes <- MIGSA(migsaInput);
+    migsaRes <- MIGSA(experiments);
     
     checkEquals(ncol(migsaRes), 5);
     checkEquals(nrow(migsaRes), 4*nGSets);
     
     checkTrue(length(unique(migsaRes$GS_Name))==4);
-    checkTrue(unique(migsaRes$GS_Name)[[1]] == myGSs1Name);
-    checkTrue(unique(migsaRes$GS_Name)[[2]] == myGSs2Name);
-    checkTrue(unique(migsaRes$GS_Name)[[3]] == myGSs3Name);
-    checkTrue(unique(migsaRes$GS_Name)[[4]] == myGSs4Name);
+    checkTrue(unique(migsaRes$GS_Name)[[1]] == "myGeneSets1");
+    checkTrue(unique(migsaRes$GS_Name)[[2]] == "myGeneSets2");
+    checkTrue(unique(migsaRes$GS_Name)[[3]] == "myGeneSets3");
+    checkTrue(unique(migsaRes$GS_Name)[[4]] == "myGeneSets4");
     
     checkTrue(all(names(gSets1) %in% migsaRes$id));
     checkTrue(all(names(gSets2) %in% migsaRes$id));
@@ -1436,8 +1435,7 @@ test_MIGSA_ok_noErrorWNoDE <- function() {
     nGSets <- 10;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
+    myGSs <- as.Genesets(gSets);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1448,10 +1446,10 @@ test_MIGSA_ok_noErrorWNoDE <- function() {
     igsaInputName <- "igsaInput";
     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput <- MIGSAinput(experiments=list(igsaInput));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(migsaInput);
+    migsaRes <- MIGSA(experiments);
     checkTrue(validObject(migsaRes));
     checkEquals(ncol(migsaRes), 4);
     checkEquals(nrow(migsaRes), nGSets);
@@ -1476,8 +1474,7 @@ test_MIGSA_ok_noErrorWtwoPerm <- function() {
     nGSets <- 10;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
+    myGSs <- as.Genesets(gSets);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1488,50 +1485,51 @@ test_MIGSA_ok_noErrorWtwoPerm <- function() {
     igsaInputName <- "igsaInput";
     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput <- MIGSAinput(experiments=list(igsaInput));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(migsaInput);
+    migsaRes <- MIGSA(experiments);
     checkTrue(validObject(migsaRes));
     checkEquals(ncol(migsaRes), 4);
     checkEquals(nrow(migsaRes), nGSets);
 }
 
-test_MIGSA_ok_manuallyDEGenes <- function() {
-    set.seed(8818);
-    nGenes <- 200;
-    nSamples <- 6;
-    geneNames <- paste("g", 1:nGenes, sep = "");
-    
-    exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
-    rownames(exprData) <- geneNames;
-    exprData <- new("MAList",list(M=exprData));
-    
-    conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
-    
-    nGSets <- 10;
-    gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
-    names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
-    
-    fitOpts <- FitOptions(conditions);
-    
-    # de_cutoff=1 so if we use fit then all genes are DE. but we just set as DE 
-    # the ones from gSet #1
-    seaParams <- SEAparams(de_cutoff=1, de_genes=gSets[[1]]);
-    gseaParams <- GSEAparams(perm_number=2);
-    
-    igsaInputName <- "igsaInput";
-    igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
-        sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput <- MIGSAinput(experiments=list(igsaInput));
-    
-    migsaRes <- MIGSA(migsaInput);
-    checkEquals(sort(unique(unlist(strsplit(
-        migsaRes@migsa_res_all$SEA_enriching_genes, ", ")))),
-        sort(gSets[[1]]));
+if (testAll) {
+    test_MIGSA_ok_manuallyDEGenes <- function() {
+        set.seed(8818);
+        nGenes <- 200;
+        nSamples <- 6;
+        geneNames <- paste("g", 1:nGenes, sep = "");
+        
+        exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
+        rownames(exprData) <- geneNames;
+        exprData <- new("MAList",list(M=exprData));
+        
+        conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
+        
+        nGSets <- 10;
+        gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
+        names(gSets) <- paste("set", as.character(1:nGSets), sep="");
+        myGSs <- as.Genesets(gSets);
+        
+        fitOpts <- FitOptions(conditions);
+        
+        # de_cutoff=1 so if we use fit then all genes are DE. but we just set as DE 
+        # the ones from gSet #1
+        seaParams <- SEAparams(de_cutoff=1, de_genes=gSets[[1]]);
+        gseaParams <- GSEAparams(perm_number=2);
+        
+        igsaInputName <- "igsaInput";
+        igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
+            sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
+            gene_sets_list=list(myGeneSets=myGSs));
+        experiments <- list(igsaInput);
+        
+        migsaRes <- MIGSA(experiments);
+        checkEquals(sort(unique(unlist(strsplit(
+            migsaRes@migsa_res_all$SEA_enriching_genes, ", ")))),
+            sort(gSets[[1]]));
+    }
 }
 
 test_MIGSA_ok_usebri <- function() {
@@ -1551,8 +1549,7 @@ test_MIGSA_ok_usebri <- function() {
     nGSets <- 10;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
+    myGSs <- as.Genesets(gSets);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1565,19 +1562,19 @@ test_MIGSA_ok_usebri <- function() {
     
     igsaInput1 <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams1, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput1 <- MIGSAinput(experiments=list(igsaInput1));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments1 <- list(igsaInput1);
     
     igsaInput2 <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams2, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput2 <- MIGSAinput(experiments=list(igsaInput2));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments2 <- list(igsaInput2);
     
     set.seed(8818);
-    migsaRes1 <- MIGSA(migsaInput1);
+    migsaRes1 <- MIGSA(experiments1);
     
     set.seed(8818);
-    migsaRes2 <- MIGSA(migsaInput2);
+    migsaRes2 <- MIGSA(experiments2);
     
     # genes ranks are equal
     checkEquals(migsaRes1@genes_rank, migsaRes2@genes_rank);
@@ -1609,8 +1606,7 @@ test_MIGSA_ok_useOwnbr <- function() {
     nGSets <- 10;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
+    myGSs <- as.Genesets(gSets);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1624,19 +1620,19 @@ test_MIGSA_ok_useOwnbr <- function() {
     
     igsaInput1 <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams1, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput1 <- MIGSAinput(experiments=list(igsaInput1));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments1 <- list(igsaInput1);
     
     igsaInput2 <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams2, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput2 <- MIGSAinput(experiments=list(igsaInput2));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments2 <- list(igsaInput2);
     
     set.seed(8818);
-    migsaRes1 <- MIGSA(migsaInput1);
+    migsaRes1 <- MIGSA(experiments1);
     
     set.seed(8818);
-    migsaRes2 <- MIGSA(migsaInput2);
+    migsaRes2 <- MIGSA(experiments2);
     
     # genes ranks are equal
     checkEquals(migsaRes1@genes_rank, migsaRes2@genes_rank);
@@ -1668,8 +1664,7 @@ test_MIGSA_ok_useDifferenttests <- function() {
     nGSets <- 10;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
+    myGSs <- as.Genesets(gSets);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1683,30 +1678,29 @@ test_MIGSA_ok_useDifferenttests <- function() {
     
     igsaInput1 <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams1, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput1 <- MIGSAinput(experiments=list(igsaInput1));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments1 <- list(igsaInput1);
     
     igsaInput2 <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams2, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput2 <- MIGSAinput(experiments=list(igsaInput2));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments2 <- list(igsaInput2);
     
     igsaInput3 <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams3, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
+        gene_sets_list=list(myGeneSets=myGSs));
     # to test also putting gene sets in MIGSAinput
-    migsaInput3 <- MIGSAinput(experiments=list(igsaInput3),
-        gene_sets_list=list(myGSs));
+    experiments3 <- list(igsaInput3);
     
     set.seed(8818);
-    migsaRes1 <- MIGSA(migsaInput1);
+    migsaRes1 <- MIGSA(experiments1);
     
     set.seed(8818);
-    migsaRes2 <- MIGSA(migsaInput2);
+    migsaRes2 <- MIGSA(experiments2);
     
     
     set.seed(8818);
-    migsaRes3 <- MIGSA(migsaInput3);
+    migsaRes3 <- MIGSA(experiments3, geneSets=list(myGeneSets=myGSs));
     
     # genes ranks are equal
     checkEquals(migsaRes1@genes_rank, migsaRes2@genes_rank);
@@ -1746,9 +1740,9 @@ test_MIGSA_wrong_noGSets <- function() {
     igsaInputName <- "igsaInput";
     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
         fit_options=fitOpts, gene_sets_list=list());
-    migsaInput <- MIGSAinput(experiments=list(igsaInput));
+    experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(migsaInput);
+    migsaRes <- MIGSA(experiments);
     
     checkTrue(is.na(migsaRes));
 }
@@ -1770,8 +1764,7 @@ test_MIGSA_ok_wrongbr <- function() {
     nGSets <- 10;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
+    myGSs <- as.Genesets(gSets);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1784,10 +1777,10 @@ test_MIGSA_ok_wrongbr <- function() {
     
     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput <- MIGSAinput(experiments=list(igsaInput));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(migsaInput);
+    migsaRes <- MIGSA(experiments);
     checkTrue(is.na(migsaRes));
 }
 
@@ -1808,8 +1801,7 @@ test_MIGSA_ok_wrongbrOption <- function() {
     nGSets <- 10;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSsName <- "myGeneSets";
-    myGSs <- as.Genesets(gSets, name=myGSsName);
+    myGSs <- as.Genesets(gSets);
     
     fitOpts <- FitOptions(conditions);
     
@@ -1821,10 +1813,10 @@ test_MIGSA_ok_wrongbrOption <- function() {
     
     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGSs));
-    migsaInput <- MIGSAinput(experiments=list(igsaInput));
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(migsaInput);
+    migsaRes <- MIGSA(experiments);
     checkTrue(is.na(migsaRes));
 }
 
@@ -2175,11 +2167,13 @@ test_MIGSAres_migsaHeatmap_ok_simplePlot <- function() {
 
 ###### GoAnalysis-getHeights tests
 
-test_GoAnalysis_getHeights <- function() {
-    heights <- getHeights(
-        c("GO:0008150", "GO:0003674", "GO:0005575", "fakeId"));
-    checkEquals(heights[1:3], c(0,0,0));
-    checkTrue(is.na(heights[[4]]));
+if (testAll) {
+    test_GoAnalysis_getHeights <- function() {
+        heights <- getHeights(
+            c("GO:0008150", "GO:0003674", "GO:0005575", "fakeId"));
+        checkEquals(heights[1:3], c(0,0,0));
+        checkTrue(is.na(heights[[4]]));
+    }
 }
 
 test_GoAnalysis_getHeights_maxHeights <- function() {
@@ -2194,13 +2188,15 @@ test_GoAnalysis_getHeights_maxHeights <- function() {
 
 #### Correct ones
 
-test_GoAnalysis_migsaGoTree_ok_simplePlot <- function() {
-    data(bcMigsaRes);
-    bcMigsaRes <- bcMigsaRes[1:10,];
-    
-    plotRes <- migsaGoTree(bcMigsaRes);
-    checkTrue(all(sort(unlist(lapply(plotRes$gotree, nrow))) == 
-        sort(table(bcMigsaRes$GS_Name)[-3])));
+if (testAll) {
+    test_GoAnalysis_migsaGoTree_ok_simplePlot <- function() {
+        data(bcMigsaRes);
+        bcMigsaRes <- bcMigsaRes[1:10,];
+        
+        plotRes <- migsaGoTree(bcMigsaRes);
+        checkTrue(all(sort(unlist(lapply(plotRes$gotree, nrow))) == 
+            sort(table(bcMigsaRes$GS_Name)[-3])));
+    }
 }
 
 #### Incorrect ones

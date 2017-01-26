@@ -21,6 +21,8 @@
 #'@docType methods
 #'@name GSEAparams-class
 #'@rdname GSEAparams-class
+#'@seealso \code{\link{SEAparams-class}}
+#'@seealso \code{\link{summary}}
 #'@export GSEAparams
 #'@examples
 #'## Lets create the default GSEAparams object.

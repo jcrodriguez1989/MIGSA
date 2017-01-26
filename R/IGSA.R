@@ -28,7 +28,7 @@ setMethod(
         # merging all gene sets in order to run just one mGSZ and one dEnricher,
         # its much faster, but after we will have to split these results
         merged_gene_sets <- merge_gene_sets(actGeneSets);
-        flog.info(paste(length(geneSets(merged_gene_sets)), "Gene Sets."));
+        flog.info(paste(length(merged_gene_sets), "Gene Sets."));
         
         flog.info(paste(name(igsaInput), ": dEnricher starting."));
         # run DEnricher
@@ -66,8 +66,9 @@ setGeneric(name="merge_gene_sets", def=function(geneSetsList) {
     standardGeneric("merge_gene_sets")
 })
 
-#'@include Genesets.R
-#'@include Geneset.R
+#'@importClassesFrom GSEABase GeneSetCollection
+#'@importFrom GSEABase GeneSetCollection setName setName<- setIdentifier 
+#'setIdentifier<-
 # input: list of Genesets
 # output: a Genesets object
 setMethod(
@@ -75,24 +76,32 @@ setMethod(
     signature=c("list"),
     definition=function(geneSetsList) {
         stopifnot(all(unlist(lapply(geneSetsList, function(x)
-                    is(x, "Genesets")))));
+                    is(x, "GeneSetCollection")))));
         
         # each individual gene set id will be its gene set name "_MIGSA_"
         # its id. e.g. BP gene set GO:10000 will be BP_MIGSA_GO:10000
         # Not the best idea haha
         merged <- Reduce(function(...) append(...),
-            lapply(geneSetsList, function(gene_sets) {
-                act_name <- name(gene_sets);
-                act_gene_sets <-
-                    lapply(geneSets(gene_sets), function(gene_set) {
-                        id(gene_set) <- paste(act_name, "MIGSA", id(gene_set),
-                                                sep="_");
-                        return(gene_set);
-                    }
-                )
+            lapply(names(geneSetsList), function(act_name) {
+                gene_sets <- geneSetsList[[act_name]];
+                act_gene_sets <- lapply(gene_sets, function(gene_set) {
+                    new_gene_set <- gene_set;
+                    
+                    # I have to save and re copy it because if no it overwrites
+                    #  ID, I think it is GSEABase bug
+                    old_set_id <- setIdentifier(new_gene_set);
+                    
+                    new_set_name <- paste(act_name, "MIGSA",
+                        setName(new_gene_set), sep="_");
+                    setName(new_gene_set) <- new_set_name;
+                    
+                    setIdentifier(new_gene_set) <- old_set_id;
+                    
+                    return(new_gene_set);
+                })
             })
         )
-        return(Genesets(name="MIGSA_internal_use", gene_sets=merged));
+        return(GeneSetCollection(merged));
     }
 )
 
@@ -101,11 +110,13 @@ setGeneric(name="split_results",
     standardGeneric("split_results")
 })
 
+#'@importClassesFrom GSEABase GOCollection
+#'@importFrom GSEABase collectionType
 #'@include GenesetRes.R
 #'@include GenesetsRes.R
 #'@include GSEAres.R
 #'@include SEAres.R
-# input geneSetsList is a list of Genesets
+# input geneSetsList is a list of GeneSetCollection
 setMethod(
     f="split_results",
     signature=c("SEAres", "GSEAres", "list"),
@@ -114,14 +125,16 @@ setMethod(
         # So now lets split the merged results!!
         # and return to each its additional info they had (as is_GO)
         
-        splitted_res <- lapply(geneSetsList, function(act_GS) {
-            act_name <- name(act_GS);
-            act_is_GO <- isGO(act_GS);
+        splitted_res <- lapply(names(geneSetsList), function(act_name) {
+            act_GS <- geneSetsList[[act_name]];
+            act_is_GO <- any(unlist(lapply(act_GS, function(x) 
+                is(collectionType(x), "GOCollection"))));
             # grep the ones which start with gene set name followed by "_MIGSA_"
             act_pattern <- paste("^", act_name, "_MIGSA_", sep="");
             act_sea_res <- lapply(gene_sets_res(sea_res), function(act_res) {
                 if (grepl(act_pattern, id(act_res))) {
                     id(act_res) <- gsub(act_pattern, "", id(act_res));
+                    getName(act_res) <- gsub(act_pattern, "", getName(act_res));
                     return(act_res);
                 } else {
                     return(NA);
@@ -133,6 +146,7 @@ setMethod(
             act_gsea_res <- lapply(gene_sets_res(gsea_res), function(act_res) {
                 if (grepl(act_pattern, id(act_res))) {
                     id(act_res) <- gsub(act_pattern, "", id(act_res));
+                    getName(act_res) <- gsub(act_pattern, "", getName(act_res));
                     return(act_res);
                 } else {
                     return(NA);

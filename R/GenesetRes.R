@@ -46,15 +46,41 @@ setMethod(
     }
 )
 
-#'@include Geneset.R
+setGeneric(name="id", def=function(object) {
+    standardGeneric("id")
+})
+
 setMethod(f="id", signature="GenesetRes", definition=function(object) {
     return(object@id)
 })
 
-#'@include Geneset.R
+setGeneric(name="id<-", def=function(object, value) {
+    standardGeneric("id<-")
+})
+
 setReplaceMethod(f="id", signature="GenesetRes",
     definition=function(object, value) {
         object@id <- value
+        validObject(object)
+        return(object)
+    }
+)
+
+setGeneric(name="getName", def=function(object) {
+    standardGeneric("getName")
+})
+
+setMethod(f="getName", signature="GenesetRes", definition=function(object) {
+    return(object@name)
+})
+
+setGeneric(name="getName<-", def=function(object, value) {
+    standardGeneric("getName<-")
+})
+
+setReplaceMethod(f="getName", signature="GenesetRes",
+    definition=function(object, value) {
+        object@name <- value
         validObject(object)
         return(object)
     }

@@ -19,7 +19,9 @@
 \alias{gseaParams,IGSAinput-method}
 \alias{gseaParams<-}
 \alias{gseaParams<-,IGSAinput-method}
+\alias{name}
 \alias{name,IGSAinput-method}
+\alias{name<-}
 \alias{name<-,IGSAinput-method}
 \alias{seaParams}
 \alias{seaParams,IGSAinput-method}
@@ -29,11 +31,15 @@
 \alias{useVoom,IGSAinput-method}
 \alias{useVoom<-}
 \alias{useVoom<-,IGSAinput-method}
-\title{Accessors for IGSAinput class.}
+\title{Accessors for IGSAinput class}
 \usage{
 "IGSAinput-getterSetters"(object)
 
+name(object)
+
 \S4method{name}{IGSAinput}(object)
+
+name(object) <- value
 
 \S4method{name}{IGSAinput}(object) <- value
 
@@ -91,7 +97,7 @@ seaParams(object) <- value
 \item{value}{value to replace in the slot.}
 }
 \value{
-modified object or desired slot.
+Modified IGSAinput object or desired slot.
 }
 \description{
 Getters and setters functions to access IGSAinput object slots.
@@ -120,5 +126,8 @@ useVoom(igsaInput);
 gseaParams(igsaInput);
 seaParams(igsaInput);
 
+}
+\seealso{
+\code{\link{IGSAinput-class}}
 }
 

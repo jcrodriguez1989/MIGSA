@@ -3,8 +3,8 @@
 #'Several R base overwritten functions to manipulate a MIGSAres object as a 
 #'data.frame way.
 #'NOTE: When subsetting a MIGSAres object, if it does not have the id, GS_Name 
-#'and (at least) one experiment columns, then it will stop being a MIGSAres 
-#'object, i.e., migsaRes[,c("id","igsaInput1")] is no longer a MIGSAres object.
+#'and (at least) one experiment columns, then it wont be a MIGSAres object, 
+#'i.e., migsaRes[,c("id","igsaInput1")] is no longer a MIGSAres object.
 #'
 #'@param x MIGSAres object.
 #'@param y MIGSAres object.
@@ -15,7 +15,7 @@
 #'@param j as used in \code{\link[base]{[}}.
 #'@param drop as used in \code{\link[base]{[}} (default: FALSE).
 #'
-#'@return desired object.
+#'@return Desired object.
 #'
 #'@docType methods
 #'@name MIGSAres-common
@@ -177,70 +177,6 @@ setMethod("[",
         x@migsa_res_summary <- data_frame;
         
         return(x);
-    }
-)
-
-#'@inheritParams MIGSAres exploratory functions
-#'@rdname MIGSAres-common
-#'@aliases summary,MIGSAres
-#'@importFrom futile.logger flog.info
-#'@exportMethod summary
-#'@examples
-#'data(migsaRes);
-#'
-#'### As enrichment cutoff is not set then we will get for each experiment the 
-#'### number of enriched gene sets at different cutoff values.
-#'summary(migsaRes);
-#'
-#'### Lets set the enrichment cutoff at 0.01
-#'migsaResWCoff <- setEnrCutoff(migsaRes, 0.01);
-#'
-#'### Now as summary we will get the number of enriched gene sets per 
-#'### experiment and their intersections.
-#'summary(migsaResWCoff);
-#'
-setMethod("summary",
-    signature=c("MIGSAres"),
-    function(object) {
-        stopifnot(validObject(object));
-        
-        pvals <- object@migsa_res_summary[,-(1:3)];
-        
-        if (is.na(object@enr_cutoff)) {
-            # if there is no cutoff then give results with these three cutoffs
-            res <- rbind(
-                enr_at_0_01=colSums(pvals < 0.01, na.rm=!FALSE),
-                enr_at_0_05=colSums(pvals < 0.05, na.rm=!FALSE),
-                enr_at_0_1=colSums(pvals < 0.1, na.rm=!FALSE)
-            )
-        } else {
-            # if we have a cutoff set then give some statistics
-            consGsets <- table(rowSums(pvals < object@enr_cutoff,
-                na.rm=!FALSE));
-            invisible(lapply(names(consGsets), function(actName) {
-                flog.info(paste("Gene sets enriched in", actName,
-                    "experiments:", consGsets[actName]));
-            }))
-            
-            numExps <- ncol(pvals);
-            # lets get the gene sets enriched between each pair of experiments
-            enrInters <- do.call(rbind, 
-            lapply(1:ncol(pvals), function(actExp1) {
-                lapply(1:ncol(pvals), function(actExp2) {
-                    sum(
-                        pvals[,actExp1] < object@enr_cutoff &
-                        pvals[,actExp2] < object@enr_cutoff,
-                        na.rm=!FALSE
-                    );
-                })
-            }))
-            colnames(enrInters) <- colnames(pvals);
-            rownames(enrInters) <- colnames(pvals);
-            res <- list(consensusGeneSets=consGsets, 
-                        enrichmentIntersections=enrInters);
-        }
-        
-        return(res);
     }
 )
 

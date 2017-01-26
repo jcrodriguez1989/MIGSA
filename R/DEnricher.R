@@ -4,10 +4,12 @@ setGeneric(name="DEnricher", def=function(params, M, fit_options, gene_sets,
 })
 
 #'@importClassesFrom BiocParallel BiocParallelParam
+#'@importClassesFrom GSEABase GeneSetCollection
 #'@importFrom futile.logger flog.info
+#'@importFrom GSEABase GeneSetCollection geneIds geneIds<- setIdentifier
+#'setIdentifier<-
 #'@include FitOptions.R
 #'@include Genesets.R
-#'@include Geneset.R
 #'@include IGSAinput.R
 #'@include SEAparams.R
 #'@include SEAres.R
@@ -15,8 +17,8 @@ setGeneric(name="DEnricher", def=function(params, M, fit_options, gene_sets,
 # use_voom <- useVoom(igsaInput); gene_sets <- merged_gene_sets
 setMethod(
     f="DEnricher",
-    signature=c("SEAparams", "ExprData", "FitOptions", "Genesets", "logical",
-                                                "BiocParallelParam"),
+    signature=c("SEAparams", "ExprData", "FitOptions", "GeneSetCollection", 
+                                            "logical", "BiocParallelParam"),
     definition=function(params, M, fit_options, gene_sets, use_voom, 
                         bp_param) {
         if (length(de_genes(params)) == 1 && is.na(de_genes(params)[[1]])) {
@@ -58,16 +60,18 @@ setMethod(
         dif <- intersect(dif, br);
         
         # so we filter gene sets that dont have genes in this br
-        validGSets <- lapply(geneSets(gene_sets), function(actGs) {
-            validGenes <- intersect(genes(actGs), br);
+        validGSets <- lapply(gene_sets, function(actGs) {
+            validGenes <- intersect(geneIds(actGs), br);
             if (length(validGenes) == 0) {
                 return(NULL);
             }
-            genes(actGs) <- validGenes;
+            actGsId <- setIdentifier(actGs);
+            geneIds(actGs) <- validGenes;
+            setIdentifier(actGs) <- actGsId;
             return(actGs);
         });
         validGSets <- validGSets[ !unlist(lapply(validGSets, is.null)) ];
-        geneSets(gene_sets) <- validGSets;
+        gene_sets <- GeneSetCollection(validGSets);
         
         test <- test(params);
         
@@ -86,16 +90,17 @@ setGeneric(name="runDEnricher",
 })
 
 #'@importClassesFrom BiocParallel BiocParallelParam
+#'@importClassesFrom GSEABase GeneSetCollection
 #'@importFrom BiocParallel bplapply
 #'@importFrom futile.logger flog.info
+#'@importFrom GSEABase geneIds setIdentifier setName
 #'@importFrom stats fisher.test pbinom phyper
 #'@include GenesetRes.R
-#'@include Geneset.R
 #'@include Genesets.R
 # genesets <- gene_sets; test="FisherTest"
 setMethod(
     f="runDEnricher",
-    signature=c("character", "Genesets", "character", "character",
+    signature=c("character", "GeneSetCollection", "character", "character",
                                                     "BiocParallelParam"),
     definition=function(dif, genesets, br, test, bp_param) {
         # most of this function is copied from dEnricher function
@@ -104,7 +109,7 @@ setMethod(
         genes.group <- GeneID[!is.na(GeneID)];
         
         gs <- genesets;
-        nSet <- length(geneSets(gs))
+        nSet <- length(gs)
         
         # defining the three tests
         doFisherTest <- function(genes.group, genes.term, genes.universe) {
@@ -153,9 +158,9 @@ setMethod(
         }
         
         flog.info(paste("Running SEA at cores:", bp_param$workers));
-        seaRes <- bplapply(geneSets(gs), function(actGset) {
+        seaRes <- bplapply(gs, function(actGset) {
         #     seaRes <- lapply(gs@gene_sets, function(actGset) {
-            genes.term <- unique(unlist(genes(actGset)))
+            genes.term <- unique(unlist(geneIds(actGset)))
             p.value <- switch(test,
                 FisherTest   = doFisherTest(genes.group, genes.term,
                                                             genes.universe),
@@ -166,8 +171,13 @@ setMethod(
             
             # important genes are the DE that are in the term
             impGenes <- intersect(genes.group, genes.term);
-            actRes <- GenesetRes(id=id(actGset), name=getName(actGset),
-                                pvalue=p.value, genes=genes(actGset),
+            
+            # We put name as setIdentifier and id as setName because we 
+            # disagree with GSEABase's usage as they use Names as unique, and 
+            # identifiers not.
+            actRes <- GenesetRes(id=setName(actGset), 
+                                name=setIdentifier(actGset), pvalue=p.value, 
+                                genes=geneIds(actGset),
                                 enriching_genes=impGenes);
             return(actRes);
         }, BPPARAM=bp_param)

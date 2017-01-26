@@ -6,8 +6,8 @@ setGeneric(name="MGSZ", def=function(params, M, fit_options, genesets,
 # params <- gseaParams(igsaInput); M <- exprData(igsaInput);
 # genesets <- merged_gene_sets; use_voom <- useVoom(igsaInput)
 #'@importClassesFrom BiocParallel BiocParallelParam
+#'@importFrom GSEABase GeneSetCollection setIdentifier setName
 #'@include FitOptions.R
-#'@include Geneset.R
 #'@include GenesetRes.R
 #'@include Genesets.R
 #'@include GSEAparams.R
@@ -15,8 +15,8 @@ setGeneric(name="MGSZ", def=function(params, M, fit_options, genesets,
 #'@include IGSAinput.R
 setMethod(
     f="MGSZ",
-    signature=c("GSEAparams", "ExprData", "FitOptions", "Genesets", "logical",
-                "BiocParallelParam"),
+    signature=c("GSEAparams", "ExprData", "FitOptions", "GeneSetCollection", 
+                "logical", "BiocParallelParam"),
     definition=function(params, M, fit_options, genesets, use_voom,
                         bp_param) {
         # mGSZ uses the gene sets as a list
@@ -34,8 +34,8 @@ setMethod(
                                 bp_param);
         
         # convert mGSZ results (data.frame) to GenesetRes
-        mgszRes <- lapply(geneSets(genesets), function(actGset) {
-            mgszGSres <- mgszRes[ mgszRes$gene.sets == id(actGset), ];
+        mgszRes <- lapply(genesets, function(actGset) {
+            mgszGSres <- mgszRes[ mgszRes$gene.sets == setName(actGset), ];
             if (nrow(mgszGSres) == 0) {
                 pval <- as.numeric(NA);
                 actScore <- as.numeric(NA);
@@ -45,12 +45,15 @@ setMethod(
                 actScore <- mgszGSres$mGszScore;
                 actImpGenes <- as.character(mgszGSres$impGenes);
                 # todo: put better genes separator
-                actImpGenes <- strsplit(actImpGenes, "_sep_")[[1]];
+                actImpGenes <- strsplit(actImpGenes, ", ")[[1]];
             }
             
-            actRes <- GenesetRes(id=id(actGset), name=getName(actGset),
-                                score=actScore, pvalue=pval,
-                                genes=genes(actGset),
+            # We put name as setIdentifier and id as setName because we 
+            # disagree with GSEABase's usage as they use Names as unique, and 
+            # identifiers not.
+            actRes <- GenesetRes(id=setName(actGset), 
+                                name=setIdentifier(actGset), score=actScore, 
+                                pvalue=pval, genes=geneIds(actGset),
                                 enriching_genes=actImpGenes);
         })
         
@@ -382,7 +385,7 @@ setMethod(
             }
             
             # todo: define a better gene separator
-            impGenes <- paste(impGenes, collapse="_sep_");
+            impGenes <- paste(impGenes, collapse=", ");
             res <- data.frame(mgszScore=abs(rawMgsz), rawMgsz=rawMgsz,
                                 impGenes=impGenes);
             

@@ -4,7 +4,7 @@
 \name{loadGo}
 \alias{loadGo}
 \alias{loadGo,character-method}
-\title{Creates a Genesets object using the Gene Ontology data base}
+\title{Creates a GeneSetCollection object using the Gene Ontology data base}
 \usage{
 loadGo(ontology)
 
@@ -15,15 +15,27 @@ loadGo(ontology)
 Must be one of BP, MF or CC.}
 }
 \value{
-Genesets object including the desired Gene Ontology gene sets.
+A GeneSetCollection object(Genes are with their EntrezGene ID).
 }
 \description{
-\code{loadGo} creates a Genesets object from the data present at the Gene 
-Ontology data base.
+\code{loadGo} creates a GeneSetCollection object from the data present at 
+the Gene Ontology data base (org.Hs.eg.db R package).
 }
 \examples{
 ## Lets load the Cellular Components gene sets from the Gene Ontology.
+\dontrun{
 ccGSets <- loadGo("CC");
+}
+\dontshow{
+aux <- 1:10; rm(aux);
+}
 
+}
+\seealso{
+\code{\link{as.Genesets}}
+
+\code{\link{Genesets-enrichr}}
+
+\code{\link{geneSetsFromFile}}
 }
 

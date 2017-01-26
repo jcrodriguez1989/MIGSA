@@ -56,4 +56,9 @@ mySeaParamsOwnParams <- SEAparams(treat_lfc=0.25, de_cutoff=0.05,
 adjust_method="none");
 
 }
+\seealso{
+\code{\link{GSEAparams-class}}
+
+\code{\link{summary}}
+}
 

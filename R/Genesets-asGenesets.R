@@ -1,23 +1,24 @@
-#'Creates a Genesets from a list
+#'Creates a GeneSetCollection from a list
 #'
-#'\code{as.Genesets} creates a Genesets object from the data present in a list.
-#'Each element will parse to a Geneset. For each list element, its name will be 
-#'the Geneset id, and the content are the genes.
+#'\code{as.Genesets} creates a GeneSetCollection object from the data present 
+#'in a list. Each element will parse to a GeneSet. For each list element, its 
+#'name will be the GeneSet setName, and the content are the genes.
 #'
 #'@param x list of character vectors which are the genes corresponding to each 
-#'Geneset. The list must have names (unique).
-#'@param name character indicating the name of these gene sets e.g. "KEGG" 
-#'(default: "no_name").
+#'GeneSet. The list must have names (unique).
+#'@param is_GO logical indicating if this gene sets are from the Gene Ontology.
+#'If true, then each GeneSet setName must be a GO id.
 #'@param ... not in use.
 #'
-#'@return Genesets object.
+#'@return A GeneSetCollection object.
 #'
 #'@docType methods
 #'@name as.Genesets
 #'@rdname Genesets-as.Genesets
+#'@seealso \code{\link{Genesets-enrichr}}
+#'@seealso \code{\link{geneSetsFromFile}}
+#'@seealso \code{\link{loadGo}}
 #'
-#'@include Genesets-class.R
-#'@include Geneset.R
 #'@exportMethod as.Genesets
 setGeneric("as.Genesets", def=function(x, ...) {
     standardGeneric("as.Genesets")
@@ -26,23 +27,30 @@ setGeneric("as.Genesets", def=function(x, ...) {
 #'@rdname Genesets-as.Genesets
 #'@inheritParams as.Genesets
 #'@aliases as.Genesets,list-method
+#'
+#'@importFrom GSEABase GeneSet GeneSetCollection GOCollection NullCollection
 #'@examples
 #'## Lets create a list with three manually created gene sets and load it as a 
-#'## Genesets object.
+#'## GeneSetCollection object.
 #'myGs1 <- as.character(1:10);
 #'myGs2 <- as.character(15:21);
 #'myGs3 <- as.character(25:30);
 #'myGssList <- list(myGs1, myGs2, myGs3);
 #'names(myGssList) <- c("myGs1", "myGs2", "myGs3");
-#'myGss <- as.Genesets(myGssList, name="myGeneSets");
+#'myGss <- as.Genesets(myGssList);
 #'
 setMethod(
     f="as.Genesets",
     signature=c("list"),
-    definition=function(x, name="no_name") {
+    definition=function(x, is_GO=FALSE) {
         if (length(unique(names(x))) != length(x)) {
             stop("The list must have all unique names.");
         }
+        
+        collection <- NullCollection();
+        if (is_GO)
+            collection <- GOCollection();
+        
         act_gss <- lapply(names(x), function(act_id) {
             # these are the genes
             act_genes <- unique(x[[act_id]]);
@@ -52,7 +60,8 @@ setMethod(
                 (length(act_genes) == 1 && act_genes == "")) {
                 act_gs <- NULL;
             } else {
-                act_gs <- Geneset(id=act_id, genes=act_genes);
+                act_gs <- GeneSet(act_genes, setName=act_id, 
+                    collectionType=collection, setIdentifier="");
             }
             return(act_gs);
         })
@@ -63,7 +72,7 @@ setMethod(
             stop("Could not create any Geneset object,
                     maybe they where empty");
         }
-        res <- Genesets(name=name, gene_sets=act_gss, is_GO=FALSE);
+        res <- GeneSetCollection(act_gss);
         return(res)
     }
 )

@@ -1,13 +1,17 @@
 #'MIGSA package
 #'
-#'The MIGSA package permits to develop an extensive gene set enrichment 
-#'analysis over multiple datasets. It provides a common gene expression 
-#'analytic framework that grants a comprehensive and coherent analysis. Only a 
-#'minimal user parameter setting is required, since the best SEA/GSEA 
-#'alternatives are integrated, i.e. \pkg{dEnricher} and \pkg{mGSZ} respectively.
-#'MIGSA's greatest strengths are its big data tools, as it provides several 
-#'functions to explore, analyze and visualize its results in order to 
+#'The MIGSA package allows to perform a massive and integrative gene set 
+#'analysis over several expression and gene sets simultaneously. It provides a 
+#'common gene expression analytic framework that grants a comprehensive and 
+#'coherent analysis. Only a minimal user parameter setting is required to 
+#'perform both singular and gene set enrichment analyses in an integrative 
+#'manner by means of the best available methods, i.e. dEnricher and mGSZ
+#'respectively.
+#'The greatest strengths of this big omics data tool are the availability of 
+#'several functions to explore, analyze and visualize its results in order to 
 #'facilitate the data mining task over huge information sources.
+#'MIGSA package also provides several functions that allow to easily load the 
+#'most updated gene sets from several repositories.
 #'
 #'@docType package
 #'@name MIGSAPackage

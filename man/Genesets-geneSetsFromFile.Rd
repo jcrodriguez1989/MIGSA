@@ -4,30 +4,28 @@
 \name{geneSetsFromFile}
 \alias{geneSetsFromFile}
 \alias{geneSetsFromFile,character-method}
-\title{Creates a Genesets from file}
+\title{Creates a GeneSetCollection object from a file}
 \usage{
-geneSetsFromFile(filePath, name, ...)
+geneSetsFromFile(filePath, ...)
 
-\S4method{geneSetsFromFile}{character}(filePath, name, is_GO = FALSE)
+\S4method{geneSetsFromFile}{character}(filePath, is_GO = FALSE)
 }
 \arguments{
 \item{filePath}{character with the path of the file to parse.}
 
-\item{name}{character with the name of this Genesets.}
-
 \item{...}{not in use.}
 
-\item{is_GO}{logical indicating if this Genesets are from the Gene Ontology. 
-If true, then each Geneset id must be a GO id.}
+\item{is_GO}{logical indicating if this gene sets are from the Gene Ontology.
+If true, then each gene GeneSet setName must be a GO id.}
 }
 \value{
-Genesets object.
+A GeneSetCollection object.
 }
 \description{
-\code{geneSetsFromFile} creates a Genesets object from the data present in 
-a file. The file must be a tab separated values file (tsv). Each line will 
-parse to a Geneset. First field will be the Geneset id, the second the name 
-and the remaining are the genes.
+\code{geneSetsFromFile} creates a GeneSetCollection object from the data 
+present in a file. The file must be a tab separated values file (tsv). Each 
+line will parse to a GeneSet. First field will be the GeneSet setName, the 
+second the setIdentifier and the remaining are the genes.
 }
 \examples{
 ## Create some fake gene sets in a data.frame to save them in disk and then
@@ -42,11 +40,18 @@ gsets <- data.frame(
 write.table(gsets, file="fakeGsets.tsv", sep="\\t",
     col.names=FALSE, row.names=FALSE, quote=FALSE);
 
-## Now lets load this tsv file as a Genesets object.
-myGsets <- geneSetsFromFile("fakeGsets.tsv", "fakeGsets");
+## Now lets load this tsv file as a GeneSetCollection object.
+myGsets <- geneSetsFromFile("fakeGsets.tsv");
 
 ## And lets delete this tsv file (so we dont have garbage in our disk).
 unlink("fakeGsets.tsv");
 
+}
+\seealso{
+\code{\link{as.Genesets}}
+
+\code{\link{Genesets-enrichr}}
+
+\code{\link{loadGo}}
 }
 

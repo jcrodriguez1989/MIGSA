@@ -28,7 +28,7 @@
 #'@param p number of permutations for p-value calculation.
 #'@param ... not in use.
 #'
-#'@return data.frame with gene sets p-values and additional information.
+#'@return A data.frame with gene sets p-values and additional information.
 #'
 #'@docType methods
 #'@name MIGSAmGSZ
@@ -55,7 +55,7 @@ setGeneric(name="MIGSAmGSZ", def=function(x, y, l, ...) {
 #'@examples
 #'nGenes <- 1000; # 1000 genes
 #'nSamples <- 30; # 30 subjects
-#'geneNames <- paste("g", 1:nGenes, sep = ""); # with names g1 ... g1000
+#'geneNames <- paste("g", 1:nGenes, sep=""); # with names g1 ... g1000
 #'## Create random gene expression data matrix.
 #'set.seed(8818);
 #'exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
@@ -79,7 +79,9 @@ setGeneric(name="MIGSAmGSZ", def=function(x, y, l, ...) {
 #'gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
 #'names(gSets) <- paste("set", as.character(1:nGSets), sep="");
 #'
+#'\dontrun{
 #'mGSZres <- MIGSAmGSZ(exprData, gSets, conditions);
+#'}
 #'
 setMethod(
     f="MIGSAmGSZ",

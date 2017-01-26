@@ -24,6 +24,9 @@
 #'@docType methods
 #'@name SEAparams-class
 #'@rdname SEAparams-class
+#'@seealso \code{\link{GSEAparams-class}}
+#'@seealso \code{\link{summary}}
+#'
 #'@export SEAparams
 #'@examples
 #'## Lets create the default SEAparams object.

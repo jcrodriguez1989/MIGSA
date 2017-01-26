@@ -3,8 +3,8 @@
 \docType{data}
 \name{bcMigsaRes}
 \alias{bcMigsaRes}
-\title{A MIGSA results object obtained from breast cancer data.}
-\format{A breast cancer MIGSAres object}
+\title{A MIGSA results object obtained from breast cancer data}
+\format{A MIGSAres object.}
 \description{
 A MIGSA results object (MIGSAres) obtained using the datasets:
 \itemize{

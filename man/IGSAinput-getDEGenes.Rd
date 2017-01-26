@@ -5,7 +5,7 @@
 \alias{getDEGenes}
 \alias{getDEGenes,IGSAinput}
 \alias{getDEGenes,IGSAinput-method}
-\title{Calculate differentialy expressed genes of an IGSAinput object.}
+\title{Calculate differentialy expressed genes of an IGSAinput object}
 \usage{
 getDEGenes(igsaInput)
 
@@ -15,12 +15,12 @@ getDEGenes(igsaInput)
 \item{igsaInput}{a valid IGSAinput object.}
 }
 \value{
-a IGSAinput object with the updated slots and DE genes calculated.
+A IGSAinput object with the updated slots and DE genes calculated.
 }
 \description{
 \code{getDEGenes} calculates the differentialy expressed genes of an 
-IGSAinput object using the expression matrix, the fit options and the SEA 
-parameters.
+IGSAinput object using the expression matrix, the FitOtions and the 
+SEAparams..
 }
 \examples{
 ## Lets create a basic IGSAinput object.
@@ -40,5 +40,8 @@ fit_options=myFOpts);
 ## parameters.
 aux <- getDEGenes(myIgsaInput);
 
+}
+\seealso{
+\code{\link{IGSAinput-class}}
 }
 

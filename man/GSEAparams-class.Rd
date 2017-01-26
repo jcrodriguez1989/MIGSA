@@ -40,4 +40,9 @@ myGseaParams <- GSEAparams();
 myGseaParams500Perms <- GSEAparams(perm_number=500);
 
 }
+\seealso{
+\code{\link{SEAparams-class}}
+
+\code{\link{summary}}
+}
 

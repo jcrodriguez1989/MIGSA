@@ -1,27 +1,67 @@
-#'Plots the GO tree/s
+# to avoid R CMD check errors we set them as NULL
+is_GO = NULL;
+
+#'Explore Gene Ontology gene sets in MIGSAres
 #'
-#'\code{migsaGoTree} Plots the GO tree/s present in migsaRes,
+#'\code{migsaGoTree} plots the GO tree/s present in migsaRes,
+#'\code{getHeights} returns the heights of given a list of ids (GO IDs).
 #'
-#'@param migsaRes MIGSAres object. It must contain at least one GO Geneset.
+#'@param migsaRes MIGSAres object. It must contain at least one GO gene set.
+#'@param ids character vector indicating the queried GO ids.
+#'@param minHeight logical indicating if the minimum or maximum height must be 
+#'calculated. If it is FALSE then the longest path to the root is calculated, 
+#'otherwise, the shortest path.
+#'@param ... not in use.
 #'
-#'@return list with the used data to plot.
+#'@return If migsaGoTree: A list with the used data to plot. If getHeights: A 
+#'list with each term height.
 #'
 #'@docType methods
-#'@name migsaGoTree
-#'@rdname MIGSAres-migsaGoTree
+#'@name MIGSAres-GOanalysis
+#'@rdname MIGSAres-GoAnalysis
 #'
+#'@examples
+#'## Lets load breast cancer results.
+#'data(bcMigsaRes);
+#'
+#'###### migsaGoTree
+#'## Get the first 40 Gene Ontology gene sets results from CC.
+#'goRes <- bcMigsaRes[bcMigsaRes$GS_Name == "CC",];
+#'fst40goRes <- goRes[1:40,];
+#'
+#'## And lets plot the results GO trees.
+#'\dontrun{
+#'aux <- migsaGoTree(fst40goRes);
+#'}
+#'
+#'###### getHeights
+#'## Get the first 40 Gene Ontology gene sets IDs.
+#'goIds <- bcMigsaRes[bcMigsaRes$GS_Name %in% c("BP", "CC", "MF"), "id"];
+#'fst40goIds <- goIds[1:40,];
+#'
+#'\dontrun{
+#'## And lets get the heights in the GO tree structure.
+#'getHeights(fst40goIds);
+#'}
+#'
+setGeneric(name="MIGSAres-GOanalysis", def=function(migsaRes) {
+    standardGeneric("MIGSAres-GOanalysis")
+})
+
+#'@name migsaGoTree
+#'@inheritParams MIGSAres-GOanalysis
+#'@rdname MIGSAres-GoAnalysis
+#'@aliases migsaGoTree,MIGSAres-method
 #'@exportMethod migsaGoTree
 #'
 setGeneric(name="migsaGoTree", def=function(migsaRes) {
     standardGeneric("migsaGoTree")
 })
 
-# to avoid R CMD check errors we set them as NULL
-is_GO = NULL;
 
-#'@inheritParams migsaGoTree
-#'@rdname MIGSAres-migsaGoTree
-#'@aliases migsaGoTree,MIGSAres
+#'@inheritParams MIGSAres-GOanalysis
+#'@rdname MIGSAres-GoAnalysis
+#'@aliases migsaGoTree,MIGSAres-method
 #'
 #'@importFrom AnnotationDbi Ontology
 #'@importFrom futile.logger flog.info
@@ -29,16 +69,6 @@ is_GO = NULL;
 #'@importFrom grDevices colorRampPalette
 #'@include MIGSAres.R
 #'@include GoAnalysis.R
-#'@examples
-#'## Lets load breast cancer results.
-#'data(bcMigsaRes);
-#'
-#'## And get the first 40 Gene Ontology gene sets results from CC.
-#'goRes <- bcMigsaRes[bcMigsaRes$GS_Name == "CC",];
-#'fst40goRes <- goRes[1:40,];
-#'
-#'## And lets plot the results GO trees.
-#'aux <- migsaGoTree(fst40goRes);
 #'
 setMethod(
     f="migsaGoTree",
@@ -109,5 +139,39 @@ setMethod(
             ));
         invisible(lapply(ontsPresent, function(x) plotGoTree(acttree, x)));
         return(acttree);
+    }
+)
+
+#'@name getHeights
+#'@inheritParams MIGSAres-GOanalysis
+#'@rdname MIGSAres-GoAnalysis
+#'@aliases getHeights,character-method
+#'@exportMethod getHeights
+#'
+setGeneric(name="getHeights", def=function(ids, ...) {
+    standardGeneric("getHeights")
+})
+
+#'@inheritParams MIGSAres-GOanalysis
+#'@rdname MIGSAres-GoAnalysis
+#'@aliases getHeights,character-method
+#'
+#'@importFrom GO.db GOBPPARENTS GOCCPARENTS GOMFPARENTS
+#'@include GoAnalysis.R
+#'
+setMethod(
+    f="getHeights",
+    signature=c("character"),
+    definition=function(ids, minHeight=TRUE) {
+        allParents <- as.list(GOBPPARENTS);
+        allParents <- c(allParents, as.list(GOMFPARENTS));
+        allParents <- c(allParents, as.list(GOCCPARENTS));
+        
+        # for each GO id find its height
+        result <- lapply(ids, function(x) {
+            getHeight(x, minHeight, allParents)
+        });
+        
+        return(unlist(result));
     }
 )

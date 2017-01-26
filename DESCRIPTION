@@ -1,20 +1,24 @@
 Package: MIGSA
 Type: Package
 Title: Massive and Integrative Gene Set Analysis
-Version: 0.99.5
+Version: 0.99.6
 Date: 2016-03-02
 Author: Juan C. Rodriguez, Cristobal Fresno, Andrea S. Llera and Elmer A. 
     Fernandez
 Maintainer: Juan C. Rodriguez <jcrodriguez@bdmg.com.ar>
 Description: Massive and Integrative Gene Set Analysis.
-    The MIGSA package permits to develop an extensive gene set enrichment 
-    analysis over multiple datasets. It provides a common gene expression 
-    analytic framework that grants a comprehensive and coherent analysis. Only 
-    a minimal user parameter setting is required, since the best SEA/GSEA 
-    alternatives are integrated, i.e. dEnricher and mGSZ respectively.
-    MIGSA's greatest strengths are its big data tools, as it provides several 
-    functions to explore, analyze and visualize its results in order to 
-    facilitate the data mining task over huge information sources.
+    The MIGSA package allows to perform a massive and integrative gene set 
+    analysis over several expression and gene sets simultaneously. It provides 
+    a common gene expression analytic framework that grants a comprehensive 
+    and coherent analysis. Only a minimal user parameter setting is required 
+    to perform both singular and gene set enrichment analyses in an 
+    integrative manner by means of the best available methods, i.e. dEnricher 
+    and mGSZrespectively.
+    The greatest strengths of this big omics data tool are the availability of 
+    several functions to explore, analyze and visualize its results in order 
+    to facilitate the data mining task over huge information sources.
+    MIGSA package also provides several functions that allow to easily load 
+    the most updated gene sets from several repositories.
 URL: http://www.bdmg.com.ar/
 biocViews: Software, GeneSetEnrichment, Visualization, GeneExpression, 
     Microarray, RNASeq, KEGG
@@ -30,7 +34,8 @@ Suggests:
     breastCancerUNT,
     breastCancerUPP,
     breastCancerVDX,
-    pbcmc
+    pbcmc,
+    MIGSAdata
 Imports:
     AnnotationDbi,
     Biobase,
@@ -45,6 +50,7 @@ Imports:
     graph,
     graphics,
     grDevices,
+    GSEABase,
     limma,
     matrixStats,
     mGSZ,
@@ -53,12 +59,8 @@ Imports:
     Rgraphviz,
     RJSONIO,
     stats,
-    utils,
     vegan
 Collate:
-    'Geneset-class.R'
-    'Geneset.R'
-    'Genesets-class.R'
     'Genesets.R'
     'GenesetRes.R'
     'GSEAres.R'
@@ -73,43 +75,29 @@ Collate:
     'IGSAinput.R'
     'FitOptions.R'
     'DEnricher.R'
-    'FitOptions-constructor.R'
-    'GSEAparams-common.R'
     'Genesets-asGenesets.R'
-    'Genesets-enrichrGeneSets.R'
-    'Genesets-downloadEnrichrGeneSets.R'
+    'Genesets-enrichr.R'
     'Genesets-geneSetsFromFile.R'
-    'Genesets-getterSetters.R'
     'Genesets-loadGo.R'
     'GenesetsRes.R'
     'GoAnalysis.R'
-    'GoAnalysis-getHeights.R'
-    'IGSAres.R'
-    'MIGSAres-class.R'
-    'MIGSAres.R'
-    'GoAnalysis-migsaGoTree.R'
     'MGSZ.R'
+    'IGSAres.R'
     'IGSAinput-getterSetters.R'
     'IGSA.R'
-    'IGSAinput-common.R'
     'IGSAinput-getDEGenes.R'
-    'MIGSAinput-class.R'
-    'MIGSAinput-getterSetters.R'
+    'MIGSAres-class.R'
     'MIGSA.R'
     'MIGSAPackage.R'
-    'MIGSAinput-common.R'
     'MIGSAmGSZ.R'
+    'MIGSAres.R'
+    'MIGSAres-GoAnalysis.R'
     'MIGSAres-common.R'
     'MIGSAres-setEnrCutoff.R'
-    'MIGSAres-genesInSets.R'
-    'MIGSAres-filterByGenes.R'
-    'MIGSAres-geneSetBarplot.R'
-    'MIGSAres-genesBarplot.R'
-    'MIGSAres-genesHeatmap.R'
+    'MIGSAres-genesManipulation.R'
     'MIGSAres-getAdditionalInfo.R'
-    'MIGSAres-migsaHeatmap.R'
-    'SEAparams-common.R'
+    'MIGSAres-plotting.R'
     'data-bcMigsaRes.R'
     'data-migsaRes.R'
-    'dataDownloaders.R'
+    'summaryFunctions.R'
 RoxygenNote: 5.0.1

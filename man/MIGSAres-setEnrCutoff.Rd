@@ -4,7 +4,7 @@
 \name{setEnrCutoff}
 \alias{setEnrCutoff}
 \alias{setEnrCutoff,MIGSAres,numeric-method}
-\title{Set enrichment cutoff for a MIGSAres object.}
+\title{Set enrichment cutoff for a MIGSAres object}
 \usage{
 setEnrCutoff(object, newEnrCutoff)
 
@@ -17,7 +17,7 @@ setEnrCutoff(object, newEnrCutoff)
 enrichment cutoff. If NA then enrichment cutoff is unset for object.}
 }
 \value{
-a MIGSAres object with the updated slots.
+A MIGSAres object with the updated slots.
 }
 \description{
 \code{setEnrCutoff} sets the enrichment cutoff value for a MIGSAres object in

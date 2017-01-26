@@ -3,27 +3,35 @@
 #'\code{MIGSA} runs a MIGSA execution. Functional analysis is done for each 
 #'experiment by means of dEnricher and mGSZ.
 #'
-#'@param migsaInput MIGSAinput object to analyze.
-#'@param ... not in use.
+#'@param igsaInputs list of IGSAinput objects to execute.
+#'@param geneSets (optional) named list of GeneSetCollection objects to be 
+#'tested for enrichment (names must be unique). If provided then it will be 
+#'tested in every IGSAinput, if not, each IGSAinput object must have its own 
+#'list of GeneSetCollection.
+#'@param bp_param (optional) BiocParallelParam to execute MIGSA 
+#'in parallel.
 #'@param saveResults logical indicating if back up of each individual 
 #'experiment analysis should be saved. It will be saved in 
-#'getwd()"/migsaResults/"experimentName".RData".
+#'getwd()"/migsaResults/"experimentName".RData". (default: FALSE).
+#'@param ... not in use.
 #'
-#'@return MIGSAres object.
+#'@return A MIGSAres object.
 #'
 #'@docType methods
 #'@name MIGSA
 #'@rdname MIGSA
+#'@seealso \code{\link{IGSAinput-class}}
+#'@seealso \code{\link{MIGSAres-class}}
 #'
 #'@exportMethod MIGSA
 #'
-setGeneric(name="MIGSA", def=function(migsaInput, ...) {
+setGeneric(name="MIGSA", def=function(igsaInputs, ...) {
     standardGeneric("MIGSA")
 })
 
 #'@inheritParams MIGSA
 #'@rdname MIGSA
-#'@aliases MIGSA,MIGSAinput,logical-method
+#'@aliases MIGSA,list
 #'
 #'@importFrom futile.logger flog.info
 #'@include IGSA.R
@@ -32,7 +40,6 @@ setGeneric(name="MIGSA", def=function(migsaInput, ...) {
 #'@include IGSAinput-getterSetters.R
 #'@include IGSAres.R
 #'@include MIGSAres-class.R
-#'@include MIGSAinput-getterSetters.R
 #'@examples
 #'## Lets simulate two expression matrices of 1000 genes and 30 subjects.
 #'nGenes <- 1000; # 1000 genes
@@ -69,33 +76,48 @@ setGeneric(name="MIGSA", def=function(migsaInput, ...) {
 #'## Lets create randomly 200 gene sets, of 10 genes each
 #'gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
 #'names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-#'myGSs <- as.Genesets(gSets, name="myGeneSets");
+#'myGSs <- as.Genesets(gSets);
 #'
 #'fitOpts <- FitOptions(conditions);
 #'
 #'igsaInput1 <- IGSAinput(name="igsaInput1", expr_data=exprData1, 
-#'fit_options=fitOpts, gene_sets_list=list(myGSs));
+#'fit_options=fitOpts, gene_sets_list=list(myGSs=myGSs));
 #'igsaInput2 <- IGSAinput(name="igsaInput2", expr_data=exprData2, 
-#'fit_options=fitOpts, gene_sets_list=list(myGSs));
+#'fit_options=fitOpts, gene_sets_list=list(myGSs=myGSs));
 #'
-#'migsaInput <- MIGSAinput(experiments=list(igsaInput1, igsaInput2));
+#'experiments <- list(igsaInput1, igsaInput2);
 #'
 #'## Finally run MIGSA!
-#'migsaRes <- MIGSA(migsaInput);
+#'\dontrun{
+#'migsaRes <- MIGSA(experiments);
+#'}
 #'
 setMethod(
     f="MIGSA",
-    signature=c("MIGSAinput"),
-    definition=function(migsaInput, saveResults=FALSE) {
+    signature=c("list"),
+    definition=function(igsaInputs, geneSets=list(), bp_param=bpparam(),
+        saveResults=FALSE) {
         flog.info("*************************************");
         flog.info("Starting MIGSA analysis.");
         
-        bp_param <- bpParam(migsaInput);
-        geneSets <- geneSetsList(migsaInput);
+        if (length(igsaInputs) <= 0) {
+            stop("At least one IGSAinput must be provided");
+        }
+        
+        if (!all(unlist(lapply(igsaInputs, function(x) is(x, "IGSAinput"))))) {
+            stop("igsaInputs must be a list of IGSAinput objects");
+        }
+        
+        # IGSAinput names must be unique
+        exprs_names <- unlist(lapply(igsaInputs, name));
+        if (length(exprs_names) != length(unique(exprs_names))) {
+            stop("IGSAinput names must be unique");
+        }
+        rm(exprs_names);
         
         # for each IGSAinput
-        actRes <- lapply(experiments(migsaInput), function(igsaInput) {
-            # if migsaInput had gene sets then these must be used
+        actRes <- lapply(igsaInputs, function(igsaInput) {
+            # if gene sets were provided then these must be used
             if (length(geneSets) > 0) {
                 geneSetsList(igsaInput) <- geneSets;
             }

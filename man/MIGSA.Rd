@@ -3,25 +3,34 @@
 \docType{methods}
 \name{MIGSA}
 \alias{MIGSA}
-\alias{MIGSA,MIGSAinput,logical-method}
-\alias{MIGSA,MIGSAinput-method}
+\alias{MIGSA,list}
+\alias{MIGSA,list-method}
 \title{MIGSA execution}
 \usage{
-MIGSA(migsaInput, ...)
+MIGSA(igsaInputs, ...)
 
-\S4method{MIGSA}{MIGSAinput}(migsaInput, saveResults = FALSE)
+\S4method{MIGSA}{list}(igsaInputs, geneSets = list(), bp_param = bpparam(),
+saveResults = FALSE)
 }
 \arguments{
-\item{migsaInput}{MIGSAinput object to analyze.}
+\item{igsaInputs}{list of IGSAinput objects to execute.}
 
 \item{...}{not in use.}
 
+\item{geneSets}{(optional) named list of GeneSetCollection objects to be 
+tested for enrichment (names must be unique). If provided then it will be 
+tested in every IGSAinput, if not, each IGSAinput object must have its own 
+list of GeneSetCollection.}
+
+\item{bp_param}{(optional) BiocParallelParam to execute MIGSA 
+in parallel.}
+
 \item{saveResults}{logical indicating if back up of each individual 
 experiment analysis should be saved. It will be saved in 
-getwd()"/migsaResults/"experimentName".RData".}
+getwd()"/migsaResults/"experimentName".RData". (default: FALSE).}
 }
 \value{
-MIGSAres object.
+A MIGSAres object.
 }
 \description{
 \code{MIGSA} runs a MIGSA execution. Functional analysis is done for each 
@@ -63,19 +72,26 @@ nGSets <- 200; # 200 gene sets
 ## Lets create randomly 200 gene sets, of 10 genes each
 gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
 names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-myGSs <- as.Genesets(gSets, name="myGeneSets");
+myGSs <- as.Genesets(gSets);
 
 fitOpts <- FitOptions(conditions);
 
 igsaInput1 <- IGSAinput(name="igsaInput1", expr_data=exprData1, 
-fit_options=fitOpts, gene_sets_list=list(myGSs));
+fit_options=fitOpts, gene_sets_list=list(myGSs=myGSs));
 igsaInput2 <- IGSAinput(name="igsaInput2", expr_data=exprData2, 
-fit_options=fitOpts, gene_sets_list=list(myGSs));
+fit_options=fitOpts, gene_sets_list=list(myGSs=myGSs));
 
-migsaInput <- MIGSAinput(experiments=list(igsaInput1, igsaInput2));
+experiments <- list(igsaInput1, igsaInput2);
 
 ## Finally run MIGSA!
-migsaRes <- MIGSA(migsaInput);
+\dontrun{
+migsaRes <- MIGSA(experiments);
+}
 
+}
+\seealso{
+\code{\link{IGSAinput-class}}
+
+\code{\link{MIGSAres-class}}
 }
 

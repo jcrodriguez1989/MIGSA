@@ -1,15 +1,16 @@
-#'Accessors for IGSAinput class.
+#'Accessors for IGSAinput class
 #'
 #'Getters and setters functions to access IGSAinput object slots.
 #'
 #'@param object IGSAinput object.
 #'@param value value to replace in the slot.
 #'
-#'@return modified object or desired slot.
+#'@return Modified IGSAinput object or desired slot.
 #'
 #'@docType methods
 #'@name IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
+#'@seealso \code{\link{IGSAinput-class}}
 #'@include IGSAinput-class.R
 #'
 #'@examples
@@ -40,6 +41,16 @@ setGeneric(name="IGSAinput-getterSetters", def=function(object) {
     standardGeneric("IGSAinput-getterSetters")
 })
 
+#'@name name
+#'@inheritParams IGSAinput-getterSetters
+#'@rdname IGSAinput-getterSetters
+#'@aliases name,IGSAinput-method
+#'@exportMethod name
+#'
+setGeneric(name="name", def=function(object) {
+    standardGeneric("name")
+})
+
 #'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases name,IGSAinput-method
@@ -49,6 +60,16 @@ setMethod(f="name", signature="IGSAinput",
         return(object@name)
     }
 )
+
+#'@name name<-
+#'@inheritParams IGSAinput-getterSetters
+#'@rdname IGSAinput-getterSetters
+#'@aliases name<-,IGSAinput-method
+#'@exportMethod name<-
+#'
+setGeneric(name="name<-", def=function(object, value) {
+    standardGeneric("name<-")
+})
 
 #'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters

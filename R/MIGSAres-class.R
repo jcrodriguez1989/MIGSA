@@ -6,6 +6,14 @@
 #'@importFrom data.table data.table
 #'@name MIGSAres-class
 #'@rdname MIGSAres-class
+#'@seealso \code{\link{MIGSA}}
+#'@seealso \code{\link{getAdditionalInfo}}
+#'@seealso \code{\link{MIGSAres-common}}
+#'@seealso \code{\link{MIGSAres-genes}}
+#'@seealso \code{\link{MIGSAres-GOanalysis}}
+#'@seealso \code{\link{MIGSAres-plots}}
+#'@seealso \code{\link{setEnrCutoff}}
+#'@seealso \code{\link{summary}}
 #'@exportClass MIGSAres
 #'
 setClass(

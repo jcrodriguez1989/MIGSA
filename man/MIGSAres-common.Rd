@@ -16,8 +16,6 @@
 \alias{merge,MIGSAres,MIGSAres-method}
 \alias{show,MIGSAres}
 \alias{show,MIGSAres-method}
-\alias{summary,MIGSAres}
-\alias{summary,MIGSAres-method}
 \alias{tail,MIGSAres}
 \alias{tail,MIGSAres-method}
 \title{MIGSAres exploratory functions}
@@ -33,8 +31,6 @@
 \S4method{tail}{MIGSAres}(x, n = 6L)
 
 \S4method{[}{MIGSAres,ANY,ANY,ANY}(x, i, j, drop = FALSE)
-
-\S4method{summary}{MIGSAres}(object)
 
 \S4method{show}{MIGSAres}(object)
 
@@ -60,14 +56,14 @@
 \item{y}{MIGSAres object.}
 }
 \value{
-desired object.
+Desired object.
 }
 \description{
 Several R base overwritten functions to manipulate a MIGSAres object as a 
 data.frame way.
 NOTE: When subsetting a MIGSAres object, if it does not have the id, GS_Name 
-and (at least) one experiment columns, then it will stop being a MIGSAres 
-object, i.e., migsaRes[,c("id","igsaInput1")] is no longer a MIGSAres object.
+and (at least) one experiment columns, then it wont be a MIGSAres object, 
+i.e., migsaRes[,c("id","igsaInput1")] is no longer a MIGSAres object.
 }
 \examples{
 data(migsaRes);
@@ -113,19 +109,6 @@ class(migsaRes[1:5, 1:4]);
 ## MIGSAres object.
 migsaRes[, c("igsaInput1", "igsaInput2")];
 class(migsaRes[, c("igsaInput1", "igsaInput2")]);
-
-data(migsaRes);
-
-### As enrichment cutoff is not set then we will get for each experiment the 
-### number of enriched gene sets at different cutoff values.
-summary(migsaRes);
-
-### Lets set the enrichment cutoff at 0.01
-migsaResWCoff <- setEnrCutoff(migsaRes, 0.01);
-
-### Now as summary we will get the number of enriched gene sets per 
-### experiment and their intersections.
-summary(migsaResWCoff);
 
 data(migsaRes);
 

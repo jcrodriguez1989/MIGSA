@@ -48,7 +48,7 @@ reasonable.}
 \item{p}{number of permutations for p-value calculation.}
 }
 \value{
-data.frame with gene sets p-values and additional information.
+A data.frame with gene sets p-values and additional information.
 }
 \description{
 \code{MIGSAmGSZ} is an optimized mGSZ version. It runs much faster than the 
@@ -60,7 +60,7 @@ p-value.
 \examples{
 nGenes <- 1000; # 1000 genes
 nSamples <- 30; # 30 subjects
-geneNames <- paste("g", 1:nGenes, sep = ""); # with names g1 ... g1000
+geneNames <- paste("g", 1:nGenes, sep=""); # with names g1 ... g1000
 ## Create random gene expression data matrix.
 set.seed(8818);
 exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
@@ -84,7 +84,9 @@ nGSets <- 200; # 200 gene sets
 gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
 names(gSets) <- paste("set", as.character(1:nGSets), sep="");
 
+\dontrun{
 mGSZres <- MIGSAmGSZ(exprData, gSets, conditions);
+}
 
 }
 

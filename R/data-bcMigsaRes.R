@@ -1,4 +1,4 @@
-#'A MIGSA results object obtained from breast cancer data.
+#'A MIGSA results object obtained from breast cancer data
 #'
 #'A MIGSA results object (MIGSAres) obtained using the datasets:
 #'\itemize{
@@ -30,6 +30,6 @@
 #'Full bcMigsaRes object results can be downloaded (refer to Vignette).
 #'
 #'@docType data
-#'@format A breast cancer MIGSAres object
+#'@format A MIGSAres object.
 #'@name bcMigsaRes
 NULL

@@ -19,6 +19,7 @@
 % \VignetteDepends{breastCancerVDX}
 % \VignetteDepends{limma}
 % \VignetteDepends{MIGSA}
+% \VignetteDepends{MIGSAdata}
 % \VignetteDepends{pbcmc}
 
 \author{Juan C Rodriguez\\CONICET\\Universidad Cat\'{o}lica de C\'{o}rdoba\\
@@ -42,7 +43,8 @@ C\'{o}rdoba\\Universidad Nacional de C\'{o}rdoba}
 %% an abstract and keywords
 \Abstract{
 In this vignette we are going to show how we got the RData 
-\textit{pbcmcData.RData} which can be loaded using loadMIGSAdata("pbcmcData").
+\textit{pbcmcData.RData} which can be loaded via the \pkg{MIGSAdata} package 
+using data(pbcmcData).
 }
 \Keywords{singular enrichment analysis, over representation analysis, gene set 
 enrichment analysis, functional class scoring, big omics data}
@@ -131,10 +133,14 @@ names(pbcmcData) <- libNames;
 
 And lets check it is the same data.
 <<validateData, eval=TRUE>>=
-library(MIGSA);
+# save the just created pbcmcData to newPbcmcData
+newPbcmcData <- pbcmcData;
 
-pbcmcData2 <- loadMIGSAdata("pbcmcData");
-all.equal(pbcmcData, pbcmcData2);
+library(MIGSAdata);
+
+# and load the MIGSAdata one.
+data(pbcmcData);
+all.equal(newPbcmcData, pbcmcData);
 @
 
 \section*{Session Info}
@@ -142,6 +148,6 @@ all.equal(pbcmcData, pbcmcData2);
 sessionInfo()
 @
 
-% \bibliography{MIGSA-vignette}
+% \bibliography{MIGSA}
 
 \end{document}

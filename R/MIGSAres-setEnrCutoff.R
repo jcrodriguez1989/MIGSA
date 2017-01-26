@@ -1,4 +1,4 @@
-#'Set enrichment cutoff for a MIGSAres object.
+#'Set enrichment cutoff for a MIGSAres object
 #'
 #'\code{setEnrCutoff} sets the enrichment cutoff value for a MIGSAres object in
 #'order to get detailed enrichment results.
@@ -7,7 +7,7 @@
 #'@param newEnrCutoff numeric value in range [0,1] or NA to set the new
 #'enrichment cutoff. If NA then enrichment cutoff is unset for object.
 #'
-#'@return a MIGSAres object with the updated slots.
+#'@return A MIGSAres object with the updated slots.
 #'
 #'@docType methods
 #'@name setEnrCutoff
