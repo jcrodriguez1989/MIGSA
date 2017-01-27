@@ -41,12 +41,6 @@ setMethod(
     }
 )
 
-setMethod(f="getName", signature="IGSAres",
-    definition=function(object) {
-        return(object@name)
-    }
-)
-
 setGeneric(name="genes_rank", def=function(object) {
     standardGeneric("genes_rank")
 })

@@ -128,7 +128,7 @@ setMethod(
             # if intermediate results must be saved
             if (saveResults) {
                 dir.create("migsaResults", showWarnings=FALSE);
-                save(igsaRes, file=paste("migsaResults/", getName(igsaRes),
+                save(igsaRes, file=paste("migsaResults/", name(igsaInput),
                     ".RData", sep=""));
             }
             return(igsaRes);

@@ -167,6 +167,8 @@ setMethod(
         allParents <- c(allParents, as.list(GOMFPARENTS));
         allParents <- c(allParents, as.list(GOCCPARENTS));
         
+        ids <- gsub(" ", "", ids);
+        
         # for each GO id find its height
         result <- lapply(ids, function(x) {
             getHeight(x, minHeight, allParents)

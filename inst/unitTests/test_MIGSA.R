@@ -1070,42 +1070,41 @@ test_MIGSAmGSZ_ok_validWithVoom <- function() {
 #         ));
 # }
 
-###### MIGSAinput-common tests
+###### IGSAinput-common tests
 
-# test_MIGSAinput_common_ok_summary <- function() {
-#     require(GSEABase);
-#     set.seed(8818);
-#     nGenes <- 200;
-#     nSamples <- 6;
-#     geneNames <- paste("g", 1:nGenes, sep = "");
-#     
-#     exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
-#     rownames(exprData) <- geneNames;
-#     exprData <- new("MAList",list(M=exprData));
-#     
-#     conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
-#     
-#     nGSets <- 10;
-#     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
-#     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-#     myGSs <- as.Genesets(gSets);
-#     
-#     fitOpts <- FitOptions(conditions);
-#     
-#     # to get some DE genes
-#     seaParams <- SEAparams(de_cutoff=0.3);
-#     gseaParams <- GSEAparams(perm_number=5);
-#     
-#     igsaInputName <- "igsaInput";
-#     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
-#         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-#         gene_sets_list=list(myGeneSets=GeneSetCollection(myGSs)));
-#     migsaInput <- MIGSAinput(experiments=list(igsaInput));
-#     
-#     migsaSumm <- summary(migsaInput);
-#     checkTrue(all(migsaSumm == c("igsaInput","6","C1VSC2","3","3","1","FALSE",
-#         "200","0","0.3","fdr","1","briii","5","0.5")));
-# }
+test_IGSAinput_common_ok_summary <- function() {
+    require(GSEABase);
+    set.seed(8818);
+    nGenes <- 200;
+    nSamples <- 6;
+    geneNames <- paste("g", 1:nGenes, sep = "");
+    
+    exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
+    rownames(exprData) <- geneNames;
+    exprData <- new("MAList",list(M=exprData));
+    
+    conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
+    
+    nGSets <- 10;
+    gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
+    names(gSets) <- paste("set", as.character(1:nGSets), sep="");
+    myGSs <- as.Genesets(gSets);
+    
+    fitOpts <- FitOptions(conditions);
+    
+    # to get some DE genes
+    seaParams <- SEAparams(de_cutoff=0.3);
+    gseaParams <- GSEAparams(perm_number=5);
+    
+    igsaInputName <- "igsaInput";
+    igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
+        sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
+        gene_sets_list=list(myGeneSets=GeneSetCollection(myGSs)));
+    
+    igsaSumm <- summary(igsaInput);
+    checkTrue(all(igsaSumm == c("igsaInput","6","C1VSC2","3","3","1","FALSE",
+        "200","0","0.3","fdr","1","briii","5","0.5")));
+}
 
 ###### MIGSAinput-getterSetters tests
 
@@ -1494,42 +1493,40 @@ test_MIGSA_ok_noErrorWtwoPerm <- function() {
     checkEquals(nrow(migsaRes), nGSets);
 }
 
-if (testAll) {
-    test_MIGSA_ok_manuallyDEGenes <- function() {
-        set.seed(8818);
-        nGenes <- 200;
-        nSamples <- 6;
-        geneNames <- paste("g", 1:nGenes, sep = "");
-        
-        exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
-        rownames(exprData) <- geneNames;
-        exprData <- new("MAList",list(M=exprData));
-        
-        conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
-        
-        nGSets <- 10;
-        gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
-        names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-        myGSs <- as.Genesets(gSets);
-        
-        fitOpts <- FitOptions(conditions);
-        
-        # de_cutoff=1 so if we use fit then all genes are DE. but we just set as DE 
-        # the ones from gSet #1
-        seaParams <- SEAparams(de_cutoff=1, de_genes=gSets[[1]]);
-        gseaParams <- GSEAparams(perm_number=2);
-        
-        igsaInputName <- "igsaInput";
-        igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
-            sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-            gene_sets_list=list(myGeneSets=myGSs));
-        experiments <- list(igsaInput);
-        
-        migsaRes <- MIGSA(experiments);
-        checkEquals(sort(unique(unlist(strsplit(
-            migsaRes@migsa_res_all$SEA_enriching_genes, ", ")))),
-            sort(gSets[[1]]));
-    }
+test_MIGSA_ok_manuallyDEGenes <- function() {
+    set.seed(8818);
+    nGenes <- 200;
+    nSamples <- 6;
+    geneNames <- paste("g", 1:nGenes, sep = "");
+    
+    exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
+    rownames(exprData) <- geneNames;
+    exprData <- new("MAList",list(M=exprData));
+    
+    conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
+    
+    nGSets <- 10;
+    gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
+    names(gSets) <- paste("set", as.character(1:nGSets), sep="");
+    myGSs <- as.Genesets(gSets);
+    
+    fitOpts <- FitOptions(conditions);
+    
+    # de_cutoff=1 so if we use fit then all genes are DE. but we just set as DE 
+    # the ones from gSet #1
+    seaParams <- SEAparams(de_cutoff=1, de_genes=gSets[[1]]);
+    gseaParams <- GSEAparams(perm_number=2);
+    
+    igsaInputName <- "igsaInput";
+    igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
+        sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments <- list(igsaInput);
+    
+    migsaRes <- MIGSA(experiments);
+    checkEquals(sort(unique(unlist(strsplit(
+        migsaRes@migsa_res_all$SEA_enriching_genes, ", ")))),
+        sort(gSets[[1]]));
 }
 
 test_MIGSA_ok_usebri <- function() {
@@ -1722,6 +1719,36 @@ test_MIGSA_ok_useDifferenttests <- function() {
 
 
 #### Incorrect ones
+
+test_MIGSA_wrong_noExperiments <- function() {
+    checkException(MIGSA(list()));
+}
+
+test_MIGSA_wrong_wrongExperiments <- function() {
+    checkException(MIGSA(list(1:10)));
+}
+
+test_MIGSA_wrong_repExpNames <- function() {
+    set.seed(8818);
+    nGenes <- 200;
+    nSamples <- 6;
+    geneNames <- paste("g", 1:nGenes, sep = "");
+    
+    exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
+    rownames(exprData) <- geneNames;
+    exprData <- new("MAList",list(M=exprData));
+    
+    conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
+    fitOpts <- FitOptions(conditions);
+    
+    igsaInput <- IGSAinput(name="exp", expr_data=exprData,
+        fit_options=fitOpts);
+    
+    checkException(MIGSA(list(
+        igsaInput,
+        igsaInput
+    )));
+}
 
 test_MIGSA_wrong_noGSets <- function() {
     set.seed(8818);
@@ -1920,6 +1947,13 @@ test_MIGSAres_common_ok_merge <- function() {
         sort(bcMigsaResDframe[,10]));
     checkEquals(sort(migsaResMergeDframe[,13]),
         sort(bcMigsaResDframe[,11]));
+}
+
+test_MIGSAres_common_wrong_merge <- function() {
+    data(migsaRes);
+    
+    # experiment names can not be the same
+    checkException(merge(migsaRes, migsaRes));
 }
 
 ###### MIGSAres-setEnrCutoff tests
@@ -2167,20 +2201,18 @@ test_MIGSAres_migsaHeatmap_ok_simplePlot <- function() {
 
 ###### GoAnalysis-getHeights tests
 
-if (testAll) {
-    test_GoAnalysis_getHeights <- function() {
-        heights <- getHeights(
-            c("GO:0008150", "GO:0003674", "GO:0005575", "fakeId"));
-        checkEquals(heights[1:3], c(0,0,0));
-        checkTrue(is.na(heights[[4]]));
-    }
+test_GoAnalysis_getHeights <- function() {
+    heights <- getHeights(
+        c("GO:0008150", "GO:0007610", "GO:0050789", "fakeId"));
+    checkEquals(heights[1:3], c(0,1,1));
+    checkTrue(is.na(heights[[4]]));
 }
 
 test_GoAnalysis_getHeights_maxHeights <- function() {
     heights <- getHeights(
-        c("GO:0008150", "GO:0003674", "GO:0005575", "fakeId"),
+        c("GO:0008150", "GO:0007610", "GO:0050789", "fakeId"),
         minHeight=FALSE);
-    checkEquals(heights[1:3], c(0,0,0));
+    checkEquals(heights[1:3], c(0,1,2));
     checkTrue(is.na(heights[[4]]));
 }
 
@@ -2188,15 +2220,13 @@ test_GoAnalysis_getHeights_maxHeights <- function() {
 
 #### Correct ones
 
-if (testAll) {
-    test_GoAnalysis_migsaGoTree_ok_simplePlot <- function() {
-        data(bcMigsaRes);
-        bcMigsaRes <- bcMigsaRes[1:10,];
-        
-        plotRes <- migsaGoTree(bcMigsaRes);
-        checkTrue(all(sort(unlist(lapply(plotRes$gotree, nrow))) == 
-            sort(table(bcMigsaRes$GS_Name)[-3])));
-    }
+test_GoAnalysis_migsaGoTree_ok_simplePlot <- function() {
+    data(bcMigsaRes);
+    bcMigsaRes <- bcMigsaRes[1:4,];
+    
+    system.time(plotRes <- migsaGoTree(bcMigsaRes));
+    checkTrue(all(sort(unlist(lapply(plotRes$gotree, nrow))) == 
+        sort(table(bcMigsaRes$GS_Name)[-3])));
 }
 
 #### Incorrect ones

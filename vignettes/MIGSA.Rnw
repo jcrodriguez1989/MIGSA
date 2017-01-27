@@ -137,6 +137,30 @@ it returns too much information, very difficult to explore, to overcome this,
 \pkg{MIGSA} provides several tools to easily explore and visualize results at 
 gene set and individual genes level.
 
+\section{Preliminaries}
+
+\subsection{Citing MIGSA}
+\pkg{MIGSA} implements a body of methodological research by the authors and 
+co-workers. Citations are the main means by which the authors receive 
+professional credit for their work. The \pkg{MIGSA} package can be cited as:
+\\
+\\ Rodriguez JC, Gonz\'{a}lez GA, Fresno C, Llera AS, Fern\'{a}ndez EA (2016).
+“Improving information retrieval in functional analysis.” \textit{Computers in 
+Biology and Medicine}, \textbf{79}, 10–20.
+
+\subsection{Installation}
+\pkg{MIGSA} is a package for the R computing environment and it is assumed that 
+you have already installed R. See the R project at http://www.r-project.org. 
+To install the latest version of \pkg{MIGSA}, you will need to be using the 
+latest version of R.
+\\ \pkg{MIGSA} is part of the Bioconductor project at 
+http://www.bioconductor.org. (Prior to R 3.4).
+\\To get \pkg{MIGSA} package you can type in an R session:
+<<eval=FALSE>>=
+source("http://www.bioconductor.org/biocLite.R");
+biocLite("MIGSA");
+@
+
 \section{MIGSAmGSZ}
 
 \subsection{mGSZ speedup}
