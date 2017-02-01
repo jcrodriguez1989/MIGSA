@@ -30,14 +30,15 @@
 #'     matrix(paste("gene", 1:(10*20)), nrow=10));
 #'
 #'## And save this file as a tab separated file.
-#'write.table(gsets, file="fakeGsets.tsv", sep="\t",
+#'geneSetsFile <- paste(tempdir(), "/fakeGsets.tsv", sep="");
+#'write.table(gsets, file=geneSetsFile, sep="\t",
 #'     col.names=FALSE, row.names=FALSE, quote=FALSE);
 #'
 #'## Now lets load this tsv file as a GeneSetCollection object.
-#'myGsets <- geneSetsFromFile("fakeGsets.tsv");
+#'myGsets <- geneSetsFromFile(geneSetsFile);
 #'
 #'## And lets delete this tsv file (so we dont have garbage in our disk).
-#'unlink("fakeGsets.tsv");
+#'unlink(geneSetsFile);
 #'
 setGeneric(name="geneSetsFromFile", def=function(filePath, ... ) {
     standardGeneric("geneSetsFromFile")

@@ -30,6 +30,49 @@
 #'## rows, and five columns (id, Name, GS_Name, and the experiments names).
 #'dim(migsaRes);
 #'
+#'## migsaRes shown as data.frame has these column names: id, Name, GS_Name, 
+#'## and the experiments names. As we ran two experiments, names igsaInput1 
+#'## and igsaInput2, we can use $ in these ways:
+#'head(migsaRes$id);
+#'table(migsaRes$Name);
+#'table(migsaRes$GS_Name);
+#'head(migsaRes$igsaInput1);
+#'head(migsaRes$igsaInput2);
+#'
+#'colnames(migsaRes);
+#'
+#'head(migsaRes);
+#'
+#'## Or see the first 10
+#'head(migsaRes, n=10);
+#'
+#'tail(migsaRes);
+#'
+#'## Or see the last 10
+#'tail(migsaRes, n=10);
+#'
+#'## migsaRes shown as data.frame has these column names: id, Name, GS_Name, 
+#'## and the experiments names. As we ran two experiments, names igsaInput1 
+#'## and igsaInput2, we can use [ in these ways:
+#'
+#'## Lets get the first 5 rows and 4 columns (the result is a MIGSAres object).
+#'migsaRes[1:5, 1:4];
+#'class(migsaRes[1:5, 1:4]);
+#'
+#'## Lets get the experiments results. Note that this is not any more a 
+#'## MIGSAres object.
+#'migsaRes[, c("igsaInput1", "igsaInput2")];
+#'class(migsaRes[, c("igsaInput1", "igsaInput2")]);
+#'
+#'migsaRes;
+#'
+#'migsaResDFrame <- as.data.frame(migsaRes);
+#'head(migsaResDFrame);
+#'
+#'migsaRes1 <- migsaRes[,1:4];
+#'migsaRes2 <- migsaRes[,c(1:3,5)];
+#'migsaResMerged <- merge(migsaRes1, migsaRes2);
+#'
 setMethod("dim",
     signature=c("MIGSAres"),
     function(x) {
@@ -43,16 +86,6 @@ setMethod("dim",
 #'@aliases $,MIGSAres-method
 #'@include MIGSAres.R
 #'@exportMethod $
-#'@examples
-#'data(migsaRes);
-#'## migsaRes shown as data.frame has these column names: id, Name, GS_Name, 
-#'## and the experiments names. As we ran two experiments, names igsaInput1 
-#'## and igsaInput2, we can use $ in these ways:
-#'head(migsaRes$id);
-#'table(migsaRes$Name);
-#'table(migsaRes$GS_Name);
-#'head(migsaRes$igsaInput1);
-#'head(migsaRes$igsaInput2);
 #'
 setMethod("$",
     signature=c("MIGSAres"),
@@ -68,9 +101,6 @@ setMethod("$",
 #'@rdname MIGSAres-common
 #'@aliases colnames,MIGSAres
 #'@exportMethod colnames
-#'@examples
-#'data(migsaRes);
-#'colnames(migsaRes);
 #'
 setMethod("colnames",
     signature=c("MIGSAres"),
@@ -84,12 +114,6 @@ setMethod("colnames",
 #'@rdname MIGSAres-common
 #'@aliases head,MIGSAres
 #'@exportMethod head
-#'@examples
-#'data(migsaRes);
-#'head(migsaRes);
-#'
-#'## Or see the first 10
-#'head(migsaRes, n=10);
 #'
 setMethod("head",
     signature=c("MIGSAres"),
@@ -104,12 +128,6 @@ setMethod("head",
 #'@rdname MIGSAres-common
 #'@aliases tail,MIGSAres
 #'@exportMethod tail
-#'@examples
-#'data(migsaRes);
-#'tail(migsaRes);
-#'
-#'## Or see the first 10
-#'tail(migsaRes, n=10);
 #'
 setMethod("tail",
     signature=c("MIGSAres"),
@@ -125,20 +143,6 @@ setMethod("tail",
 #'@aliases [,MIGSAres,ANY,ANY,ANY-method
 #'@include MIGSAres.R
 #'@exportMethod "["
-#'@examples
-#'data(migsaRes);
-#'## migsaRes shown as data.frame has these column names: id, Name, GS_Name, 
-#'## and the experiments names. As we ran two experiments, names igsaInput1 
-#'## and igsaInput2, we can use [ in these ways:
-#'
-#'## Lets get the first 5 rows and 4 columns (the result is a MIGSAres object).
-#'migsaRes[1:5, 1:4];
-#'class(migsaRes[1:5, 1:4]);
-#'
-#'## Lets get the experiments results. Note that this is not any more a 
-#'## MIGSAres object.
-#'migsaRes[, c("igsaInput1", "igsaInput2")];
-#'class(migsaRes[, c("igsaInput1", "igsaInput2")]);
 #'
 setMethod("[",
     signature=c("MIGSAres"),
@@ -185,10 +189,6 @@ setMethod("[",
 #'@aliases show,MIGSAres
 #'@include MIGSAres.R
 #'@exportMethod show
-#'@examples
-#'data(migsaRes);
-#'
-#'migsaRes;
 #'
 setMethod("show",
     signature=c("MIGSAres"),
@@ -205,10 +205,6 @@ setMethod("show",
 #'@aliases as.data.frame,MIGSAres
 #'@include MIGSAres.R
 #'@exportMethod as.data.frame
-#'@examples
-#'data(migsaRes);
-#'
-#'migsaResDFrame <- as.data.frame(migsaRes);
 #'
 setMethod(
     f="as.data.frame",
@@ -224,12 +220,6 @@ setMethod(
 #'@aliases merge,MIGSAres,MIGSAres
 #'@include MIGSAres.R
 #'@exportMethod merge
-#'@examples
-#'data(migsaRes);
-#'
-#'migsaRes1 <- migsaRes[,1:4];
-#'migsaRes2 <- migsaRes[,c(1:3,5)];
-#'migsaResMerged <- merge(migsaRes1, migsaRes2);
 #'
 setMethod(
     f="merge",

@@ -71,6 +71,8 @@ enriched (0 to #experiments).
 }
 \examples{
 data(migsaRes);
+## For this example lets work with the first 50 results
+migsaRes <- migsaRes[1:50,];
 
 #### genesHeatmap
 ## First lets set a cutoff of 0.1
@@ -105,11 +107,9 @@ migsaHeatmap(migsaResWCoff);
 ## Lets set a cutoff of 0.1
 migsaResWCoff <- setEnrCutoff(migsaRes, 0.1);
 
-\dontrun{
 ## Lets check in how many experiments each gene set was enriched (in more 
 ## than one experiment).
 geneSetBarplot(migsaResWCoff, enrFilter=1);
-}
 
 }
 \seealso{

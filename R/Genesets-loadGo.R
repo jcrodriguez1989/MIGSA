@@ -24,19 +24,12 @@ setGeneric(name="loadGo", def=function(ontology) {
 #'@inheritParams loadGo
 #'@aliases loadGo,character-method
 #'
-#'@importFrom AnnotationDbi as.list Ontology Term
+#'@importFrom AnnotationDbi as.list mappedkeys Ontology Term
 #'@importFrom GSEABase GOCollection GeneSet EntrezIdentifier GeneSetCollection
 #'@importFrom org.Hs.eg.db org.Hs.egGO2ALLEGS
-#'@importFrom futile.logger flog.error
 #'@examples
 #'## Lets load the Cellular Components gene sets from the Gene Ontology.
-#'\dontrun{
 #'ccGSets <- loadGo("CC");
-#'}
-# biocCheck gives me a note if I dont have any line ran.
-#'\dontshow{
-#'aux <- 1:10; rm(aux);
-#'}
 #'
 setMethod(
     f="loadGo",
@@ -48,17 +41,30 @@ setMethod(
         }
         
         # download GO gene sets
+        # org.Hs.egGO is an R object that provides mappings between entrez 
+        # gene identifiers and the GO identifiers that they are directly 
+        # associated with
+        # go <- org.Hs.egGO;
+        
+        # org.Hs.egGO2ALLEGS is an R object that provides mappings between 
+        # a given GO identifier and all of the Entrez Gene identifiers 
+        # annotated at that GO term OR TO ONE OF IT’S CHILD NODES
         go <- org.Hs.egGO2ALLEGS;
+        goIds <- mappedkeys(go);
+        
+        # filter the desired ontology
+        go <- go[Ontology(goIds) == ontology];
         go <- as.list(go);
         go <- lapply(go, unique);
         
         goCollection <- GOCollection(ontology=ontology,
             evidenceCode=as.character(NA));
         
-        # filter the desired ontology
-        go <- go[Ontology(names(go)) == ontology];
-        gsets <- lapply(names(go), function(x) {
-            gset <- GeneSet(go[[x]], setIdentifier=Term(x), setName=x,
+        terms <- Term(names(go));
+        gsets <- lapply(seq_along(go), function(i) {
+            gset <- GeneSet(go[[i]],
+                setIdentifier=terms[[i]],
+                setName=names(go)[[i]],
                 geneIdType=EntrezIdentifier(), 
                 collectionType=goCollection);
             

@@ -113,7 +113,7 @@ common functional patterns, or more interestingly, particular patterns of our
 experiment in question. This analysis methodology has not yet been exploited 
 since at present there is no tool that allows this type of exploration, thus 
 leaving aside a lot of valuable information that might lead to research topics.
-\\ Functional Analysis methodology allows researchers explore which gene sets 
+\\ Functional analysis methodology allows researchers explore which gene sets 
 resulted deregulated by any desired contrast over one experimental scenario. As 
 shown in \citep{rodriguez2016improving} in order to gain as much biological 
 insight as possible, both singular enrichment analysis (SEA) and gene set 
@@ -353,17 +353,18 @@ head(MIGSAmGSZres);
 
 \section{MIGSA simple example}
 Following, we show how to simply execute one \textit{MIGSA} analysis.
-\\ In this example we will generate two expression matrices with 1000 genes (40 
-differentially expressed) and 30 subjects (15 of condition "C1" and 15 of 
-"C2"), and two sets of 100 gene sets of ten genes each one.
+\\ In this example we will generate two expression matrices with 300 genes (30 
+differentially expressed) and 16 subjects (8 of condition "C1" and 8 of 
+"C2"), and two sets of 30 gene sets of ten genes each one.
 
 <<MIGSA example>>=
 library(MIGSA);
 
-## Lets simulate two expression matrices of 1000 genes and 30 subjects.
-nGenes <- 1000; # 1000 genes
-nSamples <- 30; # 30 subjects
-geneNames <- paste("g", 1:nGenes, sep = ""); # with names g1 ... g1000
+## Lets simulate two expression matrices of 300 genes and 16 subjects.
+nGenes <- 300; # 300 genes
+nSamples <- 16; # 16 subjects
+geneNames <- paste("g", 1:nGenes, sep = ""); # with names g1 ... g300
+
 ## Create random gene expression data matrix.
 set.seed(8818);
 exprData1 <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
@@ -371,8 +372,8 @@ rownames(exprData1) <- geneNames;
 exprData2 <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
 rownames(exprData2) <- geneNames;
 
-## There will be 40 differentially expressed genes.
-nDeGenes <- nGenes/25;
+## There will be 30 differentially expressed genes.
+nDeGenes <- nGenes/10;
 ## Lets generate the offsets to sum to the differentially expressed genes.
 deOffsets <- matrix(2*abs(rnorm(nDeGenes*nSamples/2)), ncol=nSamples/2);
 
@@ -388,12 +389,12 @@ exprData2[deIndexes2, 1:(nSamples/2)] <-
 exprData1 <- new("MAList",list(M=exprData1));
 exprData2 <- new("MAList",list(M=exprData2));
 
-## 15 subjects with condition C1 and 15 with C2.
+## 8 subjects with condition C1 and 8 with C2.
 conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
 fitOpts <- FitOptions(conditions);
 
-nGSets <- 100; # 100 gene sets
-## Lets create randomly 100 gene sets, of 10 genes each
+nGSets <- 30; # 30 gene sets
+## Lets create randomly 30 gene sets, of 10 genes each
 
 gSets1 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
 names(gSets1) <- paste("set", as.character(1:nGSets), sep="");
@@ -422,14 +423,12 @@ igsaInput2 <- IGSAinput(name="igsaInput2", expr_data=exprData2,
     gene_sets_list=list(myGeneSets1=myGSs1, myGeneSets2=myGSs2));
 
 experiments <- list(igsaInput1, igsaInput2);
-@
-
-<<eval=FALSE>>=
-## Not run:
 
 ## And then simply run MIGSA
 migsaRes <- MIGSA(experiments);
-## End(Not run)
+
+## migsaRes contains the p-values obtained in each experiment for each gene set
+head(migsaRes);
 @
 
 <<>>=
@@ -680,6 +679,7 @@ library(MIGSAdata);
 data(bcMigsaResAsList);
 bcMigsaRes <- MIGSA:::MIGSAres.data.table(bcMigsaResAsList$dframe, 
 bcMigsaResAsList$genesRank);
+rm(bcMigsaResAsList);
 ## End(Loading data)
 
 ## Lets see a summary of enriched gene sets at different cutoff values
@@ -778,6 +778,11 @@ table(tcgaExclusive$GS_Name);
 
 ## Lets see which is this KEGG enriched gene set
 tcgaExclusive[ tcgaExclusive$GS_Name == "KEGG_2015", "id" ];
+
+## Lets see in which depths of the GO tree are these gene sets
+table(getHeights(
+    tcgaExclusive[ tcgaExclusive$GS_Name != "KEGG_2015", "id", drop=TRUE]));
+## We can see that the most of the gene sets are between depths three and five
 @
 
 <<echo=FALSE,results=hide>>=

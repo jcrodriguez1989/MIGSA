@@ -23,12 +23,7 @@ the Gene Ontology data base (org.Hs.eg.db R package).
 }
 \examples{
 ## Lets load the Cellular Components gene sets from the Gene Ontology.
-\dontrun{
 ccGSets <- loadGo("CC");
-}
-\dontshow{
-aux <- 1:10; rm(aux);
-}
 
 }
 \seealso{

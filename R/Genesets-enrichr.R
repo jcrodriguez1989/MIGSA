@@ -27,27 +27,22 @@
 #'@seealso \code{\link{loadGo}}
 #'
 #'@examples
-#'\dontrun{
 #'## Lets list all the gene sets that can be downloaded from Enichr website.
 #'enrichrGeneSets();
 #'
-#'## Now lets list only the gene sets that have KEGG in their names 
-#'## (different KEGG versions).
-#'enrichrGeneSets("KEGG");
+#'\dontrun{
+#'## Now lets list only the gene sets that have BioCarta in their names 
+#'## (different BioCarta versions).
+#'enrichrGeneSets("BioCarta");
+#'}
 #'
-#'## And lets download the latest KEGG gene sets from Enrichr.
+#'## And lets download the latest BioCarta gene sets from Enrichr.
 #'## Make sure you use the same names as listed with enrichrGeneSets() .
-#'keggGSs <- downloadEnrichrGeneSets(c("KEGG_2016"));
-#'}
-# biocCheck gives me a note if I dont have any line ran.
-#'\dontshow{
-#'aux <- 1:10; rm(aux);
-#'}
+#'biocartaGSs <- downloadEnrichrGeneSets(c("BioCarta_2015"));
 #'
 setGeneric(name="Genesets-enrichr", def=function(pattern) {
     standardGeneric("Genesets-enrichr")
 })
-
 
 #'@name enrichrGeneSets
 #'@inheritParams Genesets-enrichr
@@ -128,12 +123,7 @@ setMethod(
         downloadUrlFst <-
 "http://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=";
         
-        # just for filtering if user desired gene sets are valid. Maybe it 
-        # would be faster just to put a try catch when downloading each.
-        libraries <- enrichrGeneSets()[,1];
-        
         # filtering invalid gene sets
-        geneSetNames <- intersect(geneSetNames, libraries);
         if (length(geneSetNames) < 1) {
             stop("No gene sets found to download from Enrichr");
         }
@@ -152,7 +142,9 @@ setMethod(
             
             actUrl <- paste(downloadUrlFst, libName, sep="");
             # downloading gene set
-            tmp <- readLines(actUrl);
+            tmp <- try({ readLines(actUrl); });
+            if (inherits(tmp, 'try-error')) return(NA);
+            
             flog.info(paste("Downloaded", libName));
             tmp <- strsplit(tmp, "\t");
             flog.info("Converting Symbol to Entrez");
@@ -201,6 +193,8 @@ setMethod(
             return(res);
         })
         names(libraries) <- geneSetNames;
+        libraries <- libraries[!is.na(libraries)];
+        
         return(libraries);
     }
 )

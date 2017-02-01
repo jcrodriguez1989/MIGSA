@@ -71,7 +71,6 @@ data(migsaRes);
 ## rows, and five columns (id, Name, GS_Name, and the experiments names).
 dim(migsaRes);
 
-data(migsaRes);
 ## migsaRes shown as data.frame has these column names: id, Name, GS_Name, 
 ## and the experiments names. As we ran two experiments, names igsaInput1 
 ## and igsaInput2, we can use $ in these ways:
@@ -81,22 +80,18 @@ table(migsaRes$GS_Name);
 head(migsaRes$igsaInput1);
 head(migsaRes$igsaInput2);
 
-data(migsaRes);
 colnames(migsaRes);
 
-data(migsaRes);
 head(migsaRes);
 
 ## Or see the first 10
 head(migsaRes, n=10);
 
-data(migsaRes);
 tail(migsaRes);
 
-## Or see the first 10
+## Or see the last 10
 tail(migsaRes, n=10);
 
-data(migsaRes);
 ## migsaRes shown as data.frame has these column names: id, Name, GS_Name, 
 ## and the experiments names. As we ran two experiments, names igsaInput1 
 ## and igsaInput2, we can use [ in these ways:
@@ -110,15 +105,10 @@ class(migsaRes[1:5, 1:4]);
 migsaRes[, c("igsaInput1", "igsaInput2")];
 class(migsaRes[, c("igsaInput1", "igsaInput2")]);
 
-data(migsaRes);
-
 migsaRes;
 
-data(migsaRes);
-
 migsaResDFrame <- as.data.frame(migsaRes);
-
-data(migsaRes);
+head(migsaResDFrame);
 
 migsaRes1 <- migsaRes[,1:4];
 migsaRes2 <- migsaRes[,c(1:3,5)];

@@ -48,21 +48,18 @@ objects downloading the specified ones from enrichr website
 (http://amp.pharm.mssm.edu /Enrichr/).
 }
 \examples{
-\dontrun{
 ## Lets list all the gene sets that can be downloaded from Enichr website.
 enrichrGeneSets();
 
-## Now lets list only the gene sets that have KEGG in their names 
-## (different KEGG versions).
-enrichrGeneSets("KEGG");
+\dontrun{
+## Now lets list only the gene sets that have BioCarta in their names 
+## (different BioCarta versions).
+enrichrGeneSets("BioCarta");
+}
 
-## And lets download the latest KEGG gene sets from Enrichr.
+## And lets download the latest BioCarta gene sets from Enrichr.
 ## Make sure you use the same names as listed with enrichrGeneSets() .
-keggGSs <- downloadEnrichrGeneSets(c("KEGG_2016"));
-}
-\dontshow{
-aux <- 1:10; rm(aux);
-}
+biocartaGSs <- downloadEnrichrGeneSets(c("BioCarta_2015"));
 
 }
 \seealso{
