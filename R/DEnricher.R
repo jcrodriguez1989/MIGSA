@@ -160,6 +160,7 @@ setMethod(
         flog.info(paste("Running SEA at cores:", bp_param$workers));
         seaRes <- bplapply(gs, function(actGset) {
         #     seaRes <- lapply(gs@gene_sets, function(actGset) {
+            require(MIGSA);
             genes.term <- unique(unlist(geneIds(actGset)))
             p.value <- switch(test,
                 FisherTest   = doFisherTest(genes.group, genes.term,

@@ -173,6 +173,7 @@ setMethod(
         col.perm.mGSZ <- do.call(rbind, 
             bplapply(1:(diff.expr.dat.sz[2] -1), function(k) {
         #   lapply(1:(diff.expr.dat.sz[2] -1), function(k) {
+                require(MIGSA);
                 tmp <- MIGSA_mGSZ.test.score(tmp.expr.data[, k+1], gene.sets,
                                         wgt1, wgt2, pre.var, var.constant,
                                         start.val, set_sz, hyge_stat,
@@ -250,6 +251,7 @@ setMethod(
         # gene scores for permuted data
         calcRes <- bplapply(1:ncol(all_perms), function(i) {
         #     calcRes <- lapply(1:ncol(all_perms), function(i) {
+            require(MIGSA);
             # modify the design matrix using the order given by the permutation
             permDesign <- designMatrix(fit_options)[all_perms[,i],];
             new_fit_options <- fit_options;
