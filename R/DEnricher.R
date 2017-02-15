@@ -176,7 +176,7 @@ setMethod(
             # We put name as setIdentifier and id as setName because we 
             # disagree with GSEABase's usage as they use Names as unique, and 
             # identifiers not.
-            actRes <- GenesetRes(id=setName(actGset), 
+            actRes <- MIGSA:::GenesetRes(id=setName(actGset), 
                                 name=setIdentifier(actGset), pvalue=p.value, 
                                 genes=geneIds(actGset),
                                 enriching_genes=impGenes);
