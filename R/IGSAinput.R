@@ -1,5 +1,5 @@
 #'@include IGSAinput-class.R
-setGeneric(name="get_fit", def=function(M, fit_options, use_voom, params) {
+setGeneric(name="get_fit", def=function(M, fit_options, params) {
     standardGeneric("get_fit")
 })
 
@@ -9,15 +9,15 @@ setGeneric(name="get_fit", def=function(M, fit_options, use_voom, params) {
 #'@include FitOptions-class.R
 #'@include SEAparams.R
 setMethod(f="get_fit",
-    signature=c("ExprData", "FitOptions", "logical", "SEAparams"),
-    definition=function(M, fit_options, use_voom, params) {
+    signature=c("ExprData", "FitOptions", "SEAparams"),
+    definition=function(M, fit_options, params) {
         act_treat_lfc <- treat_lfc(params);
         act_design <- designMatrix(fit_options);
         act_contrast <- contrast(fit_options);
         act_adj_meth <- adjust_method(params);
         
         # apply voom
-        if (use_voom) {
+        if (is(M, "DGEList")) {
             M <- voom(M, design=act_design);
         }
         
@@ -33,7 +33,7 @@ setMethod(f="get_fit",
 )
 
 setGeneric(name="igsaGetDEGenes",
-    def=function(seaParams, exprData, fitOptions, useVoom) {
+    def=function(seaParams, exprData, fitOptions) {
     standardGeneric("igsaGetDEGenes")
 })
 
@@ -43,10 +43,10 @@ setGeneric(name="igsaGetDEGenes",
 #'@include IGSAinput-class.R
 setMethod(
     f="igsaGetDEGenes",
-    signature=c("SEAparams", "ExprData", "FitOptions", "logical"),
-    definition=function(seaParams, exprData, fitOptions, useVoom) {
+    signature=c("SEAparams", "ExprData", "FitOptions"),
+    definition=function(seaParams, exprData, fitOptions) {
         # get the fit
-        act_fit <- get_fit(exprData, fitOptions, useVoom, seaParams);
+        act_fit <- get_fit(exprData, fitOptions, seaParams);
         
         de_coff <- de_cutoff(seaParams);
         # get the DE genes depending on the cutoff value

@@ -51,7 +51,7 @@ setMethod(f="getDEGenes",
         
         # get differentialy expressed genes
         dif <- igsaGetDEGenes(sea_par, igsaInput@expr_data, 
-                    igsaInput@fit_options, igsaInput@use_voom);
+                    igsaInput@fit_options);
         
         # update sea_par with this dif genes, so we dont need to recalculate
         de_genes(sea_par) <- dif;

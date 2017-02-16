@@ -35,7 +35,7 @@ If migsaGoTree: A list with the used data to plot. If getHeights: A
 list with each term height.
 }
 \description{
-\code{migsaGoTree} plots the GO tree/s present in migsaRes,
+\code{migsaGoTree} plots the GO tree/s present in migsaRes.
 \code{getHeights} returns the heights of given a list of ids (GO IDs).
 }
 \examples{

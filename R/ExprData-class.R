@@ -9,7 +9,6 @@
 #'@rdname ExprData-class
 #'
 #'@importClassesFrom edgeR DGEList
-#'@importFrom edgeR DGEList
 #'@importClassesFrom limma MAList
 #'@exportClass ExprData
 #'@examples

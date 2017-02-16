@@ -20,7 +20,7 @@
 
 \author{Juan C Rodriguez\\CONICET\\Universidad Cat\'{o}lica de C\'{o}rdoba\\
 Universidad Nacional de C\'{o}rdoba
-\And Crist\'{o}bal Fresno\\CONICET\\Universidad Cat\'{o}lica de C\'{o}rdoba
+\And Crist\'{o}bal Fresno\\Instituto Nacional de Medicina Gen\'{o}mica
 \AND Andrea S Llera\\CONICET\\Fundaci\'{o}n Instituto 
 Leloir \And Elmer A Fern\'{a}ndez\\CONICET\\Universidad Cat\'{o}lica de
 C\'{o}rdoba\\Universidad Nacional de C\'{o}rdoba}
@@ -77,32 +77,6 @@ URL: \url{http://www.bdmg.com.ar/}\\
 % \SweaveOpts{concordance=FALSE}
 
 \section{Introduction}
-% v1:
-% Functional Analysis methodology allow researchers explore which gene sets 
-% resulted deregulated by any desired contrast on a experimental scenario. As 
-% shown in \citep{rodriguez2016improving} in order to gain as much biological 
-% insight as possible, both SEA and GSEA must be performed, this strategy is 
-% know 
-% as Integrative Functional Analysis (IFA), which integrates into the same 
-% analysis the dEnricher \citep{dEnricher} and mGSZ \citep{mGSZ} methods. 
-% \pkg{MIGSA} package allows the user to easily execute IFA over a wide range 
-% of 
-% datasets by minimal parameter settings.
-% \\Since \pkg{MIGSA} is intended to be applied over large quantities of large 
-% datasets evaluated on many gene sets, it turns crucial for it to be fast. In 
-% this sense, \pkg{MIGSA} provides an improved version of \pkg{mGSZ} 
-% (\textit{MIGSAmGSZ}) which runs much faster than the default version (as 
-% shown 
-% above). In addition to this, \pkg{MIGSA} can be ran on multicore technologies 
-% to fasten even more its execution. Also \textit{MIGSAmGSZ} develops a genes 
-% ranking score alternative that adjusts to RNAseq data sources, it implements 
-% the \textit{Voom+Limma} algorithm that can (and is suggested to) be used.
-% \\Generally \pkg{MIGSA} returns too much information as result of its 
-% analysis, 
-% to overcome this, it provides several tools to easily explore and 
-% visualize 
-% results at gene set and individual genes level.
-% v2:
 At present, there are several freely available datasets which provide data over 
 the same disease, or same characteristic of interest (e.g. survival), or the 
 same subjects studied over several different platforms such as the The Cancer 
@@ -157,9 +131,37 @@ latest version of R.
 http://www.bioconductor.org. (Prior to R 3.4).
 \\To get \pkg{MIGSA} package you can type in an R session:
 <<eval=FALSE>>=
-source("http://www.bioconductor.org/biocLite.R");
+## try http:// if https:// URLs are not supported
+source("https://bioconductor.org/biocLite.R");
 biocLite("MIGSA");
 @
+
+\subsection{Class definitions}
+\pkg{MIGSA} basically consists of six classes and various functions that 
+interact with them. The following is a simplified class diagram of MIGSA.
+
+\fbox{
+\includegraphics[width=\textwidth]{ClassDiagrams/MIGSApublicSimple.eps}
+}
+
+\par Following we present a detailed diagram of each class, including the 
+functions that interact in each case. It should be noted that these diagrams 
+represent a general overview of MIGSA, for a detailed explanation of each class 
+and function please refer to the user manual.
+
+\includegraphics[width=\textwidth]{ClassDiagrams/geneSetsFunc.eps}
+\par
+\includegraphics[width=\textwidth]{ClassDiagrams/SEAparams.eps}
+\par
+\includegraphics[width=\textwidth]{ClassDiagrams/GSEAparams.eps}
+\par
+\includegraphics[width=\textwidth]{ClassDiagrams/FitOptions.eps}
+\par
+\includegraphics[width=\textwidth]{ClassDiagrams/IGSAinput.eps}
+\par
+\includegraphics[width=\textwidth]{ClassDiagrams/MIGSAfunc.eps}
+\par
+\includegraphics[width=\textwidth]{ClassDiagrams/MIGSAres.eps}
 
 \section{MIGSAmGSZ}
 
@@ -565,7 +567,6 @@ rnaSeq <- DGEList(counts=rnaSeq);
 rnaSeqIgsaInput <- IGSAinput(
     name="tcgaRNA",
     expr_data=rnaSeq,
-    use_voom=TRUE,
     fit_options=fitOpts,
     # with this treat we will get around 5% differentially expressed genes
     sea_params=SEAparams(treat_lfc=1.45));

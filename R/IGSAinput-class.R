@@ -8,9 +8,6 @@
 #'@slot name character indicating the name of this experiment.
 #'@slot expr_data ExprData object with the expression data (MicroArray or 
 #'RNAseq).
-#'@slot use_voom logical indicating wether to use 
-#'\code{\link[limma]{voom}} before fit or not. If using RNAseq data it is 
-#'recommended to set it to TRUE (default: FALSE).
 #'@slot fit_options FitOptions object with the parameters to be used when 
 #'fitting the model.
 #'@slot gene_sets_list named list of GeneSetCollection objects to be 
@@ -66,14 +63,12 @@ IGSAinput <- setClass(
     slots=c(
         name="character",
         expr_data="ExprData",
-        use_voom="logical",
         fit_options="FitOptions",
         gene_sets_list="list",
         sea_params="SEAparams",
         gsea_params="GSEAparams"
     ),
     prototype=list(
-        use_voom=FALSE
     ),
     validity=function(object) {
         # must have name

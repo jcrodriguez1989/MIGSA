@@ -22,24 +22,20 @@ experiment_name = gene_set_name = NULL;
 
 #'@importFrom data.table as.data.table data.table setkey
 #'@include GenesetsRes.R
-setMethod(
-    f="as.data.table",
-    signature=c("IGSAres"),
-    definition=function(x, wGenesInfo=FALSE, ...) {
-        # convert to data.table each GenesetsRes
-        to <- do.call(rbind, lapply(x@gene_sets_res, function(gsetsRes) {
-            actRes <- as.data.table(gsetsRes, wGenesInfo=wGenesInfo);
-            return(actRes);
-        }));
-        
-        # add some IGSA information
-        to <- data.table(experiment_name=x@name, to);
-        # set this keys for faster merging
-        setkey(to, experiment_name, gene_set_name, id, name);
-        
-        return(to);
-    }
-)
+as.data.table.IGSAres <- function(x, wGenesInfo=FALSE, ...) {
+    # convert to data.table each GenesetsRes
+    to <- do.call(rbind, lapply(x@gene_sets_res, function(gsetsRes) {
+        actRes <- as.data.table(gsetsRes, wGenesInfo=wGenesInfo);
+        return(actRes);
+    }));
+    
+    # add some IGSA information
+    to <- data.table(experiment_name=x@name, to);
+    # set this keys for faster merging
+    setkey(to, experiment_name, gene_set_name, id, name);
+    
+    return(to);
+}
 
 setGeneric(name="genes_rank", def=function(object) {
     standardGeneric("genes_rank")

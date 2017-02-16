@@ -686,10 +686,6 @@ test_IGSAinput_getterSetters_ok <- function() {
     geneSetsList(igsaInput) <- list(myGeneSets=myGSs);
     checkEquals(length(MIGSA::geneSetsList(igsaInput)), 1);
     
-    checkTrue(!useVoom(igsaInput));
-    useVoom(igsaInput) <- TRUE;
-    checkTrue(useVoom(igsaInput));
-    
     checkEquals(gseaParams(igsaInput), GSEAparams());
     gseaParams(igsaInput) <- GSEAparams(perm_number=10);
     checkEquals(gseaParams(igsaInput), GSEAparams(perm_number=10));
@@ -875,7 +871,7 @@ test_IGSAinput_common_ok_summary <- function() {
         gene_sets_list=list(myGeneSets=GeneSetCollection(myGSs)));
     
     igsaSumm <- summary(igsaInput);
-    checkTrue(all(igsaSumm == c("igsaInput","6","C1VSC2","3","3","1","FALSE",
+    checkTrue(all(igsaSumm == c("igsaInput","6","C1VSC2","3","3","1",
         "200","0","0.3","fdr","1","briii","5","0.5")));
 }
 

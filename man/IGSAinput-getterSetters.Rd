@@ -27,10 +27,6 @@
 \alias{seaParams,IGSAinput-method}
 \alias{seaParams<-}
 \alias{seaParams<-,IGSAinput-method}
-\alias{useVoom}
-\alias{useVoom,IGSAinput-method}
-\alias{useVoom<-}
-\alias{useVoom<-,IGSAinput-method}
 \title{Accessors for IGSAinput class}
 \usage{
 "IGSAinput-getterSetters"(object)
@@ -66,14 +62,6 @@ geneSetsList(object)
 geneSetsList(object) <- value
 
 \S4method{geneSetsList}{IGSAinput}(object) <- value
-
-useVoom(object)
-
-\S4method{useVoom}{IGSAinput}(object)
-
-useVoom(object) <- value
-
-\S4method{useVoom}{IGSAinput}(object) <- value
 
 gseaParams(object)
 
@@ -122,7 +110,6 @@ name(igsaInput) <- "newName";
 fitOptions(igsaInput); 
 exprData(igsaInput);
 geneSetsList(igsaInput);
-useVoom(igsaInput);
 gseaParams(igsaInput);
 seaParams(igsaInput);
 

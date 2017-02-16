@@ -33,7 +33,6 @@
 #'fitOptions(igsaInput); 
 #'exprData(igsaInput);
 #'geneSetsList(igsaInput);
-#'useVoom(igsaInput);
 #'gseaParams(igsaInput);
 #'seaParams(igsaInput);
 #'
@@ -204,48 +203,6 @@ setGeneric(name="geneSetsList<-", def=function(object, value) {
 setReplaceMethod(f="geneSetsList", signature="IGSAinput",
     definition=function(object, value) {
         object@gene_sets_list <- value;
-        validObject(object);
-        return(object);
-    }
-)
-
-#'@name useVoom
-#'@inheritParams IGSAinput-getterSetters
-#'@rdname IGSAinput-getterSetters
-#'@aliases useVoom,IGSAinput-method
-#'@exportMethod useVoom
-#'
-setGeneric(name="useVoom", def=function(object) {
-    standardGeneric("useVoom")
-})
-
-#'@inheritParams IGSAinput-getterSetters
-#'@rdname IGSAinput-getterSetters
-#'@aliases useVoom,IGSAinput-method
-#'
-setMethod(f="useVoom", signature="IGSAinput",
-    definition=function(object) {
-        return(object@use_voom)
-    }
-)
-
-#'@name useVoom<-
-#'@inheritParams IGSAinput-getterSetters
-#'@rdname IGSAinput-getterSetters
-#'@aliases useVoom<-,IGSAinput-method
-#'@exportMethod useVoom<-
-#'
-setGeneric(name="useVoom<-", def=function(object, value) {
-    standardGeneric("useVoom<-")
-})
-
-#'@inheritParams IGSAinput-getterSetters
-#'@rdname IGSAinput-getterSetters
-#'@aliases useVoom<-,IGSAinput-method
-#'
-setReplaceMethod(f="useVoom", signature="IGSAinput",
-    definition=function(object, value) {
-        object@use_voom <- value;
         validObject(object);
         return(object);
     }

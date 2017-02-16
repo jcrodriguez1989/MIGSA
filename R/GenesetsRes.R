@@ -14,18 +14,14 @@ GenesetsRes <- setClass(
 )
 
 #'@importFrom data.table as.data.table data.table
-setMethod(
-    f="as.data.table",
-    signature=c("GenesetsRes"),
-    definition=function(x, wGenesInfo=FALSE, ...) {
-        # convert to data.table SEA and GSEA results
-        seaRes  <- as.data.table(x@sea_res, wGenesInfo=wGenesInfo);
-        gseaRes <- as.data.table(x@gsea_res, wGenesInfo=wGenesInfo);
-        
-        # merge them and fill the data.table with Genesets info
-        to <- merge(seaRes, gseaRes, by=c("id", "name"), all=!FALSE);
-        to <- data.table(gene_set_name=x@gene_sets_name, is_GO=x@is_GO, to);
-        
-        return(to);
-    }
-)
+as.data.table.GenesetsRes <- function(x, wGenesInfo=FALSE, ...) {
+    # convert to data.table SEA and GSEA results
+    seaRes  <- as.data.table(x@sea_res, wGenesInfo=wGenesInfo);
+    gseaRes <- as.data.table(x@gsea_res, wGenesInfo=wGenesInfo);
+    
+    # merge them and fill the data.table with Genesets info
+    to <- merge(seaRes, gseaRes, by=c("id", "name"), all=!FALSE);
+    to <- data.table(gene_set_name=x@gene_sets_name, is_GO=x@is_GO, to);
+    
+    return(to);
+}

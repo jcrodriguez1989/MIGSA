@@ -1,10 +1,10 @@
 setGeneric(name="MGSZ", def=function(params, M, fit_options, genesets,
-                                    use_voom, bp_param) {
+                                    bp_param) {
     standardGeneric("MGSZ")
 })
 
 # params <- gseaParams(igsaInput); M <- exprData(igsaInput);
-# genesets <- merged_gene_sets; use_voom <- useVoom(igsaInput)
+# genesets <- merged_gene_sets;
 #'@importClassesFrom BiocParallel BiocParallelParam
 #'@importFrom GSEABase GeneSetCollection setIdentifier setName
 #'@include FitOptions.R
@@ -16,14 +16,13 @@ setGeneric(name="MGSZ", def=function(params, M, fit_options, genesets,
 setMethod(
     f="MGSZ",
     signature=c("GSEAparams", "ExprData", "FitOptions", "GeneSetCollection", 
-                "logical", "BiocParallelParam"),
-    definition=function(params, M, fit_options, genesets, use_voom,
-                        bp_param) {
+                "BiocParallelParam"),
+    definition=function(params, M, fit_options, genesets, bp_param) {
         # mGSZ uses the gene sets as a list
         mgsz.gene.sets <- asList(genesets);
         
         # check the ranking function depending if we use voom or not
-        if(use_voom) {
+        if(is(M, "DGEList")) {
             rankFunc <- voomLimaRank;
         } else {
             rankFunc <- mGszEbayes;
@@ -171,18 +170,19 @@ setMethod(
         
         # mGSZ score for permuted data
         col.perm.mGSZ <- do.call(rbind, 
-            bplapply(1:(diff.expr.dat.sz[2] -1), function(k) {
+            # I am passing MIGSA's not exported functions to bplapply to avoid
+            # SnowParam environment errors
+            bplapply(1:(diff.expr.dat.sz[2] -1), 
+                function(k, MIGSA_mGSZ.test.score) {
         #   lapply(1:(diff.expr.dat.sz[2] -1), function(k) {
-                require(MIGSA);
-                tmp <- MIGSA:::MIGSA_mGSZ.test.score(tmp.expr.data[, k+1],
-                                        gene.sets,
+                tmp <- MIGSA_mGSZ.test.score(tmp.expr.data[, k+1], gene.sets,
                                         wgt1, wgt2, pre.var, var.constant,
                                         start.val, set_sz, hyge_stat,
                                         prob_sum);
                 flog.debug(paste("Finnished perm n:", k));
                 return(tmp);
         #   })
-            }, BPPARAM=bp_param)
+            }, MIGSA_mGSZ.test.score=MIGSA_mGSZ.test.score, BPPARAM=bp_param)
         );
         
         # p-value calculation for the gene set scores
@@ -250,13 +250,14 @@ setMethod(
         flog.info(paste("Getting ranking at cores:", bp_param$workers));
         
         # gene scores for permuted data
-        calcRes <- bplapply(1:ncol(all_perms), function(i) {
+        # I am passing MIGSA's not exported functions to bplapply to avoid
+        # SnowParam environment errors
+        calcRes <- bplapply(1:ncol(all_perms), function(i, designMatrix) {
         #     calcRes <- lapply(1:ncol(all_perms), function(i) {
-            require(MIGSA);
             # modify the design matrix using the order given by the permutation
-            permDesign <- MIGSA:::designMatrix(fit_options)[all_perms[,i],];
+            permDesign <- designMatrix(fit_options)[all_perms[,i],];
             new_fit_options <- fit_options;
-            MIGSA:::designMatrix(new_fit_options) <- permDesign;
+            new_fit_options@design_matrix <- permDesign;
             
             actRank <- rankFunction(data, new_fit_options);
             
@@ -271,7 +272,7 @@ setMethod(
             }
             
             return(actRank);
-        }, BPPARAM=bp_param);
+        }, designMatrix=designMatrix, BPPARAM=bp_param);
         #     })
         calcRes <- matrix(unlist(calcRes), ncol=ncol(all_perms));
         
@@ -282,21 +283,21 @@ setMethod(
     }
 )
 
-#'@importFrom limma eBayes contrasts.fit lmFit
+#'@importFrom limma treat contrasts.fit lmFit
 #'@include FitOptions.R
 mGszEbayes <- function(exprMatrix, fit_options) {
 #     flog.info("Using ebayes");
     design <- designMatrix(fit_options);
     contrast <- contrast(fit_options);
     fit1 <- lmFit(exprMatrix, design);
-    fit2 <- eBayes(contrasts.fit(fit1, contrast));
+    fit2 <- treat(contrasts.fit(fit1, contrast));
     
     res <- fit2$t;
     return(res);
 }
 
 ## voom + limma
-#'@importFrom limma eBayes contrasts.fit lmFit voom
+#'@importFrom limma treat contrasts.fit lmFit voom
 #'@include FitOptions.R
 voomLimaRank <- function(exprMatrix, fit_options) {
 #     flog.info("Using voom+limma");
@@ -306,7 +307,7 @@ voomLimaRank <- function(exprMatrix, fit_options) {
     
     # Adjust the model
     fit1 <- lmFit(newExpr, design);
-    fit2 <- eBayes(contrasts.fit(fit1, contrast));
+    fit2 <- treat(contrasts.fit(fit1, contrast));
     
     res <- fit2$t;
     return(res);

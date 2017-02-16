@@ -33,21 +33,20 @@ setMethod(
         flog.info(paste(name(igsaInput), ": dEnricher starting."));
         # run DEnricher
         deRes <- DEnricher(seaParams(igsaInput), expr_data, fit_options,
-                        merged_gene_sets, useVoom(igsaInput), bp_param);
+                        merged_gene_sets, bp_param);
         flog.info(paste(name(igsaInput), ": dEnricher finnished."));
         
         flog.info(paste(name(igsaInput), ": mGSZ starting."));
         # run MGSZ
         mgszRes <- MGSZ(gseaParams(igsaInput), expr_data, fit_options,
-                        merged_gene_sets, useVoom(igsaInput), bp_param);
+                        merged_gene_sets, bp_param);
         flog.info(paste(name(igsaInput), ": mGSZ finnished."));
         
         # splitting all results. it is a list of GenesetsRes objects
         splitted_res <- split_results(deRes, mgszRes, actGeneSets);
         
         # get the genes rank to give more information in the results object
-        genes_rank <- get_fit(expr_data, fit_options, useVoom(igsaInput),
-                                SEAparams());
+        genes_rank <- get_fit(expr_data, fit_options, SEAparams());
         genes_rank <- data.frame(geneID=rownames(genes_rank),
                                     rank=genes_rank$t);
         colnames(genes_rank)[2] <- name(igsaInput);

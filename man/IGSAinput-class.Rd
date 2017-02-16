@@ -19,10 +19,6 @@ matrix and the provided gene sets.
 \item{\code{expr_data}}{ExprData object with the expression data (MicroArray or 
 RNAseq).}
 
-\item{\code{use_voom}}{logical indicating wether to use 
-\code{\link[limma]{voom}} before fit or not. If using RNAseq data it is 
-recommended to set it to TRUE (default: FALSE).}
-
 \item{\code{fit_options}}{FitOptions object with the parameters to be used when 
 fitting the model.}
 

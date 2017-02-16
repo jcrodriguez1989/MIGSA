@@ -1,5 +1,5 @@
 setGeneric(name="DEnricher", def=function(params, M, fit_options, gene_sets,
-                                            use_voom, bp_param) {
+                                            bp_param) {
     standardGeneric("DEnricher")
 })
 
@@ -14,16 +14,16 @@ setGeneric(name="DEnricher", def=function(params, M, fit_options, gene_sets,
 #'@include SEAparams.R
 #'@include SEAres.R
 # params <- seaParams(igsaInput); M <- expr_data; 
-# use_voom <- useVoom(igsaInput); gene_sets <- merged_gene_sets
+# gene_sets <- merged_gene_sets
 setMethod(
     f="DEnricher",
     signature=c("SEAparams", "ExprData", "FitOptions", "GeneSetCollection", 
-                                            "logical", "BiocParallelParam"),
-    definition=function(params, M, fit_options, gene_sets, use_voom, 
+                                            "BiocParallelParam"),
+    definition=function(params, M, fit_options, gene_sets, 
                         bp_param) {
         if (length(de_genes(params)) == 1 && is.na(de_genes(params)[[1]])) {
             # if there are not set the DE genes then calculate them
-            dif <- igsaGetDEGenes(params, M, fit_options, use_voom);
+            dif <- igsaGetDEGenes(params, M, fit_options);
         } else {
             # otherwise we use them
             dif <- de_genes(params);
@@ -158,9 +158,10 @@ setMethod(
         }
         
         flog.info(paste("Running SEA at cores:", bp_param$workers));
-        seaRes <- bplapply(gs, function(actGset) {
+        # I am passing MIGSA's not exported functions to bplapply to avoid
+        # SnowParam environment errors
+        seaRes <- bplapply(gs, function(actGset, GenesetRes) {
         #     seaRes <- lapply(gs@gene_sets, function(actGset) {
-            require(MIGSA);
             genes.term <- unique(unlist(geneIds(actGset)))
             p.value <- switch(test,
                 FisherTest   = doFisherTest(genes.group, genes.term,
@@ -176,12 +177,12 @@ setMethod(
             # We put name as setIdentifier and id as setName because we 
             # disagree with GSEABase's usage as they use Names as unique, and 
             # identifiers not.
-            actRes <- MIGSA:::GenesetRes(id=setName(actGset), 
+            actRes <- GenesetRes(id=setName(actGset), 
                                 name=setIdentifier(actGset), pvalue=p.value, 
                                 genes=geneIds(actGset),
                                 enriching_genes=impGenes);
             return(actRes);
-        }, BPPARAM=bp_param)
+        }, GenesetRes=GenesetRes, BPPARAM=bp_param)
         #     })
 
         return(seaRes);

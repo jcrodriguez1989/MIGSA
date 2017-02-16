@@ -115,6 +115,9 @@ setMethod(
         }
         rm(exprs_names);
         
+        # todo: check that geneSets is a list of GeneSetCollection, however 
+        # this might be already evaluated by IGSAinput's setter
+        
         # for each IGSAinput
         actRes <- lapply(igsaInputs, function(igsaInput) {
             # if gene sets were provided then these must be used

@@ -3,7 +3,7 @@ is_GO = NULL;
 
 #'Explore Gene Ontology gene sets in MIGSAres
 #'
-#'\code{migsaGoTree} plots the GO tree/s present in migsaRes,
+#'\code{migsaGoTree} plots the GO tree/s present in migsaRes.
 #'\code{getHeights} returns the heights of given a list of ids (GO IDs).
 #'
 #'@param migsaRes MIGSAres object. It must contain at least one GO gene set.

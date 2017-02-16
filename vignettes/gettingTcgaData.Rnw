@@ -16,7 +16,7 @@
 
 \author{Juan C Rodriguez\\CONICET\\Universidad Cat\'{o}lica de C\'{o}rdoba\\
 Universidad Nacional de C\'{o}rdoba
-\And Crist\'{o}bal Fresno\\CONICET\\Universidad Cat\'{o}lica de C\'{o}rdoba
+\And Crist\'{o}bal Fresno\\Instituto Nacional de Medicina Gen\'{o}mica
 \AND Andrea S Llera\\CONICET\\Fundaci\'{o}n Instituto 
 Leloir \And Elmer A Fern\'{a}ndez\\CONICET\\Universidad Cat\'{o}lica de
 C\'{o}rdoba\\Universidad Nacional de C\'{o}rdoba}

@@ -19,7 +19,6 @@ MIGSAres.data.table <- function(x, genes_rank=list(), ... ) {
     return(.Object);
 }
 
-#'@importFrom data.table as.data.table
 #'@include IGSAres.R
 # creates a MIGSAres from a list of IGSAres
 MIGSAres.list <- function(x, ... ) {

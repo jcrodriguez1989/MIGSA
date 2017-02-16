@@ -1,7 +1,7 @@
 Package: MIGSA
 Type: Package
 Title: Massive and Integrative Gene Set Analysis
-Version: 0.99.902
+Version: 0.99.903
 Date: 2016-03-02
 Author: Juan C. Rodriguez, Cristobal Fresno, Andrea S. Llera and Elmer A. 
     Fernandez
@@ -60,7 +60,7 @@ Imports:
     RJSONIO,
     stats,
     vegan
-Collate:
+Collate: 
     'Genesets.R'
     'GenesetRes.R'
     'GSEAres.R'
@@ -100,4 +100,4 @@ Collate:
     'data-bcMigsaRes.R'
     'data-migsaRes.R'
     'summaryFunctions.R'
-RoxygenNote: 5.0.1
+RoxygenNote: 5.0.1.9000
