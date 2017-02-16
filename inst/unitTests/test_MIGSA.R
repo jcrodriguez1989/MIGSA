@@ -739,17 +739,17 @@ test_IGSAinput_getDEGenes_ok_deGenes <- function() {
 
 test_MIGSAmGSZ_ok_sameAsMgsz <- function() {
     require(mGSZ);
-    perms <- 10;
-    nGenes <- 500;
-    nSamples <- 10;
-    geneNames <- paste("g", 1:nGenes, sep = ""); # with names g1 ... g1000
+    perms <- 4;
+    nGenes <- 100;
+    nSamples <- 6;
+    geneNames <- paste("g", 1:nGenes, sep = "");
     
     ## Create random gene expression data matrix.
     set.seed(8818);
     exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
     rownames(exprData) <- geneNames;
     
-    ## There will be 40 differentialy expressed genes.
+    ## There will be nGenes/25 differentialy expressed genes.
     nDeGenes <- nGenes/25;
     ## Lets generate the offsets to sum to the differentialy expressed genes.
     deOffsets <- matrix(2*abs(rnorm(nDeGenes*nSamples/2)), ncol=nSamples/2);
@@ -759,11 +759,10 @@ test_MIGSAmGSZ_ok_sameAsMgsz <- function() {
     exprData[deIndexes, 1:(nSamples/2)] <-
         exprData[deIndexes, 1:(nSamples/2)] + deOffsets;
     
-    ## 15 subjects with condition C1 and 15 with C2.
+    ## half of each condition.
     conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
     
-    nGSets <- 50; # 200 gene sets
-    ## Lets create randomly 200 gene sets, of 10 genes each
+    nGSets <- 4;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
     
@@ -925,7 +924,7 @@ test_MIGSA_ok_oneExp <- function() {
 
 test_MIGSA_ok_twoExp <- function() {
     set.seed(8818);
-    nGenes <- 200;
+    nGenes <- 100;
     nSamples <- 6;
     geneNames <- paste("g", 1:nGenes, sep = "");
     
@@ -939,7 +938,7 @@ test_MIGSA_ok_twoExp <- function() {
     
     conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
     
-    nGSets <- 10;
+    nGSets <- 4;
     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
     myGSs <- as.Genesets(gSets);
@@ -1027,7 +1026,7 @@ test_MIGSA_ok_twoGSs <- function() {
 
 test_MIGSA_ok_twoExptwoGSs <- function() {
     set.seed(8818);
-    nGenes <- 200;
+    nGenes <- 100;
     nSamples <- 6;
     geneNames <- paste("g", 1:nGenes, sep = "");
     
@@ -1041,7 +1040,7 @@ test_MIGSA_ok_twoExptwoGSs <- function() {
     
     conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
     
-    nGSets <- 10;
+    nGSets <- 4;
     
     gSets1 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets1) <- paste("set", as.character(1:nGSets), sep="");
@@ -1087,7 +1086,7 @@ test_MIGSA_ok_twoExptwoGSs <- function() {
 
 test_MIGSA_ok_twoExpFourGSs <- function() {
     set.seed(8818);
-    nGenes <- 200;
+    nGenes <- 100;
     nSamples <- 6;
     geneNames <- paste("g", 1:nGenes, sep = "");
     
@@ -1101,7 +1100,7 @@ test_MIGSA_ok_twoExpFourGSs <- function() {
     
     conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
     
-    nGSets <- 10;
+    nGSets <- 4;
     
     gSets1 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
     names(gSets1) <- paste("set", as.character(1:nGSets), sep="");
@@ -1738,7 +1737,7 @@ test_MIGSAres_setEnrCutoff_ok_NACoff <- function() {
 
 test_MIGSAres_genesInSets_ok <- function() {
     data(migsaRes);
-    migsaRes <- migsaRes[1:40,];
+    migsaRes <- migsaRes[1:10,];
     
     additionalInfo <- getAdditionalInfo(migsaRes);
     genesInfo <- additionalInfo[,
@@ -1939,19 +1938,23 @@ test_MIGSAres_migsaHeatmap_ok_simplePlot <- function() {
 
 ###### GoAnalysis-getHeights tests
 
-test_GoAnalysis_getHeights <- function() {
-    heights <- getHeights(
-        c("GO:0008150", "GO:0007610", "GO:0050789", "fakeId"));
-    checkEquals(heights[1:3], c(0,1,1));
-    checkTrue(is.na(heights[[4]]));
+if (testAll) {
+    test_GoAnalysis_getHeights <- function() {
+        heights <- getHeights(
+            c("GO:0008150", "GO:0007610", "GO:0050789", "fakeId"));
+        checkEquals(heights[1:3], c(0,1,1));
+        checkTrue(is.na(heights[[4]]));
+    }
 }
 
-test_GoAnalysis_getHeights_maxHeights <- function() {
-    heights <- getHeights(
-        c("GO:0008150", "GO:0007610", "GO:0050789", "fakeId"),
-        minHeight=FALSE);
-    checkEquals(heights[1:3], c(0,1,2));
-    checkTrue(is.na(heights[[4]]));
+if (testAll) {
+    test_GoAnalysis_getHeights_maxHeights <- function() {
+        heights <- getHeights(
+            c("GO:0008150", "GO:0007610", "GO:0050789", "fakeId"),
+            minHeight=FALSE);
+        checkEquals(heights[1:3], c(0,1,2));
+        checkTrue(is.na(heights[[4]]));
+    }
 }
 
 ###### GoAnalysis-migsaGoTree tests
@@ -1960,9 +1963,9 @@ test_GoAnalysis_getHeights_maxHeights <- function() {
 
 test_GoAnalysis_migsaGoTree_ok_simplePlot <- function() {
     data(bcMigsaRes);
-    bcMigsaRes <- bcMigsaRes[1:4,];
+    bcMigsaRes <- bcMigsaRes[5,];
     
-    system.time(plotRes <- migsaGoTree(bcMigsaRes));
+    plotRes <- migsaGoTree(bcMigsaRes);
     checkTrue(all(sort(unlist(lapply(plotRes$gotree, nrow))) == 
         sort(table(bcMigsaRes$GS_Name)[-3])));
 }
