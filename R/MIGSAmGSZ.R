@@ -94,12 +94,14 @@ setMethod(
         
         if (use.voom) {
             M <- DGEList(counts=x);
-            rankFunction <- ifelse(is.na(rankFunction), voomLimaRank,
-                                rankFunction);
+            if (!is(rankFunction, "function")) {
+                rankFunction <- voomLimaRank;
+            }
         } else {
             M <- new("MAList", list(M=x));
-            rankFunction <- ifelse(is.na(rankFunction), mGszEbayes,
-                                rankFunction);
+            if (!is(rankFunction, "function")) {
+                rankFunction <- mGszEbayes;
+            }
         }
         fit_options <- FitOptions(l);
         

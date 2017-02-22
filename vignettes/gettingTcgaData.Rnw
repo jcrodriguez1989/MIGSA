@@ -50,13 +50,12 @@ gene set enrichment analysis, functional class scoring, big omics data}
 %% The address of (at least) one author should be given  
 %% in the following format:
 \Address{
-Juan C Rodriguez, Crist\'{o}bal Fresno \& Elmer A Fern\'{a}ndez\\
+Juan C Rodriguez \& Elmer A Fern\'{a}ndez\\
 Bioscience Data Mining Group\\ 
 Facultad de Ingenier\'{i}a\\ 
 Universidad Cat\'{o}lica de C\'{o}rdoba - CONICET\\ 
 X5016DHK C\'{o}rdoba, Argentina\\ 
-E-mail: \email{jcrodriguez@bdmg.com.ar, cfresno@bdmg.com.ar, \\ 
-efernandez@bdmg.com.ar}\\
+E-mail: \email{jcrodriguez@bdmg.com.ar, efernandez@bdmg.com.ar}\\
 URL: \url{http://www.bdmg.com.ar/}\\
 }
 
@@ -148,7 +147,7 @@ names(tcgaMAdata$subtypes)[ tcgaMAdata$subtypes == "LumA" ];
 @
 
 \section{Getting the data with TCGAbiolinks R package}
-All the subjects data mentioned in section \ref{gettingData} was downloaded by 
+All the subject's data mentioned in section \ref{gettingData} was downloaded by 
 means of the \pkg{TCGAbiolinks} R package, however, at the present this 
 library had been greatly refactored, causing that this code does not work 
 unless some files are present in your hard drive, these files are available 
@@ -205,7 +204,7 @@ rnaSeqSubjects <- TCGAquery(tumor="BRCA", platform="IlluminaHiSeq_RNASeq",
 # TCGAdownload(rnaSeqSubjects,   path="rnaSeq/",   samples=commonSubjects, 
 #     type="gene.quantification");
 
-## However we can provide you neccesary files to skip the TCGAdownload step.
+## However, we can provide you necessary files to skip the TCGAdownload step.
 
 ## type is any of:
 # RNASeq:             exon.quantification
@@ -243,7 +242,7 @@ stopifnot(all(colnames(rnaSeq_rpkm) %in% colnames(geneExpr)));
 mapping <- do.call(rbind, strsplit(rownames(rnaSeq_raw), "|", fixed=!F));
 colnames(mapping) <- c("Symbol", "Entrez");
 
-#### Now lets get subjects subtypes
+#### Now let's get subjects subtypes
 
 library(genefu);
 
@@ -329,7 +328,7 @@ geneExprEntrez <- annotAgi[ match(geneExprSymbol, annotAgi[, "Symbol"]),
     "Entrez" ];
 sum(is.na(geneExprEntrez));
 # [1] 796
-# the we find into the mapping given by RNASeq TCGA data
+# then we look into the mapping given by RNASeq TCGA data
 geneExprEntrez[ is.na(geneExprEntrez) ] <- mapping[ match(geneExprSymbol[ 
     is.na(geneExprEntrez) ], mapping[, "Symbol"]), "Entrez" ];
 sum(is.na(geneExprEntrez));

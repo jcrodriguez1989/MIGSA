@@ -57,13 +57,12 @@ gene set enrichment analysis, functional class scoring, big omics data}
 %% The address of (at least) one author should be given  
 %% in the following format:
 \Address{
-Juan C Rodriguez, Crist\'{o}bal Fresno \& Elmer A Fern\'{a}ndez\\
+Juan C Rodriguez \& Elmer A Fern\'{a}ndez\\
 Bioscience Data Mining Group\\ 
 Facultad de Ingenier\'{i}a\\ 
 Universidad Cat\'{o}lica de C\'{o}rdoba - CONICET\\ 
 X5016DHK C\'{o}rdoba, Argentina\\ 
-E-mail: \email{jcrodriguez@bdmg.com.ar, cfresno@bdmg.com.ar, \\ 
-efernandez@bdmg.com.ar}\\
+E-mail: \email{jcrodriguez@bdmg.com.ar, efernandez@bdmg.com.ar}\\
 URL: \url{http://www.bdmg.com.ar/}\\
 }
 
@@ -81,7 +80,7 @@ library(pbcmc);
 # datasets included in BioConductor repository
 libNames <- c("mainz", "nki", "transbig", "unt", "upp", "vdx");
 
-# lets load them!
+# let's load them!
 pbcmcData <- lapply(libNames, function(actLibName) {
     print(actLibName);
     
@@ -95,7 +94,7 @@ pbcmcData <- lapply(libNames, function(actLibName) {
     actExprs <- exprs(actLib);
     actAnnot <- annotation(actLib);
     
-    # we recommend working allways with Entrez IDs, lets match them with 
+    # we recommend working allways with Entrez IDs, let's match them with 
     # expression matrix rownames (and modify them)
     if (all(actAnnot$probe == rownames(actExprs))) {
         actExprs <- actExprs[!is.na(actAnnot$EntrezGene.ID),];
@@ -131,7 +130,7 @@ pbcmcData <- lapply(libNames, function(actLibName) {
 names(pbcmcData) <- libNames;
 @
 
-And lets check it is the same data.
+And let's check it is the same data.
 <<validateData, eval=TRUE>>=
 # save the just created pbcmcData to newPbcmcData
 newPbcmcData <- pbcmcData;

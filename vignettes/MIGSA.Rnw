@@ -39,20 +39,21 @@ C\'{o}rdoba\\Universidad Nacional de C\'{o}rdoba}
 %% an abstract and keywords
 \Abstract{
 The \pkg{MIGSA} package allows to perform a massive and integrative gene set 
-analysis over several expression and gene sets simultaneously. It provides a 
+analysis over several experiments and gene sets simultaneously. It provides a 
 common gene expression analytic framework that grants a comprehensive and 
 coherent analysis. Only a minimal user parameter setting is required to 
-perform both singular and gene set enrichment analyses in an integrative manner 
-by means of the best available methods, i.e. \pkg{dEnricher} and \pkg{mGSZ}
-respectively.
-\\ The greatest strengths of this big omics data tool are the availability of 
-several functions to explore, analyze and visualize its results in order to 
-facilitate the data mining task over huge information sources.
-\\ MIGSA package also provides several functions that allow to easily load the 
-most updated gene sets from several repositories.
+perform both singular and gene set enrichment analyses in an integrative 
+manner by means of enhanced versions of the best available methods, i.e. 
+\pkg{dEnricher} and \pkg{mGSZ} respectively.
+\\ One of the greatest strengths of this big omics data tool is the 
+availability of several functions to explore, analyze and visualize its results 
+in order to facilitate the data mining task over huge information sources.
+\\ The MIGSA package also  allows to easily load the most updated gene sets 
+collections from several repositories.
 }
 \Keywords{singular enrichment analysis, over representation analysis, gene set 
-enrichment analysis, functional class scoring, big omics data}
+enrichment analysis, functional class scoring, big omics data, r package, 
+bioconductor}
 
 %% without formatting
 \Plainkeywords{singular enrichment analysis, over representation analysis, 
@@ -62,13 +63,12 @@ gene set enrichment analysis, functional class scoring, big omics data}
 %% The address of (at least) one author should be given  
 %% in the following format:
 \Address{
-Juan C Rodriguez, Crist\'{o}bal Fresno \& Elmer A Fern\'{a}ndez\\
+Juan C Rodriguez \& Elmer A Fern\'{a}ndez\\
 Bioscience Data Mining Group\\ 
 Facultad de Ingenier\'{i}a\\ 
 Universidad Cat\'{o}lica de C\'{o}rdoba - CONICET\\ 
 X5016DHK C\'{o}rdoba, Argentina\\ 
-E-mail: \email{jcrodriguez@bdmg.com.ar, cfresno@bdmg.com.ar, \\ 
-efernandez@bdmg.com.ar}\\
+E-mail: \email{jcrodriguez@bdmg.com.ar, efernandez@bdmg.com.ar}\\
 URL: \url{http://www.bdmg.com.ar/}\\
 }
 
@@ -77,39 +77,38 @@ URL: \url{http://www.bdmg.com.ar/}\\
 % \SweaveOpts{concordance=FALSE}
 
 \section{Introduction}
-At present, there are several freely available datasets which provide data over 
-the same disease, or same characteristic of interest (e.g. survival), or the 
-same subjects studied over several different platforms such as the The Cancer 
-Genome Atlas (TCGA) project, among others, thus making possible the study and 
-comparison in a massive way of these cohorts, not only between them but also 
-against our own population. This unprecedented opportunity allows to search for 
-common functional patterns, or more interestingly, particular patterns of our 
-experiment in question. This analysis methodology has not yet been exploited 
-since at present there is no tool that allows this type of exploration, thus 
-leaving aside a lot of valuable information that might lead to research topics.
-\\ Functional analysis methodology allows researchers explore which gene sets 
-resulted deregulated by any desired contrast over one experimental scenario. As 
-shown in \citep{rodriguez2016improving} in order to gain as much biological 
-insight as possible, both singular enrichment analysis (SEA) and gene set 
-enrichment analysis (GSEA) must be performed, this strategy is known as 
-Integrative Functional Analysis (IFA), which integrates into the same analysis 
-the dEnricher \citep{dEnricher} and mGSZ \citep{mGSZ} methods.
-\\ \pkg{MIGSA} allows to evaluate and compare, massively and transparently, 
-large collections of datasets coming from diverse sources, maintaining the 
-gene set enrichment ideas of IFA and minimizing parameter settings.
-\\ Since \pkg{MIGSA} is designed to be applied over large quantities of large 
-datasets evaluated on many gene sets, it turns crucial for it to be fast. In 
-this sense, \pkg{MIGSA} provides an improved version of \pkg{mGSZ} 
-(\textit{MIGSAmGSZ}) which runs much faster than the default version (as shown 
-below). In addition to this, \pkg{MIGSA} can be ran on multi-core technologies 
-to fasten even more its execution. Also \textit{MIGSAmGSZ} develops a genes 
-ranking score alternative that adjusts to RNAseq data sources, it implements 
-the \textit{Voom+Limma} algorithm that can (and is suggested to) be used with 
-this type of data.
-\\ As \pkg{MIGSA} is intended to be executed massively over several datasets, 
-it returns too much information, very difficult to explore, to overcome this, 
-\pkg{MIGSA} provides several tools to easily explore and visualize results at 
-gene set and individual genes level.
+The functional analysis methodology allows researchers to gain biological 
+insight from a list of deregulated gene sets between experimental conditions 
+of interest. As suggested by \citep{rodriguez2016improving} both singular 
+enrichment analysis (SEA) and gene set enrichment analysis (GSEA) must be 
+performed over the same dataset in order to gain as much biological insight 
+as possible. This strategy is known as Integrative Functional Analysis (IFA) 
+and integrates into the same analysis with enhanced versions of the dEnricher 
+\citep{dEnricher} and mGSZ \citep{mGSZ} methods.
+\par At present, there are several freely available datasets which provide 
+data over the same disease, characteristic of interest (e.g. survival), or 
+subjects studied over several different platforms. The Cancer Genome Atlas 
+(TCGA) among other projects makes possible the study and comparison in a 
+massive way of these datasets, not only among them but, also against our own 
+population of interest. This unprecedented opportunity allows researchers to 
+search for common functional patterns between these studies, or, more 
+interestingly, particular patterns of our experiment in question. However, 
+this type of approach has not been implemented in any existing tool yet, 
+leaving aside valuable biological information that might assist research 
+hypotheses.
+\par Here, we present a Massive and Integrative Gene Set Analysis tool called 
+\pkg{MIGSA}. It allows to evaluate and compare, massively and transparently, a 
+large collection of datasets coming from diverse sources, maintaining the gene 
+set enrichment ideas of IFA and minimizing parameter settings. In addition, it 
+includes a gene ranking score alternative for RNAseq data by integrating the 
+\textit{Voom+Limma} methodological approach. It provides an enhanced version 
+of mGSZ (\texttt{MIGSAmGSZ}) faster than the default implementation, in order 
+to speed up even more its execution, \pkg{MIGSA} can be run using multicore 
+architectures. In this sense it can be applied over a large collection of 
+datasets on many gene sets in a fast way. Finally, \pkg{MIGSA} provides 
+several user-friendly methods to easily explore and visualize results at gene 
+set, dataset and individual gene level to aid researchers in their biological 
+hypothesis understanding.
 
 \section{Preliminaries}
 
@@ -119,8 +118,8 @@ co-workers. Citations are the main means by which the authors receive
 professional credit for their work. The \pkg{MIGSA} package can be cited as:
 \\
 \\ Rodriguez JC, Gonz\'{a}lez GA, Fresno C, Llera AS, Fern\'{a}ndez EA (2016).
-“Improving information retrieval in functional analysis.” \textit{Computers in 
-Biology and Medicine}, \textbf{79}, 10–20.
+\\“Improving information retrieval in functional analysis.”
+\textit{Computers in Biology and Medicine}, \textbf{79}, 10–20.
 
 \subsection{Installation}
 \pkg{MIGSA} is a package for the R computing environment and it is assumed that 
@@ -163,19 +162,77 @@ and function please refer to the user manual.
 \par
 \includegraphics[width=\textwidth]{ClassDiagrams/MIGSAres.eps}
 
+\section{Gene sets}
+\pkg{MIGSA} allows to perform the functional analysis of any type of gene 
+sets provided by the user. Such gene sets should be present as 
+GeneSetCollection objects from the \pkg{GSEABase} R library, in this section we 
+will give a brief introduction on how to construct such an object from our 
+own gene sets. In addition, the tools provided by \pkg{MIGSA} to automatically 
+load various collections of known gene sets will be presented.
+
+\subsection{Sample GeneSetCollection creation}
+Here we present a simple way to create a GeneSetCollection object from own 
+gene sets, for more detailed information please refer to the \pkg{GSEABase} 
+documentation.
+\\For this example we are going to manually create the GeneSetCollection 
+object for the gene sets hsa00232, hsa00130 and hsa00785 from KEGG.
+\\First, we will have to create each gene set separately, and then the 
+GeneSetCollection object.
+<<>>=
+library(GSEABase);
+gs1 <- GeneSet(c("10", "1544", "1548", "1549", "1553", "7498", "9"), 
+    setName="hsa00232", 
+    setIdentifier="Caffeine metabolism");
+gs1;
+
+gs2 <- GeneSet(c("10229", "27235", "3242", "51004", "51805", "6898", "84274"),
+    setName="hsa00130", 
+    setIdentifier="Ubiquinone and other terpenoid-quinone biosynthesis");
+gs3 <- GeneSet(c("11019", "387787", "51601"),
+    setName="hsa00785", 
+    setIdentifier="Lipoic acid metabolism");
+
+## And now construct the GeneSetCollection object.
+gsetsColl <- GeneSetCollection(list(gs1, gs2, gs3));
+gsetsColl;
+@
+
+\subsection{MIGSA gene sets loading}
+As mentioned above, \pkg{MIGSA} provides functions for automatically loading 
+known collections of gene sets. These functions are \texttt{loadGo} and 
+\texttt{downloadEnrichrGeneSets}, the first constructs the GeneSetCollection 
+object using the \pkg{org.Hs.eg.db} R package. Meanwhile, 
+\texttt{downloadEnrichrGeneSets} constructs the object by downloading the 
+gene sets from the Enrichr database 
+(http://amp.pharm.mssm.edu/Enrichr/\#stats). Enrichr gene set names can be 
+listed with the \texttt{enrichrGeneSets} function.
+
+<<eval=FALSE>>=
+## Not run:
+
+## Load cellular component gene sets (another possibility would be "MF" or "BP")
+ccGsets <- loadGo("CC"); # It is a GeneSetCollection object
+
+## Load KEGG and Reactome gene sets
+keggReact <- downloadEnrichrGeneSets(c("KEGG_2015", "Reactome_2015"));
+## It is a list object containing two GeneSetCollection objects
+
+## End(Not run)
+@
+
 \section{MIGSAmGSZ}
 
 \subsection{mGSZ speedup}
-As stated below, \pkg{MIGSA} provides the \textit{MIGSAmGSZ} function, which 
+As stated below, \pkg{MIGSA} provides the \texttt{MIGSAmGSZ} function, which 
 implements \textit{mGSZ} but running much faster. In order to test 
-\textit{MIGSAmGSZ}'s correctness and speed up over \textit{mGSZ}, it was 
+\texttt{MIGSAmGSZ}'s correctness and speed up over \textit{mGSZ}, it was 
 evaluated using the TCGA's microarray breast cancer dataset. Basal vs. Luminal 
-A contrast was tested (16,207 genes * 237 subjects) over the Gene Ontology and 
+A contrast was tested (16,207 genes x 237 subjects) over the Gene Ontology and 
 KEGG gene sets (20,425 gene sets).
 \\This analysis was carried out using an Intel(R) Xeon(R) E5-2620 v3 @ 2.40GHz 
 (24 cores), 128 GB RAM. Different number of cores were used to analyze the 
-speedup.
-\\Lets test it!
+speed up.
+\\Let's test it!
 \\Note that we are using MulticoreParam as I am testing under Linux.
 
 <<Speedup1, eval=TRUE>>=
@@ -249,7 +306,7 @@ lapply(allRes, function(actRes) {
 @
 
 <<Speedup3, eval=TRUE>>=
-## As last chunk of code was not executed we load that data:
+## As last chunk of code was not executed, we load that data:
 library(MIGSAdata);
 
 data(mGSZspeedup);
@@ -266,7 +323,7 @@ names(newtimeSpent) <- nCores;
 speeduptable <- c(timeSpent, unlist(newtimeSpent));
 names(speeduptable) <- c(1, nCores);
 
-## lets put all times in the same unit in order to measure speedup
+## Let's put all times in the same unit in order to measure speedup
 newtimeSpent <- lapply(newtimeSpent, function(acttime) {
     units(acttime) <- "secs";
     return(acttime);
@@ -286,10 +343,10 @@ round(speeduptable, 2);
 @
 
 As it can be seen in Table \ref{speedUpTable}, no matter the number of cores in 
-which \textit{MIGSAmGSZ} was tested, it outperformed \textit{mGSZ}. Running in 
-one core, it has shown a speedup of 1.6X, reaching to a top of 10.8X speedup 
+which \texttt{MIGSAmGSZ} was tested, it outperformed \textit{mGSZ}. Running in 
+one core, it has shown a speedup of 1.6X, reaching for a top of 10.8X speedup 
 with ten cores, giving the same results in 14 minutes in contrast to 
-\pkg{MIGSA}'s 2.46 hours execution.
+\textit{mGSZ}'s 2.46 hours execution.
 
 \begin{table}[!htpb]
     \caption{MIGSAmGSZ speedup}
@@ -307,15 +364,15 @@ Efficiency & 1 & 1.58 & 1.59 & 1.48 & 1.18 & 1.08 & 0.83 & 0.37 \\ \hline
 \end{table}
 
 \subsection{MIGSAmGSZ simple example}
-Following, we show how to simply execute one \textit{MIGSAmGSZ} analysis.
+Following, we show how to simply execute one \texttt{MIGSAmGSZ} analysis.
 \\ In this example we will generate an expression matrix with 200 genes (ten 
-differentially expressed) and eight subjects (four of condition "C1" and four 
-of "C2"), and 50 gene sets of ten genes each one.
+differentially expressed) and eight subjects (four of condition ``C1'' and four 
+of ``C2''), and 50 gene sets of ten genes each one.
 
 <<MIGSAmGSZ example>>=
 library(MIGSA);
 
-## Lets create our genes expression matrix with 200 genes and 8 subjects
+## Let's create our gene expression matrix with 200 genes and 8 subjects
 nSamples <- 8; # 8 subjects
 nGenes <- 200; # 200 genes
 geneNames <- paste("g", 1:nGenes, sep = ""); # with names g1 ... g200
@@ -329,7 +386,7 @@ rownames(exprMatrix) <- geneNames;
 
 ## There will be 10 differentially expressed genes.
 nDeGenes <- 10;
-## Lets generate the offsets to sum to the differentially expressed genes.
+## Let's generate the offsets to sum to the differentially expressed genes.
 deOffsets <- matrix(2*abs(rnorm(nDeGenes*nSamples/2)), ncol=nSamples/2);
 
 ## Randomly select which are the DE genes.
@@ -341,7 +398,7 @@ exprMatrix[deIndexes, 1:(nSamples/2)] <-
 conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
 
 nGSets <- 50; # 50 gene sets
-## Lets create randomly 50 gene sets, of 10 genes each
+## Let's create randomly 50 gene sets, of 10 genes each
 gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
 names(gSets) <- paste("set", as.character(1:nGSets), sep="");
 ## with names set1 ... set50
@@ -356,18 +413,18 @@ head(MIGSAmGSZres);
 \section{MIGSA simple example}
 Following, we show how to simply execute one \textit{MIGSA} analysis.
 \\ In this example we will generate two expression matrices with 300 genes (30 
-differentially expressed) and 16 subjects (8 of condition "C1" and 8 of 
-"C2"), and two sets of 30 gene sets of ten genes each one.
+differentially expressed) and 16 subjects (8 of condition ``C1'' and 8 of 
+``C2''), and two sets of 30 gene sets of ten genes each one.
 
 <<MIGSA example>>=
 library(MIGSA);
 
-## Lets simulate two expression matrices of 300 genes and 16 subjects.
+## Let's simulate two expression matrices of 300 genes and 16 subjects.
 nGenes <- 300; # 300 genes
 nSamples <- 16; # 16 subjects
 geneNames <- paste("g", 1:nGenes, sep = ""); # with names g1 ... g300
 
-## Create random gene expression data matrix.
+## Create the random gene expression data matrices.
 set.seed(8818);
 exprData1 <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
 rownames(exprData1) <- geneNames;
@@ -376,7 +433,7 @@ rownames(exprData2) <- geneNames;
 
 ## There will be 30 differentially expressed genes.
 nDeGenes <- nGenes/10;
-## Lets generate the offsets to sum to the differentially expressed genes.
+## Let's generate the offsets to sum to the differentially expressed genes.
 deOffsets <- matrix(2*abs(rnorm(nDeGenes*nSamples/2)), ncol=nSamples/2);
 
 ## Randomly select which are the DE genes.
@@ -396,7 +453,7 @@ conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
 fitOpts <- FitOptions(conditions);
 
 nGSets <- 30; # 30 gene sets
-## Lets create randomly 30 gene sets, of 10 genes each
+## Let's create randomly 30 gene sets, of 10 genes each
 
 gSets1 <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
 names(gSets1) <- paste("set", as.character(1:nGSets), sep="");
@@ -478,7 +535,7 @@ matrices.
 For each dataset, genes reliably detected in less than 30\% of the samples per 
 condition were removed from the analysis. In addition, in RNAseq data, genes 
 with a mean less than 15 counts per condition were also removed.
-Detailed dataset's information can be seen in Table \ref{datasetsTable}.
+Detailed datasets information can be seen in Table \ref{datasetsTable}.
 
 \begin{table}[!htpb]
     \caption{Datasets details}
@@ -502,9 +559,9 @@ Total    &      -     & 432   & 916       & -      \\ \hline
 
 \subsection{MIGSA on TCGA data}
 \label{migsatcga}
-Lets run MIGSA over the TCGA RNAseq and microarray datasets.
-We are going to load both datasets using the \pkg{MIGSA} package, please refer 
-to gettingTcgaData vignette for details about these matrices.
+Let's run MIGSA over the TCGA RNAseq and microarray datasets.
+We are going to load both datasets using the \pkg{MIGSAdata} package, please 
+refer to the gettingTcgaData vignette for details about these matrices.
 \\ \textbf{NOTE:} This chunk of code took 29.83m to execute on 10 cores.
 
 <<tcga MIGSA1, eval=TRUE>>=
@@ -593,9 +650,9 @@ tcgaMigsaRes <- MIGSA(experiments, geneSets=gSets);
 
 \subsection{MIGSA on pbcmc datasets}
 \label{migsapbcmc}
-Lets run \textit{MIGSA} over the pbcmc microarray datasets.
-We are going to load six datasets using the \pkg{MIGSA} package, please refer 
-to gettingPbcmcData vignette for details in how we got this matrices.
+Let's run \textit{MIGSA} over the pbcmc microarray datasets.
+We are going to load six datasets using the \pkg{MIGSAdata} package, please 
+refer to the gettingPbcmcData vignette for details on how we got this matrices.
 \\ \textbf{NOTE:} This chunk of code took 1.27 hours to execute on 10 cores.
 
 <<pbcmc MIGSA1, eval=TRUE>>=
@@ -653,10 +710,11 @@ pbcmcMigsaRes <- MIGSA(experiments, geneSets=gSets);
 @
 
 \subsection{MIGSA exploring breast cancer enrichment results}
-Lets start with the exploratory task. First lets merge both MIGSAres objects 
+Let's start with the exploratory task. First, merge both MIGSAres objects 
 into one with all the datasets results.
-\\ \textbf{NOTE:} In order to follow this code sections \ref{migsatcga} and 
-\ref{migsapbcmc} must had been executed.
+\\ \textbf{NOTE:} In order to follow this code, sections \ref{migsatcga} and 
+\ref{migsapbcmc} must have been executed. If not, jump to the next ``End(Not 
+run)'' tag.
 
 <<MIGSAres merge1, eval=FALSE>>=
 ## Not run:
@@ -666,7 +724,7 @@ dim(pbcmcMigsaRes);
 dim(tcgaMigsaRes);
 # [1] 20425     5
 
-## Lets merge both results in one big MIGSAres object
+## Let's merge both results in one big MIGSAres object
 bcMigsaRes <- merge(pbcmcMigsaRes, tcgaMigsaRes);
 dim(bcMigsaRes);
 # [1] 20425     11
@@ -674,7 +732,7 @@ dim(bcMigsaRes);
 @
 
 <<>>=
-## As last chunk of code was not executed we load that data:
+## As last chunk of code was not executed, we load that data:
 library(MIGSA);
 library(MIGSAdata);
 data(bcMigsaResAsList);
@@ -683,7 +741,7 @@ bcMigsaResAsList$genesRank);
 rm(bcMigsaResAsList);
 ## End(Loading data)
 
-## Lets see a summary of enriched gene sets at different cutoff values
+## Let's see a summary of enriched gene sets at different cutoff values
 summary(bcMigsaRes);
 
 ## We will set a cutoff of 0.01 (recommended)
@@ -696,7 +754,7 @@ bcMigsaRes <- setEnrCutoff(bcMigsaRes, 0.01);
 # bcMigsaRes <- bcMigsaRes[1:200,];
 @
 
-Lets start exploring this MIGSA results object.
+Let's start exploring this MIGSA results object.
 
 <<MIGSAres exploring1, eval=TRUE>>=
 colnames(bcMigsaRes);
@@ -706,10 +764,10 @@ summary(bcMigsaRes);
 
 ## We can see that 18,191 gene sets were not enriched, while 242 were 
 ## enriched in every dataset.
-## Moreover there is a high consensus between datasets, with a maximum of 679 
+## Moreover, there is a high consensus between datasets, with a maximum of 679 
 ## enriched gene sets in common between upp and unt.
 ##
-## Lets keep only gene sets enriched in at least one data set
+## Let's keep only gene sets enriched in at least one data set
 bcMigsaRes <- bcMigsaRes[ rowSums(bcMigsaRes[,-(1:3)], na.rm=TRUE) > 0, ];
 dim(bcMigsaRes);
 @
@@ -723,7 +781,7 @@ dev.off();
 @
 
 <<MIGSAres exploring2, eval=FALSE>>=
-## Lets see enrichment heat map
+## Let's see enrichment heat map
 ## i.e. a heat map of binary data (enriched/not enriched)
 aux <- migsaHeatmap(bcMigsaRes, trace="none", dendrogram="column", key=FALSE, 
     keysize=0.4, srtCol=45, xlab="Yellow: enriched    Orange: not enriched");
@@ -733,13 +791,13 @@ aux <- migsaHeatmap(bcMigsaRes, trace="none", dendrogram="column", key=FALSE,
 
 <<MIGSAres exploring3, eval=TRUE>>=
 ## In this heat map we can see a high number of gene sets that are being 
-## enriched in consensus by most of the datasets. Lets explore them.
+## enriched in consensus by most of the datasets. Let's explore them.
 ## We can obtain them (enriched in at least 80% of datasets) by doing
 consensusGsets <- bcMigsaRes[ rowSums(bcMigsaRes[, -(1:3)], na.rm=TRUE)
     > 6.4,];
 dim(consensusGsets);
 
-## And lets see from which sets are them
+## And let's see from which sets are them
 table(consensusGsets$GS_Name);
 @
 
@@ -752,8 +810,8 @@ dev.off();
 @
 
 <<MIGSAres exploring4, eval=FALSE>>=
-## Moreover, lets see which are the genes that are mostly contributing 
-## to gene sets enrichment (genes contributing in at least 70 gene sets)
+## Moreover, let's see which are the genes that are mostly contributing 
+## to gene set enrichment (genes contributing in at least 70 gene sets)
 ## i.e. a heat map showing the number of datasets in which each gene (columns) 
 ## contributed to enrich each gene set (rows).
 aux <- genesHeatmap(bcMigsaRes, enrFilter=6.4, gsFilter=70, trace="none", 
@@ -766,8 +824,8 @@ aux <- genesHeatmap(bcMigsaRes, enrFilter=6.4, gsFilter=70, trace="none",
 ## Well, we could continue exploring them, however, at the first heat map we
 ## can see that TCGA datasets are defining a separate cluster, this is caused 
 ## by a big group of gene sets that seem to be enriched mainly by TCGA.
-## Lets explore them:
-## (gene sets enriched by both TCGA datasets and in less than 20% of other)
+## Let's explore them:
+## (gene sets enriched by both TCGA datasets and in less than 20% of the other)
 tcgaExclusive <- bcMigsaRes[
     rowSums(bcMigsaRes[, c("tcgaMA", "tcgaRNA")], na.rm=TRUE) == 2 & 
     rowSums(bcMigsaRes[, c("mainz","nki","transbig","unt","upp","vdx")],
@@ -777,10 +835,10 @@ dim(tcgaExclusive);
 
 table(tcgaExclusive$GS_Name);
 
-## Lets see which is this KEGG enriched gene set
+## Let's see which is this KEGG enriched gene set
 tcgaExclusive[ tcgaExclusive$GS_Name == "KEGG_2015", "id" ];
 
-## Lets see in which depths of the GO tree are these gene sets
+## Let's see in which depths of the GO tree are these gene sets
 table(getHeights(
     tcgaExclusive[ tcgaExclusive$GS_Name != "KEGG_2015", "id", drop=TRUE]));
 ## We can see that the most of the gene sets are between depths three and five
@@ -822,7 +880,7 @@ dev.off();
 @
 
 <<MIGSAres exploring6_3, eval=FALSE>>=
-## Lets explore which are the genes that repeat the most in these 
+## Let's explore which are the genes that repeat the most in these 
 ## gene sets (that are present in at least 15% of the gene sets)
 ## i.e. a bar plot of the number of gene sets in which each gene contributed to 
 ## enrich.
@@ -848,8 +906,8 @@ dev.off();
 @
 
 <<MIGSAres exploring8, eval=FALSE>>=
-## Lets do the same analysis for the rest of the datasets, so we can filter 
-## which genes are acting exclusive in TCGA datasets
+## Let's do the same analysis for the rest of the datasets, so we can filtrate 
+## which genes are acting exclusively in TCGA datasets
 consMostEnrichedGenes <- genesBarplot(consensusGsets, gsFilter=53.25);
 @
 
@@ -858,10 +916,10 @@ consMostEnrichedGenes <- genesBarplot(consensusGsets, gsFilter=53.25);
 <<MIGSAres exploring9, eval=TRUE>>=
 consImportantGenes <- as.character(consMostEnrichedGenes$data$id);
 
-## Lets see which genes they share
+## Let's see which genes they share
 intersect(tcgaImportantGenes, consImportantGenes);
 
-## Lets get really tcga exclusive genes (5 genes)
+## And get the really tcga exclusive genes (5 genes)
 tcgaExclGenes <- setdiff(tcgaImportantGenes, consImportantGenes);
 @
 
@@ -870,7 +928,7 @@ genes of interest, we can filter our results having the gene sets that were
 enriched by our interest genes as follows:
 
 <<MIGSAres exploring10>>=
-## Lets sample 4 genes from consImportantGenes (as if they are our interest 
+## Let's sample 4 genes from consImportantGenes (as if they are our interest 
 ## genes)
 set.seed(8818);
 myInterestGenes <- sample(consImportantGenes, 4);
