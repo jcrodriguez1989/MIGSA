@@ -206,7 +206,6 @@ setMethod(
     definition=function(migsaRes, enrFilter=0, expFilter=0,
     col.dist="jaccard", row.dist=col.dist, ... ) {
         otherParams <- list(...);
-        
         # we must have a cutoff for this function
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
@@ -237,6 +236,7 @@ setMethod(
         }
         if ("RowSideColors" %in% names(otherParams)) {
             rowColors <- otherParams[["RowSideColors"]];
+            otherParams <- otherParams[names(otherParams) != "RowSideColors"];
 #           rowColors <- RowSideColors; ## ojo! ver si funca
         }
         
@@ -253,6 +253,7 @@ setMethod(
 #         }
         if ("ColSideColors" %in% names(otherParams)) {
             colColors <- otherParams[["ColSideColors"]];
+            otherParams <- otherParams[names(otherParams) != "ColSideColors"];
 #           colColors <- ColSideColors; ## ojo! ver si funca
         }
         
@@ -268,10 +269,12 @@ setMethod(
         
         # we use values -1 NA (not analyzed), 0 not enriched, 1 enriched
         numRes[is.na(numRes)] <- -1;
-        p <- heatmap.2(as.matrix(numRes), Rowv=as.dendrogram(hr.s),
-                    labRow=rep("", nrow(numRes)), Colv=as.dendrogram(h.s),
-                    colsep=1:(ncol(numRes)-1), sepwidth=c(0.025, 0.025),
-                    RowSideColors=rowColors, ColSideColors=colColors, ...);
+        allParams <- c(otherParams, list(x=as.matrix(numRes), 
+            Rowv=as.dendrogram(hr.s), labRow=rep("", nrow(numRes)), 
+            Colv=as.dendrogram(h.s), colsep=1:(ncol(numRes)-1), 
+            sepwidth=c(0.025, 0.025), RowSideColors=rowColors, 
+            ColSideColors=colColors));
+        p <- do.call(heatmap.2, allParams);
         p$data <- numRes;
         # how to add legends:
         # http://stackoverflow.com/questions/17041246/
