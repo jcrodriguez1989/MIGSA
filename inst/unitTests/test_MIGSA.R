@@ -1460,6 +1460,106 @@ test_MIGSA_ok_useDifferenttests <- function() {
     checkTrue(any(migsaRes2All[,8] != migsaRes3All[,8]));
 }
 
+test_MIGSA_ok_onlySeaOrGsea <- function() {
+    set.seed(8818);
+    nGenes <- 200;
+    nSamples <- 6;
+    geneNames <- paste("g", 1:nGenes, sep = "");
+    
+    exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
+    rownames(exprData) <- geneNames;
+    exprData <- new("MAList",list(M=exprData));
+    
+    conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
+    
+    nGSets <- 10;
+    gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
+    names(gSets) <- paste("set", as.character(1:nGSets), sep="");
+    myGSs <- as.Genesets(gSets);
+    
+    fitOpts <- FitOptions(conditions);
+    
+    # to get some DE genes
+    seaParams <- SEAparams(de_cutoff=0.3);
+    gseaParams <- GSEAparams(perm_number=5);
+    
+    igsaInput1 <- IGSAinput(name="igsaInput1", expr_data=exprData,
+        sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
+        gene_sets_list=list(myGeneSets=myGSs));
+    set.seed(8818);
+    migsaRes1 <- MIGSA(list(igsaInput1), bp_param=bp_param);
+    
+    igsaInput2 <- IGSAinput(name="igsaInput2", expr_data=exprData,
+        sea_params=seaParams, gsea_params=NULL, fit_options=fitOpts, 
+        gene_sets_list=list(myGeneSets=myGSs));
+    set.seed(8818);
+    migsaRes2 <- MIGSA(list(igsaInput2), bp_param=bp_param);
+    
+    igsaInput3 <- IGSAinput(name="igsaInput3", expr_data=exprData,
+        sea_params=NULL, gsea_params=gseaParams, fit_options=fitOpts, 
+        gene_sets_list=list(myGeneSets=myGSs));
+    set.seed(8818);
+    migsaRes3 <- MIGSA(list(igsaInput3), bp_param=bp_param);
+    
+    # check results from both SEA are equal, and the rest NA
+    checkEquals(migsaRes1@migsa_res_all[,2:10], migsaRes2@migsa_res_all[,2:10]);
+    checkTrue(all(is.na(migsaRes2@migsa_res_all[,11:15])));
+    
+    # check results from both GSEA are equal, and the rest NA
+    checkEquals(migsaRes1@migsa_res_all[,c(2:5, 11:15)], 
+        migsaRes3@migsa_res_all[,c(2:5, 11:15)]);
+    checkTrue(all(is.na(migsaRes3@migsa_res_all[,6:10])));
+}
+
+test_MIGSA_ok_useOwnbrNoExprData <- function() {
+    set.seed(8818);
+    nGenes <- 200;
+    nSamples <- 6;
+    geneNames <- paste("g", 1:nGenes, sep = "");
+    
+    exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
+    rownames(exprData) <- geneNames;
+    exprData <- new("MAList",list(M=exprData));
+    
+    conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
+    
+    # generate genes that are not in our experiment (so we get them in gSets).
+    geneNames <- paste("g", 1:(10*nGenes), sep = "");
+    nGSets <- 10;
+    gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
+    names(gSets) <- paste("set", as.character(1:nGSets), sep="");
+    myGSs <- as.Genesets(gSets);
+    
+    fitOpts <- FitOptions(conditions);
+    
+    # to get at least one DE gene
+    seaParams1 <- SEAparams(de_cutoff=0.5); # with briii
+    
+    igsaInputName <- "igsaInput";
+    
+    igsaInput1 <- IGSAinput(name=igsaInputName, expr_data=exprData,
+        sea_params=seaParams1, gsea_params=NULL, fit_options=fitOpts, 
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments1 <- list(igsaInput1);
+    
+    myDeGenes <- seaParams(getDEGenes(igsaInput1));
+    igsaInput2 <- IGSAinput(name=igsaInputName,
+        sea_params=SEAparams(de_genes=myDeGenes@de_genes, 
+            br=rownames(exprData)),
+        gsea_params=NULL,
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments2 <- list(igsaInput2);
+    
+    set.seed(8818);
+    migsaRes1 <- MIGSA(experiments1, bp_param=bp_param);
+    
+    set.seed(8818);
+    migsaRes2 <- MIGSA(experiments2, bp_param=bp_param);
+    
+    checkEquals(migsaRes1@migsa_res_all, migsaRes2@migsa_res_all);
+    checkEquals(migsaRes1@migsa_res_summary, migsaRes2@migsa_res_summary);
+}
+
 #### Incorrect ones
 
 test_MIGSA_wrong_noExperiments <- function() {
@@ -1516,42 +1616,42 @@ test_MIGSA_wrong_noGSets <- function() {
     checkTrue(is.na(migsaRes));
 }
 
-test_MIGSA_ok_wrongbr <- function() {
-    set.seed(8818);
-    nGenes <- 200;
-    nSamples <- 6;
-    geneNames <- paste("g", 1:nGenes, sep = "");
-    
-    exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
-    rownames(exprData) <- geneNames;
-    exprData <- new("MAList",list(M=exprData));
-    
-    conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
-    
-    # generate genes that are not in our experiment (so we get them in gSets).
-    geneNames <- paste("g", 1:(10*nGenes), sep = "");
-    nGSets <- 10;
-    gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
-    names(gSets) <- paste("set", as.character(1:nGSets), sep="");
-    myGSs <- as.Genesets(gSets);
-    
-    fitOpts <- FitOptions(conditions);
-    
-    # to get at least one DE gene
-    seaParams <- SEAparams(de_cutoff=0.5,
-        br=paste("gene", 1:100));
-    gseaParams <- GSEAparams(perm_number=2, min_sz=0);
-    
-    igsaInputName <- "igsaInput";
-    
-    igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
-        sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
-        gene_sets_list=list(myGeneSets=myGSs));
-    experiments <- list(igsaInput);
-    
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
-    checkTrue(is.na(migsaRes));
-}
+# test_MIGSA_ok_wrongbr <- function() {
+#     set.seed(8818);
+#     nGenes <- 200;
+#     nSamples <- 6;
+#     geneNames <- paste("g", 1:nGenes, sep = "");
+#     
+#     exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
+#     rownames(exprData) <- geneNames;
+#     exprData <- new("MAList",list(M=exprData));
+#     
+#     conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
+#     
+#     # generate genes that are not in our experiment (so we get them in gSets).
+#     geneNames <- paste("g", 1:(10*nGenes), sep = "");
+#     nGSets <- 10;
+#     gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
+#     names(gSets) <- paste("set", as.character(1:nGSets), sep="");
+#     myGSs <- as.Genesets(gSets);
+#     
+#     fitOpts <- FitOptions(conditions);
+#     
+#     # to get at least one DE gene
+#     seaParams <- SEAparams(de_cutoff=0.5,
+#         br=paste("gene", 1:100));
+#     gseaParams <- GSEAparams(perm_number=2, min_sz=0);
+#     
+#     igsaInputName <- "igsaInput";
+#     
+#     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
+#         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
+#         gene_sets_list=list(myGeneSets=myGSs));
+#     experiments <- list(igsaInput);
+#     
+#     migsaRes <- MIGSA(experiments, bp_param=bp_param);
+#     checkTrue(is.na(migsaRes));
+# }
 
 test_MIGSA_ok_wrongbrOption <- function() {
     set.seed(8818);
@@ -1582,6 +1682,38 @@ test_MIGSA_ok_wrongbrOption <- function() {
     
     igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
+        gene_sets_list=list(myGeneSets=myGSs));
+    experiments <- list(igsaInput);
+    
+    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    checkTrue(is.na(migsaRes));
+}
+
+test_MIGSA_ok_paramsCantbebothNull <- function() {
+    set.seed(8818);
+    nGenes <- 200;
+    nSamples <- 6;
+    geneNames <- paste("g", 1:nGenes, sep = "");
+    
+    exprData <- matrix(rnorm(nGenes*nSamples),ncol=nSamples);
+    rownames(exprData) <- geneNames;
+    exprData <- new("MAList",list(M=exprData));
+    
+    conditions <- rep(c("C1", "C2"),c(nSamples/2,nSamples/2));
+    
+    # generate genes that are not in our experiment (so we get them in gSets).
+    geneNames <- paste("g", 1:(10*nGenes), sep = "");
+    nGSets <- 10;
+    gSets <- lapply(1:nGSets, function(i) sample(geneNames, size=10));
+    names(gSets) <- paste("set", as.character(1:nGSets), sep="");
+    myGSs <- as.Genesets(gSets);
+    
+    fitOpts <- FitOptions(conditions);
+    
+    igsaInputName <- "igsaInput";
+    
+    igsaInput <- IGSAinput(name=igsaInputName, expr_data=exprData,
+        sea_params=NULL, gsea_params=NULL, fit_options=fitOpts, 
         gene_sets_list=list(myGeneSets=myGSs));
     experiments <- list(igsaInput);
     

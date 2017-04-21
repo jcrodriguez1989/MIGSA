@@ -110,6 +110,8 @@ setMethod("colnames",
     }
 )
 
+## todo: define colnames(migsaRes) <-
+
 #'@inheritParams MIGSAres exploratory functions
 #'@rdname MIGSAres-common
 #'@aliases head,MIGSAres

@@ -27,8 +27,7 @@ setMethod(
         } else {
             # otherwise we use them
             dif <- de_genes(params);
-            flog.info(paste("DE genes", length(dif), "of a total of", nrow(M),
-                            "(", round(length(dif)/nrow(M)*100,2), "%)"));
+            flog.info(paste("DE genes", length(dif)));
         }
         
         br <- br(params);
@@ -38,7 +37,7 @@ setMethod(
         if (length(br) > 1) {
             # if its a user provided br, then filter the genes that are in the
             # gene sets (statistical importance)
-            br <- intersect(br, allGenes);
+#             br <- intersect(br, allGenes);
             flog.info(paste("Using user provided BR:", length(br), "genes."));
             if (length(br) < 2) {
                 stop("No genes in br after intersecting with experiment genes");

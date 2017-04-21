@@ -49,6 +49,8 @@ setMethod(f="getDEGenes",
         validObject(igsaInput);
         sea_par <- igsaInput@sea_params;
         
+        if (is.null(sea_par)) return(sea_par);
+        
         # get differentialy expressed genes
         dif <- igsaGetDEGenes(sea_par, igsaInput@expr_data, 
                     igsaInput@fit_options);

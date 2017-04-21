@@ -1,10 +1,11 @@
+\pdfminorversion=4 % tell pdflatex to generate PDF in version 1.4
 \documentclass[article, shortnames, nojss]{jss}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{enumerate}
 \usepackage{multirow}
 \DeclareMathOperator*{\argmax}{arg\,max}
-% \VignetteIndexEntry{Massive and Integrative Gene Set Analysis}
+% \VignetteIndexEntry{Getting pbcmc datasets}
 % \VignetteKeyword{singular enrichment analysis}
 % \VignetteKeyword{over representation analysis}
 % \VignetteKeyword{gene set enrichment analysis}

@@ -30,26 +30,40 @@ setMethod(
         merged_gene_sets <- merge_gene_sets(actGeneSets);
         flog.info(paste(length(merged_gene_sets), "Gene Sets."));
         
-        flog.info(paste(name(igsaInput), ": dEnricher starting."));
-        # run DEnricher
-        deRes <- DEnricher(seaParams(igsaInput), expr_data, fit_options,
-                        merged_gene_sets, bp_param);
-        flog.info(paste(name(igsaInput), ": dEnricher finnished."));
+        if (is.null(seaParams(igsaInput)) && is.null(gseaParams(igsaInput))) {
+            stop("SEAparams and GSEAparams are both NULL");
+        }
         
-        flog.info(paste(name(igsaInput), ": mGSZ starting."));
-        # run MGSZ
-        mgszRes <- MGSZ(gseaParams(igsaInput), expr_data, fit_options,
-                        merged_gene_sets, bp_param);
-        flog.info(paste(name(igsaInput), ": mGSZ finnished."));
+        deRes <- SEAres();
+        if (!is.null(seaParams(igsaInput))) {
+            flog.info(paste(name(igsaInput), ": dEnricher starting."));
+            # run DEnricher
+            deRes <- DEnricher(seaParams(igsaInput), expr_data, 
+                            fit_options, merged_gene_sets, bp_param);
+            flog.info(paste(name(igsaInput), ": dEnricher finnished."));
+        }
+        
+        mgszRes <- GSEAres();
+        if (!is.null(gseaParams(igsaInput))) {
+            flog.info(paste(name(igsaInput), ": mGSZ starting."));
+            # run MGSZ
+            mgszRes <- MGSZ(gseaParams(igsaInput), expr_data, fit_options,
+                            merged_gene_sets, bp_param);
+            flog.info(paste(name(igsaInput), ": mGSZ finnished."));
+        }
         
         # splitting all results. it is a list of GenesetsRes objects
         splitted_res <- split_results(deRes, mgszRes, actGeneSets);
         
-        # get the genes rank to give more information in the results object
-        genes_rank <- get_fit(expr_data, fit_options, SEAparams());
-        genes_rank <- data.frame(geneID=rownames(genes_rank),
-                                    rank=genes_rank$t);
-        colnames(genes_rank)[2] <- name(igsaInput);
+        genes_rank <- data.frame();
+        
+        if (ncol(expr_data) > 0) {
+            # get the genes rank to give more information in the results object
+            genes_rank <- get_fit(expr_data, fit_options, SEAparams());
+            genes_rank <- data.frame(geneID=rownames(genes_rank),
+                                        rank=genes_rank$t);
+            colnames(genes_rank)[2] <- name(igsaInput);
+        }
         
         # create the IGSAres object
         igsaRes <- IGSAres(name=name(igsaInput), gene_sets_res=splitted_res,

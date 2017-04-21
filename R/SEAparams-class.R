@@ -86,3 +86,5 @@ SEAparams <- setClass(
             test_ok);
     }
 )
+
+setClassUnion("SEAparamsOrNULL", c("SEAparams", "NULL"));

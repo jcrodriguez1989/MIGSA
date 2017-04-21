@@ -17,7 +17,9 @@ matrix and the provided gene sets.
 \item{\code{name}}{character indicating the name of this experiment.}
 
 \item{\code{expr_data}}{ExprData object with the expression data (MicroArray or 
-RNAseq).}
+RNAseq). Note: expr_data can be a 0x0 matrix only if gsea_params=NULL and 
+de_genes and br slots from sea_params are correctly set (vectors of gene 
+names), in this case only SEA will be run.}
 
 \item{\code{fit_options}}{FitOptions object with the parameters to be used when 
 fitting the model.}
@@ -26,10 +28,10 @@ fitting the model.}
 tested for enrichment (names must be unique).}
 
 \item{\code{sea_params}}{SEAparams object with the parameters to be used 
-by SEA.}
+by SEA, if NULL then SEA wont be run.}
 
 \item{\code{gsea_params}}{GSEAparams object with the parameters to be used 
-by GSEA.}
+by GSEA, if NULL then GSEA wont be run.}
 }}
 \examples{
 ## Lets create a basic IGSAinput object.
@@ -52,6 +54,13 @@ myGSs <- GeneSetCollection(list(myGs1, myGs2));
 ## And now we can create our IGSAinput ready for MIGSA.
 igsaInput <- IGSAinput(name="igsaInput", expr_data=maExprData, 
 fit_options=myFOpts, gene_sets_list=list(myGSs=myGSs));
+
+## Valid IGSAinput object with no expr_data (only run SEA).
+igsaInput <- IGSAinput(name="igsaInput", gene_sets_list=list(myGSs=myGSs),
+gsea_params=NULL, 
+sea_params=SEAparams(de_genes=rownames(maExprData)[1:10],
+br=rownames(maExprData)));
+validObject(igsaInput);
 
 }
 \seealso{
