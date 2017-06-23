@@ -53,7 +53,8 @@ setMethod(
         goIds <- mappedkeys(go);
         
         # filter the desired ontology
-        go <- go[Ontology(goIds) == ontology];
+        ontologies <- Ontology(goIds);
+        go <- go[(!is.na(ontologies)) & ontologies == ontology];
         go <- as.list(go);
         go <- lapply(go, unique);
         
