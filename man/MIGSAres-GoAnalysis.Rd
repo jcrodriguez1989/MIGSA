@@ -3,17 +3,26 @@
 \docType{methods}
 \name{MIGSAres-GOanalysis}
 \alias{MIGSAres-GOanalysis}
-\alias{getHeights}
-\alias{getHeights,character-method}
 \alias{migsaGoTree}
 \alias{migsaGoTree,MIGSAres-method}
+\alias{goTree}
+\alias{goTree,MIGSAres-method}
+\alias{goTree,data.frame-method}
+\alias{getHeights}
+\alias{getHeights,character-method}
 \title{Explore Gene Ontology gene sets in MIGSAres}
 \usage{
 "MIGSAres-GOanalysis"(migsaRes)
 
-migsaGoTree(migsaRes)
+migsaGoTree(migsaRes, ...)
 
-\S4method{migsaGoTree}{MIGSAres}(migsaRes)
+\S4method{migsaGoTree}{MIGSAres}(migsaRes, categories = rep(NA, ncol(migsaRes)
+- 3), categColors = "red", ont = "BP", legendPos = "topleft")
+
+goTree(treeInfo, ...)
+
+\S4method{goTree}{data.frame}(treeInfo, ont = "BP", legends = NA,
+legendPos = "topleft")
 
 getHeights(ids, ...)
 
@@ -22,9 +31,27 @@ getHeights(ids, ...)
 \arguments{
 \item{migsaRes}{MIGSAres object. It must contain at least one GO gene set.}
 
-\item{ids}{character vector indicating the queried GO ids.}
-
 \item{...}{not in use.}
+
+\item{categories}{vector. Each experiment category, it will print different 
+node color for each. Can have NAs. Must have length equal to number of 
+experiments, i.e. length(categories) == ncol(migsaRes)-3}
+
+\item{categColors}{character. Color for each category. Must have the same 
+length as the number of different categories.}
+
+\item{ont}{character. One of "BP", "CC" or "MF". Selected ontology to plot.}
+
+\item{legendPos}{. Parameter passed to legend function.}
+
+\item{treeInfo}{. Data.frame with GO ids as rownames, and three columns:
+Enriched (logical), Important (logical) and Color (character). If Enriched is
+true then it will be ploted, if Important is true then it will have another 
+shape, Color has the color name to use.}
+
+\item{legends}{. Matrix with two columns, each col is a pair (lengend, color).}
+
+\item{ids}{character vector indicating the queried GO ids.}
 
 \item{minHeight}{logical indicating if the minimum or maximum height must be 
 calculated. If it is FALSE then the longest path to the root is calculated, 
@@ -63,4 +90,3 @@ getHeights(fst40goIds);
 }
 
 }
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/IGSAinput-class.R
 \docType{methods}
 \name{IGSAinput-class}
-\alias{IGSAinput}
 \alias{IGSAinput-class}
+\alias{IGSAinput}
 \title{IGSAinput S4 class implementation in R}
 \description{
 This S4 class contains all the necessary inputs to execute a functional 
@@ -33,6 +33,7 @@ by SEA, if NULL then SEA wont be run.}
 \item{\code{gsea_params}}{GSEAparams object with the parameters to be used 
 by GSEA, if NULL then GSEA wont be run.}
 }}
+
 \examples{
 ## Lets create a basic IGSAinput object.
 ## First create a expression matrix.
@@ -78,4 +79,3 @@ validObject(igsaInput);
 
 \code{\link{summary}}
 }
-

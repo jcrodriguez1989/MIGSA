@@ -776,16 +776,14 @@ dim(bcMigsaRes);
 <<echo=FALSE,results=hide>>=
 # it is the same code as below, but saving the pdf to correctly load it in tex
 pdf("bcMigsaResMigsaHeatmap.pdf");
-aux <- migsaHeatmap(bcMigsaRes, trace="none", dendrogram="column", key=FALSE, 
-keysize=0.4, srtCol=45, xlab="Yellow: enriched    Orange: not enriched");
+aux <- migsaHeatmap(bcMigsaRes);
 dev.off();
 @
 
 <<MIGSAres exploring2, eval=FALSE>>=
 ## Let's see enrichment heat map
 ## i.e. a heat map of binary data (enriched/not enriched)
-aux <- migsaHeatmap(bcMigsaRes, trace="none", dendrogram="column", key=FALSE, 
-    keysize=0.4, srtCol=45, xlab="Yellow: enriched    Orange: not enriched");
+aux <- migsaHeatmap(bcMigsaRes);
 @
 
 \includegraphics{bcMigsaResMigsaHeatmap.pdf}
@@ -805,8 +803,8 @@ table(consensusGsets$GS_Name);
 <<echo=FALSE,results=hide>>=
 # it is the same code as below, but saving the pdf to correctly load it in tex
 pdf("bcMigsaResGenesHeatmap.pdf");
-aux <- genesHeatmap(bcMigsaRes, enrFilter=6.4, gsFilter=70, trace="none", 
-    dendrogram="column", srtCol=45);
+aux <- genesHeatmap(bcMigsaRes, enrFilter=6.4, gsFilter=70,
+    dendrogram="col");
 dev.off();
 @
 
@@ -815,8 +813,8 @@ dev.off();
 ## to gene set enrichment (genes contributing in at least 70 gene sets)
 ## i.e. a heat map showing the number of datasets in which each gene (columns) 
 ## contributed to enrich each gene set (rows).
-aux <- genesHeatmap(bcMigsaRes, enrFilter=6.4, gsFilter=70, trace="none", 
-    dendrogram="column", srtCol=45);
+aux <- genesHeatmap(bcMigsaRes, enrFilter=6.4, gsFilter=70,
+    dendrogram="col");
 @
 
 \includegraphics{bcMigsaResGenesHeatmap.pdf}
@@ -848,14 +846,14 @@ table(getHeights(
 <<echo=FALSE,results=hide>>=
 # it is the same code as below, but saving the pdf to correctly load it in tex
 pdf("tcgaExclusiveMigsaGoTreeMF.pdf");
-aux <- migsaGoTree(tcgaExclusive[ tcgaExclusive$GS_Name == "MF",]);
+aux <- migsaGoTree(tcgaExclusive, ont="MF");
 dev.off();
 @
 
 <<MIGSAres exploring6_1, eval=FALSE>>=
 ## And plot the GO tree of the other gene sets (except of CC, as it 
 ## has only three gene sets, and it will look bad)
-aux <- migsaGoTree(tcgaExclusive[ tcgaExclusive$GS_Name == "MF",]);
+aux <- migsaGoTree(tcgaExclusive, ont="MF");
 @
 
 \includegraphics{tcgaExclusiveMigsaGoTreeMF.pdf}
@@ -863,12 +861,12 @@ aux <- migsaGoTree(tcgaExclusive[ tcgaExclusive$GS_Name == "MF",]);
 <<echo=FALSE,results=hide>>=
 # it is the same code as below, but saving the pdf to correctly load it in tex
 pdf("tcgaExclusiveMigsaGoTreeBP.pdf");
-aux <- migsaGoTree(tcgaExclusive[ tcgaExclusive$GS_Name == "BP",]);
+aux <- migsaGoTree(tcgaExclusive, ont="BP");
 dev.off();
 @
 
 <<MIGSAres exploring6_2, eval=FALSE>>=
-aux <- migsaGoTree(tcgaExclusive[ tcgaExclusive$GS_Name == "BP",]);
+aux <- migsaGoTree(tcgaExclusive, ont="BP");
 @
 
 \includegraphics{tcgaExclusiveMigsaGoTreeBP.pdf}

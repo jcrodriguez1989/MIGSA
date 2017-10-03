@@ -24,4 +24,3 @@ This S4 class represents the results of one MIGSA execution in R.
 
 \code{\link{summary}}
 }
-

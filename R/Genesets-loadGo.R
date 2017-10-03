@@ -48,13 +48,13 @@ setMethod(
         
         # org.Hs.egGO2ALLEGS is an R object that provides mappings between 
         # a given GO identifier and all of the Entrez Gene identifiers 
-        # annotated at that GO term OR TO ONE OF IT’S CHILD NODES
+        # annotated at that GO term OR TO ONE OF ITS CHILD NODES
         go <- org.Hs.egGO2ALLEGS;
         goIds <- mappedkeys(go);
         
         # filter the desired ontology
         ontologies <- Ontology(goIds);
-        go <- go[(!is.na(ontologies)) & ontologies == ontology];
+        go <- go[!is.na(ontologies) & ontologies == ontology];
         go <- as.list(go);
         go <- lapply(go, unique);
         

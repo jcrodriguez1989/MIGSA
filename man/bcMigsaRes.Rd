@@ -36,4 +36,3 @@ For fully described information and a step-by-step guide in how this object
 was generated, please refer to MIGSA's Vignette.
 Full bcMigsaRes object results can be downloaded (refer to Vignette).
 }
-

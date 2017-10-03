@@ -89,4 +89,3 @@ mGSZres <- MIGSAmGSZ(exprData, gSets, conditions);
 }
 
 }
-

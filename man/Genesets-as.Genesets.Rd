@@ -45,4 +45,3 @@ myGss <- as.Genesets(myGssList);
 
 \code{\link{loadGo}}
 }
-

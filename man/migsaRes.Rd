@@ -12,4 +12,3 @@ see \code{\link{MIGSA}}
 A MIGSA results object (MIGSAres) obtained using the code present as example 
 in \link{MIGSA} man page.
 }
-

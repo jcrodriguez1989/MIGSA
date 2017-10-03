@@ -3,14 +3,13 @@
 \docType{methods}
 \name{MIGSA}
 \alias{MIGSA}
-\alias{MIGSA,list}
 \alias{MIGSA,list-method}
+\alias{MIGSA,list}
 \title{MIGSA execution}
 \usage{
 MIGSA(igsaInputs, ...)
 
-\S4method{MIGSA}{list}(igsaInputs, geneSets = list(), bp_param = bpparam(),
-saveResults = FALSE)
+\S4method{MIGSA}{list}(igsaInputs, geneSets = list(), bp_param = bpparam())
 }
 \arguments{
 \item{igsaInputs}{list of IGSAinput objects to execute.}
@@ -24,10 +23,6 @@ list of GeneSetCollection.}
 
 \item{bp_param}{(optional) BiocParallelParam to execute MIGSA 
 in parallel.}
-
-\item{saveResults}{logical indicating if back up of each individual 
-experiment analysis should be saved. It will be saved in 
-getwd()"/migsaResults/"experimentName".RData". (default: FALSE).}
 }
 \value{
 A MIGSAres object.
@@ -94,4 +89,3 @@ migsaRes <- MIGSA(experiments);
 
 \code{\link{MIGSAres-class}}
 }
-

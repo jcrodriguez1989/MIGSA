@@ -36,4 +36,71 @@ Suggests:
     breastCancerVDX,
     pbcmc,
     MIGSAdata
-
+Imports:
+    AnnotationDbi,
+    Biobase,
+    BiocParallel,
+    data.table,
+    edgeR,
+    futile.logger,
+    ggdendro,
+    ggplot2,
+    GO.db,
+    GOstats,
+    graph,
+    graphics,
+    grDevices,
+    grid,
+    GSEABase,
+    limma,
+    matrixStats,
+    mGSZ,
+    org.Hs.eg.db,
+    RBGL,
+    reshape2,
+    Rgraphviz,
+    RJSONIO,
+    stats,
+    utils,
+    vegan
+Collate: 
+    'GenesetRes.R'
+    'GSEAres.R'
+    'SEAres.R'
+    'SEAparams-class.R'
+    'SEAparams.R'
+    'FitOptions-class.R'
+    'ExprData-class.R'
+    'Genesets.R'
+    'GSEAparams-class.R'
+    'GSEAparams.R'
+    'IGSAinput-class.R'
+    'IGSAinput.R'
+    'FitOptions.R'
+    'DEnricher.R'
+    'Genesets-asGenesets.R'
+    'Genesets-enrichr.R'
+    'Genesets-geneSetsFromFile.R'
+    'Genesets-loadGo.R'
+    'GenesetsRes.R'
+    'GoAnalysis.R'
+    'MGSZ.R'
+    'IGSAres.R'
+    'IGSAinput-getterSetters.R'
+    'IGSA.R'
+    'IGSAinput-getDEGenes.R'
+    'MIGSAres-class.R'
+    'MIGSA.R'
+    'MIGSAPackage.R'
+    'MIGSAmGSZ.R'
+    'MIGSAmultiplot.R'
+    'MIGSAres.R'
+    'MIGSAres-GoAnalysis.R'
+    'MIGSAres-common.R'
+    'MIGSAres-setEnrCutoff.R'
+    'MIGSAres-genesManipulation.R'
+    'MIGSAres-getAdditionalInfo.R'
+    'MIGSAres-plotting.R'
+    'data-bcMigsaRes.R'
+    'data-migsaRes.R'
+    'summaryFunctions.R'

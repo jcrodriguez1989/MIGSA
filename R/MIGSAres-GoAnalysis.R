@@ -11,6 +11,18 @@ is_GO = NULL;
 #'@param minHeight logical indicating if the minimum or maximum height must be 
 #'calculated. If it is FALSE then the longest path to the root is calculated, 
 #'otherwise, the shortest path.
+#'@param categories vector. Each experiment category, it will print different 
+#'node color for each. Can have NAs. Must have length equal to number of 
+#'experiments, i.e. length(categories) == ncol(migsaRes)-3
+#'@param categColors character. Color for each category. Must have the same 
+#'length as the number of different categories.
+#'@param ont character. One of "BP", "CC" or "MF". Selected ontology to plot.
+#'@param legendPos . Parameter passed to legend function.
+#'@param treeInfo . Data.frame with GO ids as rownames, and three columns:
+#'Enriched (logical), Important (logical) and Color (character). If Enriched is
+#'true then it will be ploted, if Important is true then it will have another 
+#'shape, Color has the color name to use.
+#'@param legends . Matrix with two columns, each col is a pair (lengend, color).
 #'@param ... not in use.
 #'
 #'@return If migsaGoTree: A list with the used data to plot. If getHeights: A 
@@ -54,10 +66,9 @@ setGeneric(name="MIGSAres-GOanalysis", def=function(migsaRes) {
 #'@aliases migsaGoTree,MIGSAres-method
 #'@exportMethod migsaGoTree
 #'
-setGeneric(name="migsaGoTree", def=function(migsaRes) {
+setGeneric(name="migsaGoTree", def=function(migsaRes, ...) {
     standardGeneric("migsaGoTree")
 })
-
 
 #'@inheritParams MIGSAres-GOanalysis
 #'@rdname MIGSAres-GoAnalysis
@@ -65,80 +76,135 @@ setGeneric(name="migsaGoTree", def=function(migsaRes) {
 #'
 #'@importFrom AnnotationDbi Ontology
 #'@importFrom futile.logger flog.info
-#'@importFrom graphics par
-#'@importFrom grDevices colorRampPalette
+#'@importFrom graphics legend
+#'@importFrom grDevices col2rgb rgb
+#'@importFrom utils combn
 #'@include MIGSAres.R
 #'@include GoAnalysis.R
 #'
 setMethod(
     f="migsaGoTree",
     signature=c("MIGSAres"),
-    definition=function(migsaRes) {
+    definition=function(migsaRes, categories=rep(NA, ncol(migsaRes)-3),
+        categColors="red", ont="BP", legendPos="topleft") {
         stopifnot(validObject(migsaRes));
+        stopifnot(length(categories) == ncol(migsaRes)-3);
+        stopifnot(length(unique(categories))
+            -any(is.na(categories))+all(is.na(categories))
+            == length(unique(categColors)));
+        stopifnot(ont %in% c("BP", "CC", "MF"));
         
         # we must have a cutoff for this function
         migsaRes <- setDefaultEnrCutoff(migsaRes);
+        
+        if (any(!is.na(categories))) {
+            migsaRes <- migsaRes[,c(1:3, 3+which(!is.na(categories)))];
+            categories <- categories[!is.na(categories)];
+        } else {
+            categories[is.na(categories)] <- "Enriched";
+        }
         
         # get gene set names and if they are GO
         goGsets <- unique(as.data.frame(migsaResAll(migsaRes)[,
                                             list(gene_set_name, is_GO)]));
         
-        if (!any(goGsets$is_GO)) {
+        if (!any(goGsets[ goGsets$gene_set_name == ont, "is_GO" ])) {
             stop("No Gene Ontology gene set to plot.");
         }
         
-        # get only the GO gene sets
-        goGsets <- goGsets[ goGsets$is_GO, "gene_set_name" ];
-        
-        # at least one gene set must be from GO
-        stopifnot(length(goGsets) > 0);
-        
         # and filter the MIGSAres object with only the GO gene sets
-        actRes <- migsaRes[ migsaRes[, "GS_Name", drop=!FALSE] %in% goGsets, ];
+        actRes <- migsaRes[ migsaRes[, "GS_Name", drop=!FALSE] == ont, ];
         
         # get the gene sets and the number of enriched experiments
-        plotRes <- data.frame(id=actRes[,1], gs_name=actRes[,3],
-                                number=rowSums(actRes[,-(1:3)], na.rm=!FALSE));
+        plotRes <- data.frame(id=actRes[,1], gs_name=actRes[,3]);
         
         # get the real ontology, I could use GS_Name, but this is more trustable
         plotRes <- cbind(plotRes,
                         ont=Ontology(as.character(plotRes$id)));
         
+        actRes <- actRes[!is.na(plotRes$ont),];
+        plotRes <- plotRes[!is.na(plotRes$ont),];
         ontsPresent <- unique(as.character(plotRes$ont));
-        flog.info("Ontologies to plot.");
-        flog.info(ontsPresent);
         
-        # give different color depending of number of enriched datasets.
-        # 0 enriched dataset is white, every enriched dataset is red
-        colfunc <- colorRampPalette(c("white", "red"));
-        myColors <- colfunc(max(plotRes$number)+1);
-        plotRes$colors <- myColors[ (plotRes$number)+1 ];
+        # for each condition, the times it gets enriched
+        enrichedPerc <- do.call(cbind, by(t(actRes[,-(1:3)]), 
+            categories, colMeans, na.rm=TRUE));
+        enrichedPerc[is.nan(enrichedPerc)] <- 0;
         
-        treeData <- lapply(ontsPresent, function(actOnt) {
-            # for each ontology create the structure needed
-            actualResults <- plotRes[ plotRes$ont == actOnt, ];
-            out <- data.frame(matrix(!FALSE, nrow=nrow(actualResults), 
-                                    ncol=3));
-            colnames(out) <- c("Enriched", "Important", "Color");
-            rownames(out) <- actualResults$id;
-            
-            out$Important <- FALSE;
-            out$Color <- actualResults$colors;
-            
-            return(out);
-        });
-        names(treeData) <- ontsPresent;
+        uniqColors <- lapply(categColors, function(x) 
+            t(col2rgb(x)/255));
+        
+        plotRes$colors <- apply(enrichedPerc, 1, function(actRow) {
+            colors <- unlist(lapply(seq_along(actRow), function(i) {
+                # we put as alpha the percentage of enrichment
+                rgb(uniqColors[[i]], alpha=actRow[[i]]);
+            }))
+            rgb(t(mixColors(colors)));
+        })
+        
+        out <- data.frame(matrix(!FALSE, nrow=nrow(plotRes), ncol=3));
+        colnames(out) <- c("Enriched", "Important", "Color");
+        rownames(out) <- plotRes$id;
+        
+        out$Important <- FALSE;
+        out$Color <- plotRes$colors;
+        
+        # lets create the legend
+        categories <- colnames(enrichedPerc);
+        legends <- do.call(cbind, lapply(seq_along(categories), function(i) {
+            apply(combn(categories, i), 2, function(x) {
+                aux <- mixColors(categColors[categories %in% x]);
+                return(c(paste(x, collapse=" "), 
+                    rgb(t(aux))));
+            })
+        }))
+        
+        acttree <- goTree(out, ont, legends, legendPos);
+        
+        return(invisible(acttree));
+    }
+)
+
+#'@name goTree
+#'@inheritParams MIGSAres-GOanalysis
+#'@rdname MIGSAres-GoAnalysis
+#'@aliases goTree,MIGSAres-method
+#'@exportMethod goTree
+#'
+setGeneric(name="goTree", def=function(treeInfo, ...) {
+    standardGeneric("goTree")
+})
+
+#'@inheritParams MIGSAres-GOanalysis
+#'@rdname MIGSAres-GoAnalysis
+#'@aliases goTree,MIGSAres-method
+#'
+#'@importFrom graphics legend
+#'@include GoAnalysis.R
+#'
+setMethod(
+    f="goTree",
+    signature=c("data.frame"),
+    definition=function(treeInfo, ont="BP", legends=NA, legendPos="topleft") {
+        stopifnot(ont %in% c("BP", "CC", "MF"));
+        stopifnot(colnames(treeInfo) == c("Enriched", "Important", "Color"));
+        stopifnot(unlist(lapply(seq_len(ncol(treeInfo)), function(i) {
+            class(treeInfo[,i])
+        })) == c("logical", "logical", "character"))
+        
+        treeInfo <- treeInfo[Ontology(rownames(treeInfo)) == ont, ];
+        treeData <- list(treeInfo);
+        names(treeData) <- ont;
         
         graph <- createGoGraph(treeData);
         acttree <- list(graph=graph, gotree=treeData);
         
         # select grid depending on number of ontologies to plot
-        par(mfrow=c(
-            as.numeric(length(ontsPresent)>2)+1,
-            as.numeric(length(ontsPresent)>1)+1
-            ));
-        invisible(lapply(ontsPresent, function(x) plotGoTree(acttree, x)));
-        return(acttree);
+        acttree$graph <- plotGoTree(acttree, ont);
+        
+        if (!all(is.na(legends)))
+            legend(legendPos, legends[1,], fill=legends[2,], cex=.75);
+        return(invisible(acttree));
     }
 )
 

@@ -3,10 +3,10 @@
 \docType{methods}
 \name{MIGSAres-genes}
 \alias{MIGSAres-genes}
-\alias{filterByGenes}
-\alias{filterByGenes,MIGSAres,character-method}
 \alias{genesInSets}
 \alias{genesInSets,MIGSAres-method}
+\alias{filterByGenes}
+\alias{filterByGenes,MIGSAres,character-method}
 \title{Get or edit MIGSAres with/by genes that contributed to enrichment}
 \usage{
 "MIGSAres-genes"(migsaRes)
@@ -67,4 +67,3 @@ migsaResIntGenes
 \seealso{
 \code{\link{setEnrCutoff}}
 }
-

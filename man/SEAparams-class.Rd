@@ -2,8 +2,8 @@
 % Please edit documentation in R/SEAparams-class.R
 \docType{methods}
 \name{SEAparams-class}
-\alias{SEAparams}
 \alias{SEAparams-class}
+\alias{SEAparams}
 \title{SEAparams S4 class implementation in R}
 \description{
 This S4 class contains the parameters to provide for SEA.
@@ -35,6 +35,7 @@ reference.
 \item{\code{test}}{character indicating which test to use, it must be one of 
 "FisherTest", "HypergeoTest" or "BinomialTest" (default: "FisherTest").}
 }}
+
 \examples{
 ## Lets create the default SEAparams object.
 mySeaParams <- SEAparams();
@@ -61,4 +62,3 @@ adjust_method="none");
 
 \code{\link{summary}}
 }
-
