@@ -24,7 +24,7 @@ biocViews: Software, GeneSetEnrichment, Visualization, GeneExpression,
     Microarray, RNASeq, KEGG
 License: GPL (>= 2)
 Depends:
-    R (>= 3.5),
+    R (>= 3.4),
     methods,
     BiocGenerics
 Suggests:
