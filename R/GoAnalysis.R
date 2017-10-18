@@ -426,7 +426,7 @@ setMethod(
         # bp, mf and cc ids
         fstTerms <- c("GO:0008150", "GO:0003674", "GO:0005575");
         actualHeight <- 1;
-        actualParents <- unlist(allParents[term]);
+        actualParents <- allParents[[term]];
         
         if (term %in% fstTerms) {
             return(0);
@@ -438,15 +438,15 @@ setMethod(
             # while we dont get to the root node sum 1 to the result.
             # remember we are starting from our node, finding its parents 
             # pseudo recursively
-            while ((!fstTerms %in% actualParents) && 
+            while ((!any(fstTerms %in% actualParents)) && 
                     (actualParents != "all")) {
                 actualHeight <- actualHeight +1;
-                actualParents <- unlist(allParents[unlist(actualParents)]);
+                actualParents <- unique(unlist(allParents[actualParents]));
             }
         } else {
             while (!all(actualParents %in% as.list(c("all", fstTerms)))) {
                 actualHeight <- actualHeight +1;
-                actualParents <- unlist(allParents[unlist(actualParents)]);
+                actualParents <- unique(unlist(allParents[actualParents]));
             }
         }
         
