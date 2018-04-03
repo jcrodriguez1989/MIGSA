@@ -9,7 +9,7 @@
 \usage{
 MIGSA(igsaInputs, ...)
 
-\S4method{MIGSA}{list}(igsaInputs, geneSets = list(), bp_param = bpparam())
+\S4method{MIGSA}{list}(igsaInputs, geneSets = list())
 }
 \arguments{
 \item{igsaInputs}{list of IGSAinput objects to execute.}
@@ -20,9 +20,6 @@ MIGSA(igsaInputs, ...)
 tested for enrichment (names must be unique). If provided then it will be 
 tested in every IGSAinput, if not, each IGSAinput object must have its own 
 list of GeneSetCollection.}
-
-\item{bp_param}{(optional) BiocParallelParam to execute MIGSA 
-in parallel.}
 }
 \value{
 A MIGSAres object.

@@ -1,11 +1,9 @@
-setGeneric(name="MGSZ", def=function(params, M, fit_options, genesets,
-                                    bp_param) {
+setGeneric(name="MGSZ", def=function(params, M, fit_options, genesets) {
     standardGeneric("MGSZ")
 })
 
 # params <- gseaParams(igsaInput); M <- exprData(igsaInput);
 # genesets <- merged_gene_sets;
-#'@importClassesFrom BiocParallel BiocParallelParam
 #'@importFrom GSEABase GeneSetCollection setIdentifier setName
 #'@include FitOptions.R
 #'@include GenesetRes.R
@@ -15,9 +13,8 @@ setGeneric(name="MGSZ", def=function(params, M, fit_options, genesets,
 #'@include IGSAinput.R
 setMethod(
     f="MGSZ",
-    signature=c("GSEAparams", "ExprData", "FitOptions", "GeneSetCollection", 
-                "BiocParallelParam"),
-    definition=function(params, M, fit_options, genesets, bp_param) {
+    signature=c("GSEAparams", "ExprData", "FitOptions", "GeneSetCollection"),
+    definition=function(params, M, fit_options, genesets) {
         # mGSZ uses the gene sets as a list
         mgsz.gene.sets <- asList(genesets);
         
@@ -29,8 +26,7 @@ setMethod(
         }
         
         # run faster version of mGSZ
-        mgszRes <- MIGSA_mGSZ(M, fit_options, mgsz.gene.sets, rankFunc, params,
-                                bp_param);
+        mgszRes <- MIGSA_mGSZ(M, fit_options, mgsz.gene.sets, rankFunc, params);
         
         # convert mGSZ results (data.frame) to GenesetRes
         mgszRes <- lapply(genesets, function(actGset) {
@@ -64,222 +60,159 @@ setMethod(
 )
 
 setGeneric(name="MIGSA_mGSZ",
-    def=function(M, fit_options, gene.sets, rankFunction, params,
-                        bp_param) {
+    def=function(exprData, fitOptions, gSets, rankFunction, params) {
     standardGeneric("MIGSA_mGSZ")
 })
 
 # gene.sets <- mgsz.gene.sets; rankFunction <- rankFunc
 # M <- igsaInput@expr_data; fit_options <- igsaInput@fit_options;
-#'@importClassesFrom BiocParallel BiocParallelParam
 #'@importClassesFrom edgeR DGEList
-#'@importFrom BiocParallel bplapply
+#'@importFrom BiocParallel bplapply bpparam
 #'@importFrom data.table data.table
 #'@importFrom edgeR [.DGEList
 #'@importFrom futile.logger flog.debug flog.info
-#'@importFrom mGSZ count_hyge_var_mean count.prob.sum mGSZ.p.values 
-#'rm.small.genesets toMatrix
+#'@importFrom ismev gum.fit
+#'@importFrom matrixStats colSds rowMedians colVars
 #'@include FitOptions.R
 #'@include GSEAparams.R
 #'@include IGSAinput.R
 setMethod(
     f="MIGSA_mGSZ",
-    signature=c("ExprData", "FitOptions", "list", "function", "GSEAparams",
-                                            "BiocParallelParam"),
-    definition=function(M, fit_options, gene.sets, rankFunction, params,
-                                                    bp_param) {
-        if (is(M, "DGEList")) {
-            stopifnot(all(rownames(M$samples) == colnames(M$counts)));
+    signature=c("ExprData", "FitOptions", "list", "function", "GSEAparams"),
+    definition=function(exprData, fitOptions, gSets, rankFunction, params) {
+        if (is(exprData, "DGEList")) {
+            stopifnot(all(rownames(exprData$samples) == 
+                                colnames(exprData$counts)));
         }
         
-        ## all this code is from mGSZ, with some improvements
+        # filtering inputs, as required
+        filteredInputs <- filterInputs(exprData, gSets, minSz(params));
+        exprData <- filteredInputs$exprData;
+        gSets <- filteredInputs$gSets;
+        rm(filteredInputs);
         
-        expr.data <- M;
-        min.cl.sz <- minSz(params); # min gene set size
-        pre.var <- pv(params);
-        wgt1 <- w1(params);
+        # get gene rankings (also for permuted data)
+        nPerm <- perm_number(params);
+        preVar <- pv(params);
         wgt2 <- w2(params);
-        var.constant <- vc(params);
-        start.val=5;
-        perm.number <- perm_number(params);
+        varConstant <- vc(params);
         
-        flog.debug(paste("mGSZ: perm.number=", perm.number));
-        flog.debug(paste("mGSZ: gene.sets number=", length(gene.sets)));
+        rankings <- getRankings(exprData, fitOptions, nPerm, rankFunction);
+        rownames(rankings) <- rownames(exprData);
+        rm(nPerm);
         
-        expr.dat.sz <- dim(expr.data)
-        # convert the gene sets list to a data.frame (genes x genesets)
-        gene.sets <- toMatrix(expr.data, gene.sets)
-        num.genes <- nrow(gene.sets)
-        if(!(num.genes == expr.dat.sz[1])){
-            stop("Number of genes in gene set data and expression data
-                    do not match")
-        }
-        rm(expr.dat.sz);
+        # calculate normalizing values
+        setSizes <- unlist(lapply(gSets, length));
+        uniqSizes <- unique(setSizes);
+        normValues <- countHygeVarMean(nrow(rankings), uniqSizes);
+        normMean <- normValues$mean; colnames(normMean) <- uniqSizes;
+        normVar <- normValues$var; colnames(normVar) <- uniqSizes;
+        rm(normValues);
         
-        # Remove genes which are not in any term
-        data <- rowSums(gene.sets) > 0;
-        expr.data <- expr.data[data, ];
-        gene.sets <- gene.sets[data, ];
-        rm(data);
+        probSum <- do.call(cbind, lapply(seq_along(uniqSizes), function(j) {
+            countProbSum(nrow(rankings), normMean[, j], normVar[, j]);
+        }));
+        colnames(probSum) <- uniqSizes;
+        normFactors <- list(normMean=normMean, normVar=normVar, 
+                                                probSum=probSum);
         
-        # Remove too small gene sets
-        aux <- ncol(gene.sets);
-        gene.sets <- rm.small.genesets(gene.sets, min.cl.sz)
-        flog.debug(paste("mGSZ: Not analyzed gene sets:",
-                    aux-ncol(gene.sets)));
-        rm(aux);
+        # get extra info for real data
+        realRank <- rankings[,1];
+        realRank <- sort(realRank, decreasing=!FALSE);
+        sVMC_dec <- sumVarMeanCalc(realRank, preVar, normFactors);
+        sVMC_inc <- sumVarMeanCalc(rev(realRank), preVar, normFactors);
+        zVars_dec <- zVarCalc(sVMC_dec$Z_vars, wgt2, varConstant);
+        zVars_inc <- zVarCalc(sVMC_inc$Z_vars, wgt2, varConstant);
         
-        # now convert it to data.table to make it much faster
-        gene.sets <- data.table(gene.sets)
-        
-        if (ncol(expr.data) < 1 || nrow(expr.data) < 1 || 
-            ncol(gene.sets) < 1 || nrow(gene.sets) < 1) {
-            stop("No gene sets to test after mGSZ filtering");
-        }
-        
-        geneset.classes <- colnames(gene.sets)
-        num.classes <- ncol(gene.sets)
-        num.genes <- nrow(expr.data)
-        geneset.class.sizes <- colSums(gene.sets)
-        
-        # Calculation of gene scores
-        tmp = MIGSA_diffScore(expr.data, fit_options, perm.number, 
-                        rankFunction, bp_param);
-        
-        tmp.expr.data = tmp$rankings
-        perm.number = tmp$perm.number
-        diff.expr.dat.sz <- dim(tmp.expr.data)
-        
-        # calculate hyge and prob (mGSZ stuff)
-        set_sz <- geneset.class.sizes;
-        hyge_stat <- count_hyge_var_mean(nrow(gene.sets), unique(set_sz));
-        prob_sum <- lapply(1:length(unique(set_sz)), function(j) {
-            count.prob.sum(nrow(gene.sets), hyge_stat$mean[, j],
-                hyge_stat$var[, j])
-        });
-        
-        # mGSZ score for real data
-        pos.scores <- MIGSA_mGSZ.test.score2(tmp.expr.data[,1], gene.sets,
-                                            rownames(expr.data), wgt1, wgt2,
-                                            pre.var, var.constant, start.val,
-                                            set_sz, hyge_stat, prob_sum);
-        
-        pos.mGSZ.scores <- as.numeric(pos.scores$mgszScore);
-        
-        flog.info(paste("Running score at cores:", bp_param$workers));
-        
-        # mGSZ score for permuted data
-        col.perm.mGSZ <- do.call(rbind, 
-            # I am passing MIGSA's not exported functions to bplapply to avoid
-            # SnowParam environment errors
-            bplapply(1:(diff.expr.dat.sz[2] -1), 
-                function(k, MIGSA_mGSZ.test.score) {
-        #   lapply(1:(diff.expr.dat.sz[2] -1), function(k) {
-                tmp <- MIGSA_mGSZ.test.score(tmp.expr.data[, k+1], gene.sets,
-                                        wgt1, wgt2, pre.var, var.constant,
-                                        start.val, set_sz, hyge_stat,
-                                        prob_sum);
-                flog.debug(paste("Finnished perm n:", k));
-                return(tmp);
-        #   })
-            }, MIGSA_mGSZ.test.score=MIGSA_mGSZ.test.score, BPPARAM=bp_param)
-        );
-        
-        # p-value calculation for the gene set scores
-        mGSZ.p.vals.col.perm <- mGSZ.p.values(pos.mGSZ.scores,col.perm.mGSZ)
-        
-        # preparing output table
-        mGSZ.table.col <- data.frame(
-            gene.sets=colnames(gene.sets)[mGSZ.p.vals.col.perm$class.ind],
-            set.size=geneset.class.sizes[mGSZ.p.vals.col.perm$class.ind],
-            gene.set.scores=pos.mGSZ.scores[mGSZ.p.vals.col.perm$class.ind],
-            pvalue=mGSZ.p.vals.col.perm$EV.class,
-            mGszScore=pos.scores[mGSZ.p.vals.col.perm$class.ind, "rawMgsz"],
-            impGenes=pos.scores[mGSZ.p.vals.col.perm$class.ind, "impGenes"],
-            row.names=NULL
-        )
-        
-        # sorting the results table
-        out <- mGSZ.table.col[order(mGSZ.table.col$pvalue,decreasing=FALSE),]
-        
-        return(out)
-    }
-)
-
-setGeneric(name="MIGSA_diffScore",
-    def=function(data, fit_options, perm.number, rankFunction,
-                bp_param) {
-    standardGeneric("MIGSA_diffScore")
-})
-
-#'@importClassesFrom BiocParallel BiocParallelParam
-#'@importFrom BiocParallel bplapply
-#'@importFrom futile.logger flog.info
-#'@include IGSAinput.R
-#'@include FitOptions.R
-setMethod(
-    f="MIGSA_diffScore",
-    signature=c("ExprData", "FitOptions", "numeric", "function",
-                "BiocParallelParam"),
-    definition=function(data, fit_options, perm.number, rankFunction,
-                        bp_param) {
-        # data: expression data matrix
-        # labels: Vector of response values (example: 1,2)
-        # perms.number: Number of sample permutations
-        
-        dime2 <- dim(data)
-        pit <- ncol(data)
-        
-        # generate permutations
-        all_perms <- replicate(perm.number, sample(1:pit, replace=FALSE));
-        
-        # it deletes duplicate permutations
-        unique.perm <- unique(t(all_perms))
-        if (dim(unique.perm)[1] < perm.number) {
-            flog.info(paste("Number of unique permutations:",
-                dim(unique.perm)[1]));
-            all_perms <- t(unique.perm)
-        }
-        dime  <- dim(all_perms)
-        dime2 <- dim(data)
-        rankings = array(0, c(dime2[1], dime[2] + 1))
-        
-        # gene scores for real data
-        rankings[,1] <- rankFunction(data, fit_options);
-        
-        flog.info(paste("Getting ranking at cores:", bp_param$workers));
-        
-        # gene scores for permuted data
-        # I am passing MIGSA's not exported functions to bplapply to avoid
-        # SnowParam environment errors
-        calcRes <- bplapply(1:ncol(all_perms), function(i, designMatrix) {
-        #     calcRes <- lapply(1:ncol(all_perms), function(i) {
-            # modify the design matrix using the order given by the permutation
-            permDesign <- designMatrix(fit_options)[all_perms[,i],];
-            new_fit_options <- fit_options;
-            new_fit_options@design_matrix <- permDesign;
+        enrichScores <- do.call(c, bplapply(uniqSizes, function(actSize) {
+    #             actSize <- uniqSizes[[1]];
+            actGsets <- gSets[setSizes == actSize];
+            actSize_c <- as.character(actSize);
             
-            actRank <- rankFunction(data, new_fit_options);
+            zM_d <- sVMC_dec$Z_means[, actSize_c];
+            zM_i <- sVMC_inc$Z_means[, actSize_c];
+            zV_d <- zVars_dec[, actSize_c];
+            zV_i <- zVars_inc[, actSize_c];
             
-            # todo: maybe the best alternative would be delete the gene from
-            # everywhere
-            if (any(is.na(actRank))) {
-                warning(paste(sum(is.na(actRank)), 
-                    "genes generated NAs when estimating fit for perm", i));
-                actRank[is.na(actRank)] <- mean(actRank, na.rm=!FALSE);
-                # genes which are NA are given the mean value of all genes, 
-                # so they dont contribute to enrichment score.
-            }
+            actESs <- lapply(actGsets, function(actGset) {
+                    diffScores <- getEnrichScore_c(realRank, actGset, 
+                                                zM_d, zM_i, zV_d, zV_i);
+                    # real data
+                    maxI <- which.max(abs(diffScores));
+                    rawES <- diffScores[[maxI]];
+                    nGenes <- length(realRank);
+                    
+                    if (maxI > nGenes) {
+                        impGenes <- names(diffScores)[(nGenes+1):maxI];
+                    } else {
+                        impGenes <- names(diffScores)[1:maxI];
+                    }
+                    impGenes <- intersect(impGenes, actGset);
+                    actES <- abs(rawES);
+                    
+                    return(list(actES=actES, rawES=rawES, impGenes=impGenes));
+                });
+            names(actESs) <- names(actGsets);
+            return(actESs);
+        }))
+        rm(sVMC_dec); rm(sVMC_inc); rm(zVars_dec); rm(zVars_inc);
+        
+        realESs <- do.call(c, lapply(enrichScores, function(x) x$actES));
+        rawESs <- do.call(c, lapply(enrichScores, function(x) x$rawES));
+        impGenes <- do.call(c, lapply(enrichScores, function(x) 
+                                            paste(x$impGenes, collapse=', ')));
+        
+        permESs <- do.call(cbind, bplapply(seq_len(ncol(rankings)-1)+1,
+            function(i) {
+    #         i <- 2;
+            ranking <- rankings[,i];
+            ranking <- sort(ranking, decreasing=!FALSE);
+            sVMC_dec <- sumVarMeanCalc(ranking, preVar, normFactors);
+            sVMC_inc <- sumVarMeanCalc(rev(ranking), preVar, normFactors);
             
-            return(actRank);
-        }, designMatrix=designMatrix, BPPARAM=bp_param);
-        #     })
-        calcRes <- matrix(unlist(calcRes), ncol=ncol(all_perms));
+            zVars_dec <- zVarCalc(sVMC_dec$Z_vars, wgt2, varConstant);
+            zVars_inc <- zVarCalc(sVMC_inc$Z_vars, wgt2, varConstant);
+            
+            # as norm factors are separated by gene set sizes, then in order to
+            # consume less ram, lets separate by sizes.
+            # In some cases it will not use the best of cores, but its for ram!
+            enrichScores <- do.call(c, lapply(uniqSizes, 
+                function(actSize, sVMC_dec, sVMC_inc, zVars_dec, zVars_inc) {
+    #             actSize <- uniqSizes[[1]];
+                actGsets <- gSets[setSizes == actSize];
+                actSize_c <- as.character(actSize);
+                
+                act_z_means_dec <- sVMC_dec$Z_means[, actSize_c];
+                act_z_means_inc <- sVMC_inc$Z_means[, actSize_c];
+                act_zVars_dec <- zVars_dec[, actSize_c];
+                act_zVars_inc <- zVars_inc[, actSize_c];
+#                 rm(sVMC_dec); rm(sVMC_inc); rm(zVars_dec); rm(zVars_inc);
+                
+                actESs <- do.call(c, lapply(actGsets,
+                    function(actGset, zM_d, zM_i, zV_d, zV_i) {
+                        actES <- max(abs(getEnrichScore_c(ranking, actGset, 
+                                                    zM_d, zM_i, zV_d, zV_i)));
+                        return(actES);
+                    },
+                    zM_d=act_z_means_dec, zM_i=act_z_means_inc,
+                    zV_d=act_zVars_dec, zV_i=act_zVars_inc
+                ));
+                names(actESs) <- names(actGsets);
+                return(actESs);
+            }, sVMC_dec=sVMC_dec, sVMC_inc=sVMC_inc, 
+                zVars_dec=zVars_dec, zVars_inc=zVars_inc))
+            return(enrichScores);
+        }));
         
-        rankings[,-1] <- calcRes;
+        stopifnot(all(names(realESs) == rownames(permESs)));
+        pvals <- getPvalues(realESs, t(permESs));
+        names(pvals) <- names(realESs);
         
-        out <- list(rankings=rankings, perm.number=dim(unique.perm)[1])
-        return(out);
+        result <- data.frame(gene.sets=names(pvals), pvalue=pvals, 
+                                mGszScore=rawESs, impGenes=impGenes);
+        result <- result[order(pvals),];
+        
+        return(result);
     }
 )
 
@@ -313,222 +246,169 @@ voomLimaRank <- function(exprMatrix, fit_options) {
     return(res);
 }
 
-setGeneric(name="MIGSA_mGSZ.test.score2",
-    def=function(expr.data, gene.sets, genes, wgt1, wgt2, pre.var, 
-                var.constant, start.val, set_sz, hyge_stat, prob_sum) {
-    standardGeneric("MIGSA_mGSZ.test.score2")
-})
+filterInputs <- function(exprData, gSets, minGsetSize) {
+    # keep only genes in exprData and gene sets
+    exprDataGenes <- rownames(exprData);
+    geneSetsGenes <- do.call(c, gSets);
+    commonGenes <- intersect(exprDataGenes, geneSetsGenes);
+    
+    exprData <- exprData[commonGenes,];
+    gSets <- lapply(gSets, intersect, commonGenes);
+    
+    # remove gene sets with less than minSz genes (detected in the experiment)
+    gSets <- gSets[lapply(gSets, length) > minGsetSize];
+    return(list(exprData=exprData, gSets=gSets));
+}
 
-# expr.data <- tmp.expr.data[,1]; genes <- rownames(expr.data); 
-#'@importFrom data.table data.table
-setMethod(
-    f="MIGSA_mGSZ.test.score2",
-    signature=c("numeric", "data.table", "character", "numeric", "numeric",
-                "numeric", "numeric", "numeric", "numeric", "list", "list"),
-    definition=function(expr.data, gene.sets, genes, wgt1, wgt2, pre.var,
-                    var.constant, start.val, set_sz, hyge_stat, prob_sum) {
-        num.genes <- length(expr.data)
-        # order the data by genes decreasing value
-        ord_out <- order(expr.data, decreasing=TRUE)
-        expr.data <- expr.data[ord_out]
-        genes <- genes[ord_out];
-        gene.sets <- gene.sets[ord_out,] 
+getRankings <- function(exprData, fitOptions, nPerm, rankFunction) {
+    # generate permutations
+    perms <- replicate(nPerm, sample(1:ncol(exprData), replace=FALSE));
+    conds <- col_data(fitOptions);
+    permsConds <- do.call(cbind, lapply(seq_len(ncol(perms)), function(i) {
+        as.character(conds[perms[,i],]);
+    }))
+    perms <- t(perms[,!duplicated(t(permsConds))]);
+    rm(permsConds);
+    
+    nPerm <- nrow(perms);
+    flog.info(paste("Number of unique permutations:", nPerm));
+    
+    rankings <- matrix(0, nrow=nrow(exprData), ncol=nPerm+1);
+    # gene scores for real data
+    rankings[,1] <- rankFunction(exprData, fitOptions);
+    
+    flog.info(paste("Getting ranking at cores:", bpparam()$workers));
+    
+    # gene scores for permuted data
+    # I am passing MIGSA's not exported functions to bplapply to avoid
+    # SnowParam environment errors
+    rankings[,-1] <- do.call(cbind,
+    bplapply(seq_len(nPerm), function(i, designMatrix) {
+        # modify the design matrix using the order given by the permutation
+        permDesign <- designMatrix(fitOptions)[perms[i,],];
+        newFitOptions <- fitOptions;
+        newFitOptions@design_matrix <- permDesign;
         
-        expr.data.ud <- expr.data[num.genes:1]
-        num.classes=ncol(gene.sets)
-        unique_class_sz_ln <- length(unique(set_sz))
-        
-        # calculating some mGSZ stuff
-        pre_z_var.1 <- MIGSA_sumVarMean_calc(expr.data, gene.sets, pre.var,
-                                            set_sz, hyge_stat, prob_sum)
-        pre_z_var.2 <- MIGSA_sumVarMean_calc(expr.data.ud, gene.sets, pre.var,
-                                            set_sz, hyge_stat, prob_sum)
-        
-        # calculating some mGSZ stuff
-        Z_var1 = MIGSA_calc_z_var(num.genes, unique_class_sz_ln,
-                                pre_z_var.1$Z_var, wgt2, var.constant)
-        Z_var2 = MIGSA_calc_z_var(num.genes, unique_class_sz_ln,
-                                pre_z_var.2$Z_var, wgt2, var.constant)
-        
-        # for each gene set calculate enrichment score
-        out <- do.call(rbind, lapply(1:num.classes, function(k) {
-            # genes in set and out set
-            po1 <- which(gene.sets[[k]] == 1)
-            po0 <- which(gene.sets[[k]] == 0)
-            
-            tmp1 = expr.data
-            tmp1[po0] = 0
-            tmp0 = expr.data
-            tmp0[po1] = 0
-            
-            result1 = cumsum(tmp1 - tmp0) -
-            pre_z_var.1$Z_mean[, pre_z_var.1$class_size_index[k]]
-            result2 = cumsum(tmp1[num.genes:1] - tmp0[num.genes:1]) - 
-            pre_z_var.2$Z_mean[, pre_z_var.2$class_size_index[k]]
-            
-            result1[1:start.val] <- 0
-            result2[1:start.val] <- 0
-            
-            # A genes are in the same order as expr.data
-            # b genes are backwards
-            A = result1/Z_var1[, pre_z_var.1$class_size_index[k]]
-            B = result2/Z_var2[, pre_z_var.2$class_size_index[k]]
-            
-            eScores <- c(A,B);
-            maxPoint <- which.max(abs(c(A,B)));
-            rawMgsz <- eScores[[maxPoint]];
-            
-            # important genes are the ones until the top of the enrichment 
-            # score. If ES is positive then the fst ones, if negative, the last 
-            # ones
-            if (maxPoint <= length(A)) {
-                impGenes <- intersect(genes[po1], genes[1:maxPoint]);
-            } else {
-                impGenes <- intersect(genes[po1],
-                                rev(genes)[1:(maxPoint%%length(A))]);
-            }
-            
-            # todo: define a better gene separator
-            impGenes <- paste(impGenes, collapse=", ");
-            res <- data.frame(mgszScore=abs(rawMgsz), rawMgsz=rawMgsz,
-                                impGenes=impGenes);
-            
-            return(res);
-        }));
-        
-        return(out)
+        actRank <- rankFunction(exprData, newFitOptions);
+        return(actRank);
+    }, designMatrix=designMatrix));
+    
+    # todo: maybe the best alternative would be delete the gene from
+    # everywhere
+    rankings[is.na(rankings)] <- mean(rankings, na.rm=TRUE);
+    # genes which are NA are given the mean value of all genes, 
+    # so they dont contribute to enrichment score.
+    
+    return(rankings);
+}
+
+countHygeVarMean <- function (M, K) {
+    N <- matrix(rep(seq_len(M), length(K)), ncol=length(K));
+    K <- matrix(rep(K, M), byrow=TRUE, ncol=length(K));
+    mean <- N * K/M;
+    var <- N * (K * (M - K)/M^2) * ((M - N)/(M - 1));
+    return(list(mean=mean, var=var));
+}
+
+countProbSum <- function (M, hyge.mean, hyge.var) {
+    tulos <- matrix(0, nrow=length(hyge.mean));
+    N_tab <- matrix(c(2:M), byrow=FALSE);
+    tulos[1] <- hyge.mean[1];
+    tulos[2:M] <- N_tab/(N_tab-1) * hyge.mean[2:M] - (hyge.mean[2:M]^2 + 
+        hyge.var[2:M])/(N_tab-1);
+    return(tulos);
+}
+
+sumVarMeanCalc <- function(ranking, preVar, normFactors) {
+#     preVar <- pv(params);
+    divider <- seq_along(ranking);
+    mean_table <- cumsum(ranking)/divider;
+    mean_table_sq <- mean_table^2;
+    
+    # not sure if it is +2*preVar or just +preVar , in mGSZ it does +preVar
+    # and again +preVar
+    var_table <- cumsum(ranking^2)/divider - (mean_table)^2 + 2*preVar;
+    
+    z_means <- do.call(cbind, lapply(seq_len(ncol(normFactors$normMean)),
+    function(j) {
+        mean_table * (2 * normFactors$normMean[,j] - divider);
+    })); colnames(z_means) <- colnames(normFactors$normMean);
+    
+    z_vars <- do.call(cbind, lapply(seq_len(ncol(normFactors$normVar)), 
+    function(j) {
+        4 * (var_table * normFactors$probSum[,j] + mean_table_sq * 
+                                                    normFactors$normVar[,j]);
+    })); colnames(z_vars) <- colnames(normFactors$normVar);
+    
+    return(list(Z_means=z_means, Z_vars=z_vars));
+}
+
+zVarCalc <- function(z_vars, wgt2, varConstant) {
+    medianPart <- matrix(matrixStats::rowMedians(t(z_vars)) * 
+                    wgt2, nrow=nrow(z_vars), ncol=ncol(z_vars), byrow=!FALSE);
+    z_var <- (z_vars + medianPart + varConstant)^0.5;
+    return(z_var);
+}
+
+getEnrichScore <- function(ranking, actGset, zM_d, zM_i, zV_d, zV_i) {
+    startVal <- 5; # hard coded
+    nMG <- !names(ranking) %in% actGset;
+    ranking[nMG] <- -ranking[nMG];
+    
+    es_dec <- cumsum(ranking) - zM_d;
+    es_inc <- cumsum(rev(ranking)) - zM_i;
+    
+    es_dec[1:startVal] <- 0; es_inc[1:startVal] <- 0;
+    
+    es_dec <- es_dec/zV_d;
+    es_inc <- es_inc/zV_i;
+    
+    return(c(es_dec, es_inc));
+#     return(max(abs(c(es_dec, es_inc))));
+}
+
+#'@importFrom compiler cmpfun
+getEnrichScore_c <- cmpfun(getEnrichScore);
+
+logEVcdf <- function (x, fitParams) {
+    mu <- fitParams[[1]];
+    sigma <- fitParams[[2]];
+    x <- (mu - x)/sigma;
+    out <- rep(0, length(x));
+    if (!(is.vector(x))) {
+        out <- matrix(out, nrow(x), ncol(x));
     }
-)
+    po1 <- which(x < 5);
+    out[po1] <- -log(1 - exp(-exp(x[po1])));
+    x <- x[-po1];
+    out[-po1] <- -x + exp(x)/2 - exp(2 * x)/24 + exp(4 * x)/2880;
+    out <- out/log(10);
+    out <- 10^(-out);
+    return(out);
+}
 
-setGeneric(name="MIGSA_mGSZ.test.score",
-    def=function(expr.data, gene.sets, wgt1, wgt2, pre.var, var.constant,
-                start.val, set_sz, hyge_stat, prob_sum) {
-    standardGeneric("MIGSA_mGSZ.test.score")
-})
+# realES <- allESs[,1]; permESs <- t(allESs[,-1])
+getPvalues <- function(realES, permESs) {
+#     pos.data <- realES; perm.data <- permESs;
+    # some normalization
+    mean.prof <- colMeans(permESs);
+    std.prof <- matrixStats::colSds(permESs);
+    std.prof[std.prof == 0] <- 0.1;
+    realES <- (realES - mean.prof)/std.prof;
+    permESs <- do.call(cbind, lapply(seq_len(ncol(permESs)), function(k) {
+        (permESs[, k] - mean.prof[k])/std.prof[k];
+    }))
+    rm(mean.prof); rm(std.prof);
 
-#'@importFrom data.table data.table
-setMethod(
-    f="MIGSA_mGSZ.test.score",
-    signature=c("numeric", "data.table", "numeric", "numeric", "numeric",
-                "numeric", "numeric", "numeric", "list", "list"),
-    definition=function(expr.data, gene.sets, wgt1, wgt2, pre.var, 
-            var.constant, start.val, set_sz, hyge_stat, prob_sum) {
-        num.genes <- length(expr.data)
-        # order the data by genes decreasing value
-        ord_out <- order(expr.data, decreasing=TRUE)
-        expr.data <- expr.data[ord_out]
-        gene.sets <- gene.sets[ord_out, ]
-        
-        expr.data.ud <- expr.data[num.genes:1]
-        num.classes = ncol(gene.sets)
-        unique_class_sz_ln <- length(unique(set_sz))
-        
-        # calculating some mGSZ stuff
-        pre_z_var.1 <- MIGSA_sumVarMean_calc(expr.data, gene.sets, pre.var,
-                                        set_sz, hyge_stat, prob_sum)
-        pre_z_var.2 <- MIGSA_sumVarMean_calc(expr.data.ud, gene.sets, pre.var,
-                                        set_sz, hyge_stat, prob_sum)
-        
-        # calculating some mGSZ stuff
-        Z_var1 = MIGSA_calc_z_var(num.genes, unique_class_sz_ln,
-                                pre_z_var.1$Z_var, wgt2, var.constant)
-        Z_var2 = MIGSA_calc_z_var(num.genes, unique_class_sz_ln,
-                                pre_z_var.2$Z_var, wgt2, var.constant)
-        
-        # for each gene set calculate enrichment score
-        out <- unlist(lapply(1:num.classes, function(k) {
-            po1 <- which(gene.sets[[k]] == 1)
-            po0 <- which(gene.sets[[k]] == 0)
-            
-            #         if (length(po1) > 0 & length(po0) > 0) {
-            tmp1 = expr.data
-            tmp1[po0] = 0
-            tmp0 = expr.data
-            tmp0[po1] = 0
-            
-            result1 = cumsum(tmp1 - tmp0) -
-                pre_z_var.1$Z_mean[, pre_z_var.1$class_size_index[k]]
-            result2 = cumsum(tmp1[num.genes:1] - tmp0[num.genes:1]) - 
-                pre_z_var.2$Z_mean[, pre_z_var.2$class_size_index[k]]
-            
-            result1[1:start.val] <- 0
-            result2[1:start.val] <- 0
-            
-            # A genes are in the same order as expr.data
-            # b genes are backwards
-            A = result1/Z_var1[, pre_z_var.1$class_size_index[k]]
-            B = result2/Z_var2[, pre_z_var.2$class_size_index[k]]
-            
-            return(max(abs(c(A, B))));
-        }));
-        
-        return(out)
-    }
-)
-
-setGeneric(name="MIGSA_sumVarMean_calc",
-    def=function(expr_data, gene.sets, pre.var, set_sz, hyge_stat, prob_sum) {
-    standardGeneric("MIGSA_sumVarMean_calc")
-})
-
-setMethod(
-    f="MIGSA_sumVarMean_calc",
-    signature=c("numeric", "data.frame", "numeric", "numeric", "list", "list"),
-    definition=function(expr_data, gene.sets, pre.var, set_sz, hyge_stat,
-                        prob_sum) {
-        # this is a mGSZ function, I just put lapply instead of for loop
-        dim_sets <- dim(gene.sets)
-        unique_class_sz <- unique(set_sz)
-        num_genes <- length(expr_data)
-        divider <- 1:num_genes
-        mean_table <- cumsum(expr_data)/divider
-        mean_table_sq <- mean_table^2
-        var_table <- cumsum(expr_data^2)/divider - (mean_table)^2 + pre.var
-        
-        class_sz_index <- do.call(c, lapply(1:dim_sets[2], function(i) {
-            which(set_sz[i] == unique_class_sz)
-        }));
-        
-        var_table <- var_table + pre.var
-        
-        max_value <- 1:dim_sets[1]
-        calcRes <- lapply(1:length(unique_class_sz), function(j) {
-            act_prob_sum <- prob_sum[[j]];
-            z_var_j <- 4 * (var_table * act_prob_sum + mean_table_sq * 
-                            hyge_stat$var[, j])
-            z_mean_j <- mean_table * (2 * hyge_stat$mean[, j] - max_value)
-            return(list(var=z_var_j, mean=z_mean_j));
-        })
-        
-        z_var  <- do.call(cbind, lapply(calcRes, function(x) x$var));
-        z_mean <- do.call(cbind, lapply(calcRes, function(x) x$mean));
-        
-        out = list(Z_var=z_var, Z_mean=z_mean, 
-            class_size_index=class_sz_index, var_table=var_table, 
-            mean_table_sq=mean_table_sq, set_sz=set_sz)
-        return(out)
-    }
-)
-
-setGeneric(name="MIGSA_calc_z_var",
-    def=function(num.genes, unique_class_sz_ln, pre_z_var, wgt2,
-            var.constant) {
-    standardGeneric("MIGSA_calc_z_var")
-})
-
-#'@importFrom matrixStats colMedians
-setMethod(
-    f="MIGSA_calc_z_var",
-    signature=c("integer", "integer", "matrix", "numeric", "numeric"),
-    definition=function(num.genes, unique_class_sz_ln, pre_z_var, wgt2,
-                        var.constant) {
-        # this is a mGSZ function, I just put colMedias instead of for loop
-        ones_matrix = matrix(1, num.genes, unique_class_sz_ln)
-        ones_tmatrix = t(ones_matrix)
-        median_matrix = colMedians(pre_z_var)
-        pre_median_part = ones_tmatrix * median_matrix * wgt2
-        median_part = t(pre_median_part)
-        z_var = (pre_z_var + median_part + var.constant)^0.5
-        return(z_var);
-    }
-)
+    col.ind <- colVars(permESs) > 0;
+    permESs <- permESs[, col.ind];
+    realES <- realES[col.ind];
+    ev.p.val.class <- rep(0, length(realES))
+    
+    pvals <- do.call(c, lapply(seq_along(realES), function(k) {
+        ev.param.class <- ismev::gum.fit(as.vector(permESs[, k]), 
+            show=FALSE)$mle
+        logEVcdf(realES[[k]], ev.param.class);
+    }))
+    return(pvals);
+}

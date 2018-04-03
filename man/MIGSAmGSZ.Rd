@@ -9,8 +9,8 @@
 MIGSAmGSZ(x, y, l, ...)
 
 \S4method{MIGSAmGSZ}{matrix,list,vector}(x, y, l, use.voom = FALSE,
-bp.param = bpparam(), rankFunction = NA, min.sz = 5, pv = 0,
-w1 = 0.2, w2 = 0.5, vc = 10, p = 200)
+rankFunction = NA, min.sz = 5, pv = 0, w1 = 0.2, w2 = 0.5,
+vc = 10, p = 200)
 }
 \arguments{
 \item{x}{gene expression data matrix (rows as genes and columns as samples).}
@@ -24,8 +24,6 @@ w1 = 0.2, w2 = 0.5, vc = 10, p = 200)
 
 \item{use.voom}{logical indicating wether use voom or not (if RNAseq data we 
 recommend using use.voom=TRUE).}
-
-\item{bp.param}{BiocParallel param to use as BPPARAM in bplapply.}
 
 \item{rankFunction}{internal use.}
 

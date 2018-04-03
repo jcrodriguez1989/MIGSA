@@ -13,7 +13,7 @@ Description: Massive and Integrative Gene Set Analysis.
     and coherent analysis. Only a minimal user parameter setting is required 
     to perform both singular and gene set enrichment analyses in an 
     integrative manner by means of the best available methods, i.e. dEnricher 
-    and mGSZrespectively.
+    and mGSZ respectively.
     The greatest strengths of this big omics data tool are the availability of 
     several functions to explore, analyze and visualize its results in order 
     to facilitate the data mining task over huge information sources.
@@ -34,12 +34,14 @@ Suggests:
     breastCancerUNT,
     breastCancerUPP,
     breastCancerVDX,
+    mGSZ,
     pbcmc,
     MIGSAdata
 Imports:
     AnnotationDbi,
     Biobase,
     BiocParallel,
+    compiler,
     data.table,
     edgeR,
     futile.logger,
@@ -52,9 +54,9 @@ Imports:
     grDevices,
     grid,
     GSEABase,
+    ismev,
     limma,
     matrixStats,
-    mGSZ,
     org.Hs.eg.db,
     RBGL,
     reshape2,

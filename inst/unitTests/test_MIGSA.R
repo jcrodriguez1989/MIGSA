@@ -21,6 +21,7 @@ if (.Platform$OS.type == "unix") {
 } else if (.Platform$OS.type == "windows") {
     bp_param <- SnowParam(workers=1);
 }
+register(bp_param);
 
 ######## FitOptions tests
 
@@ -775,16 +776,13 @@ test_MIGSAmGSZ_ok_sameAsMgsz <- function() {
     mGSZres <- mGSZres$mGSZ;
     
     set.seed(8818);
-    MIGSAmGSZres <- MIGSAmGSZ(exprData, gSets, conditions, p=perms,
-        bp.param=bp_param);
-    MIGSAmGSZres <- MIGSAmGSZres[, 1:4];
+    MIGSAmGSZres <- MIGSAmGSZ(exprData, gSets, conditions, p=perms);
     
     mergedRes <- merge(mGSZres, MIGSAmGSZres, by="gene.sets",
     suffixes=c("mGSZ", "MIGSAmGSZ"))
     
-    checkTrue(all(unlist(lapply(2:4, function(x) {
-        all.equal(mergedRes[,x], mergedRes[,x+3])
-    }))));
+    checkTrue(all.equal(mergedRes$gene.set.scores, abs(mergedRes$mGszScore)));
+    checkTrue(all.equal(mergedRes$pvaluemGSZ, mergedRes$pvalueMIGSAmGSZ));
 }
 
 test_MIGSAmGSZ_ok_validWithVoom <- function() {
@@ -819,9 +817,9 @@ test_MIGSAmGSZ_ok_validWithVoom <- function() {
     
     set.seed(8818);
     MIGSAmGSZres <- MIGSAmGSZ(exprData, gSets, conditions, use.voom=!F,
-                            p=perms, bp.param=bp_param);
+                            p=perms);
     
-    checkEquals(ncol(MIGSAmGSZres), 6);
+    checkEquals(ncol(MIGSAmGSZres), 4);
     checkEquals(nrow(MIGSAmGSZres), nGSets);
 }
 
@@ -914,7 +912,7 @@ test_MIGSA_ok_oneExp <- function() {
         gene_sets_list=list(myGeneSets=myGSs));
     experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     
     checkEquals(ncol(migsaRes), 4);
     checkEquals(nrow(migsaRes), nGSets);
@@ -966,7 +964,7 @@ test_MIGSA_ok_twoExp <- function() {
     
     experiments <- list(igsaInput1, igsaInput2);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     
     checkEquals(ncol(migsaRes), 5);
     checkEquals(nrow(migsaRes), nGSets);
@@ -1014,7 +1012,7 @@ test_MIGSA_ok_twoGSs <- function() {
         gene_sets_list=list(myGeneSets1=myGSs1, myGeneSets2=myGSs2));
     experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     
     checkEquals(ncol(migsaRes), 4);
     checkEquals(nrow(migsaRes), 2*nGSets);
@@ -1073,7 +1071,7 @@ test_MIGSA_ok_twoExptwoGSs <- function() {
     
     experiments <- list(igsaInput1, igsaInput2);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     
     checkEquals(ncol(migsaRes), 5);
     checkEquals(nrow(migsaRes), 2*nGSets);
@@ -1141,7 +1139,7 @@ test_MIGSA_ok_twoExpFourGSs <- function() {
     
     experiments <- list(igsaInput1, igsaInput2);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     
     checkEquals(ncol(migsaRes), 5);
     checkEquals(nrow(migsaRes), 4*nGSets);
@@ -1190,7 +1188,7 @@ test_MIGSA_ok_noErrorWNoDE <- function() {
         gene_sets_list=list(myGeneSets=myGSs));
     experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     checkTrue(validObject(migsaRes));
     checkEquals(ncol(migsaRes), 4);
     checkEquals(nrow(migsaRes), nGSets);
@@ -1229,7 +1227,7 @@ test_MIGSA_ok_noErrorWtwoPerm <- function() {
         gene_sets_list=list(myGeneSets=myGSs));
     experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     checkTrue(validObject(migsaRes));
     checkEquals(ncol(migsaRes), 4);
     checkEquals(nrow(migsaRes), nGSets);
@@ -1265,7 +1263,7 @@ test_MIGSA_ok_manuallyDEGenes <- function() {
         gene_sets_list=list(myGeneSets=myGSs));
     experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     checkEquals(sort(unique(unlist(strsplit(
         migsaRes@migsa_res_all$SEA_enriching_genes, ", ")))),
         sort(gSets[[1]]));
@@ -1311,10 +1309,10 @@ test_MIGSA_ok_usebri <- function() {
     experiments2 <- list(igsaInput2);
     
     set.seed(8818);
-    migsaRes1 <- MIGSA(experiments1, bp_param=bp_param);
+    migsaRes1 <- MIGSA(experiments1);
     
     set.seed(8818);
-    migsaRes2 <- MIGSA(experiments2, bp_param=bp_param);
+    migsaRes2 <- MIGSA(experiments2);
     
     # genes ranks are equal
     checkTrue(all(migsaRes1@genes_rank[[1]] == migsaRes2@genes_rank[[1]]));
@@ -1370,10 +1368,10 @@ test_MIGSA_ok_useOwnbr <- function() {
     experiments2 <- list(igsaInput2);
     
     set.seed(8818);
-    migsaRes1 <- MIGSA(experiments1, bp_param=bp_param);
+    migsaRes1 <- MIGSA(experiments1);
     
     set.seed(8818);
-    migsaRes2 <- MIGSA(experiments2, bp_param=bp_param);
+    migsaRes2 <- MIGSA(experiments2);
     
     # genes ranks are equal
     checkTrue(all(migsaRes1@genes_rank[[1]] == migsaRes2@genes_rank[[1]]));
@@ -1436,15 +1434,14 @@ test_MIGSA_ok_useDifferenttests <- function() {
     experiments3 <- list(igsaInput3);
     
     set.seed(8818);
-    migsaRes1 <- MIGSA(experiments1, bp_param=bp_param);
+    migsaRes1 <- MIGSA(experiments1);
     
     set.seed(8818);
-    migsaRes2 <- MIGSA(experiments2, bp_param=bp_param);
+    migsaRes2 <- MIGSA(experiments2);
     
     
     set.seed(8818);
-    migsaRes3 <- MIGSA(experiments3, geneSets=list(myGeneSets=myGSs), 
-        bp_param=bp_param);
+    migsaRes3 <- MIGSA(experiments3, geneSets=list(myGeneSets=myGSs));
     
     # genes ranks are equal
     checkTrue(all(migsaRes1@genes_rank[[1]] == migsaRes2@genes_rank[[1]]));
@@ -1491,19 +1488,19 @@ test_MIGSA_ok_onlySeaOrGsea <- function() {
         sea_params=seaParams, gsea_params=gseaParams, fit_options=fitOpts, 
         gene_sets_list=list(myGeneSets=myGSs));
     set.seed(8818);
-    migsaRes1 <- MIGSA(list(igsaInput1), bp_param=bp_param);
+    migsaRes1 <- MIGSA(list(igsaInput1));
     
     igsaInput2 <- IGSAinput(name="MIGSA_ok_onlySeaOrGsea2", expr_data=exprData,
         sea_params=seaParams, gsea_params=NULL, fit_options=fitOpts, 
         gene_sets_list=list(myGeneSets=myGSs));
     set.seed(8818);
-    migsaRes2 <- MIGSA(list(igsaInput2), bp_param=bp_param);
+    migsaRes2 <- MIGSA(list(igsaInput2));
     
     igsaInput3 <- IGSAinput(name="MIGSA_ok_onlySeaOrGsea3", expr_data=exprData,
         sea_params=NULL, gsea_params=gseaParams, fit_options=fitOpts, 
         gene_sets_list=list(myGeneSets=myGSs));
     set.seed(8818);
-    migsaRes3 <- MIGSA(list(igsaInput3), bp_param=bp_param);
+    migsaRes3 <- MIGSA(list(igsaInput3));
     
     # check results from both SEA are equal, and the rest NA
     checkEquals(migsaRes1@migsa_res_all[,2:10], migsaRes2@migsa_res_all[,2:10]);
@@ -1556,10 +1553,10 @@ test_MIGSA_ok_useOwnbrNoExprData <- function() {
     experiments2 <- list(igsaInput2);
     
     set.seed(8818);
-    migsaRes1 <- MIGSA(experiments1, bp_param=bp_param);
+    migsaRes1 <- MIGSA(experiments1);
     
     set.seed(8818);
-    migsaRes2 <- MIGSA(experiments2, bp_param=bp_param);
+    migsaRes2 <- MIGSA(experiments2);
     
     checkEquals(migsaRes1@migsa_res_all[,-1], migsaRes2@migsa_res_all[,-1]);
     checkTrue(all(migsaRes1@migsa_res_summary == migsaRes2@migsa_res_summary));
@@ -1568,11 +1565,11 @@ test_MIGSA_ok_useOwnbrNoExprData <- function() {
 #### Incorrect ones
 
 test_MIGSA_wrong_noExperiments <- function() {
-    checkException(MIGSA(list(), bp_param=bp_param));
+    checkException(MIGSA(list()));
 }
 
 test_MIGSA_wrong_wrongExperiments <- function() {
-    checkException(MIGSA(list(1:10), bp_param=bp_param));
+    checkException(MIGSA(list(1:10)));
 }
 
 test_MIGSA_wrong_repExpNames <- function() {
@@ -1594,7 +1591,7 @@ test_MIGSA_wrong_repExpNames <- function() {
     checkException(MIGSA(list(
         igsaInput,
         igsaInput
-    ), bp_param=bp_param));
+    )));
 }
 
 test_MIGSA_wrong_noGSets <- function() {
@@ -1616,7 +1613,7 @@ test_MIGSA_wrong_noGSets <- function() {
         fit_options=fitOpts, gene_sets_list=list());
     experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     
     checkTrue(is.na(migsaRes));
 }
@@ -1654,7 +1651,7 @@ test_MIGSA_wrong_noGSets <- function() {
 #         gene_sets_list=list(myGeneSets=myGSs));
 #     experiments <- list(igsaInput);
 #     
-#     migsaRes <- MIGSA(experiments, bp_param=bp_param);
+#     migsaRes <- MIGSA(experiments);
 #     checkTrue(is.na(migsaRes));
 # }
 
@@ -1690,7 +1687,7 @@ test_MIGSA_ok_wrongbrOption <- function() {
         gene_sets_list=list(myGeneSets=myGSs));
     experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     checkTrue(is.na(migsaRes));
 }
 
@@ -1722,7 +1719,7 @@ test_MIGSA_ok_paramsCantbebothNull <- function() {
         gene_sets_list=list(myGeneSets=myGSs));
     experiments <- list(igsaInput);
     
-    migsaRes <- MIGSA(experiments, bp_param=bp_param);
+    migsaRes <- MIGSA(experiments);
     checkTrue(is.na(migsaRes));
 }
 

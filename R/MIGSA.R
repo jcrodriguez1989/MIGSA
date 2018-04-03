@@ -8,8 +8,6 @@
 #'tested for enrichment (names must be unique). If provided then it will be 
 #'tested in every IGSAinput, if not, each IGSAinput object must have its own 
 #'list of GeneSetCollection.
-#'@param bp_param (optional) BiocParallelParam to execute MIGSA 
-#'in parallel.
 #'@param ... not in use.
 #'
 #'@return A MIGSAres object.
@@ -92,7 +90,7 @@ setGeneric(name="MIGSA", def=function(igsaInputs, ...) {
 setMethod(
     f="MIGSA",
     signature=c("list"),
-    definition=function(igsaInputs, geneSets=list(), bp_param=bpparam()) {
+    definition=function(igsaInputs, geneSets=list()) {
         flog.info("*************************************");
         flog.info("Starting MIGSA analysis.");
         
@@ -128,7 +126,7 @@ setMethod(
             # if it was already ran ok, then just return
             if (file.exists(resFile)) return(TRUE);
             
-            igsaRes <- try({ IGSA(igsaInput, bp_param); });
+            igsaRes <- try({ IGSA(igsaInput); });
             
             ranOk <- !inherits(igsaRes, 'try-error');
             if (ranOk) {
