@@ -781,7 +781,8 @@ test_MIGSAmGSZ_ok_sameAsMgsz <- function() {
     mergedRes <- merge(mGSZres, MIGSAmGSZres, by="gene.sets",
     suffixes=c("mGSZ", "MIGSAmGSZ"))
     
-    checkTrue(all.equal(mergedRes$gene.set.scores, abs(mergedRes$mGszScore)));
+    checkTrue(all.equal(round(mergedRes$gene.set.scores, 7),
+        round(abs(mergedRes$mGszScore), 7)));
     checkTrue(all.equal(mergedRes$pvaluemGSZ, mergedRes$pvalueMIGSAmGSZ));
 }
 
