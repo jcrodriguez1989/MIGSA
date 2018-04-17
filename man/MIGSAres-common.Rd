@@ -41,15 +41,15 @@
 \arguments{
 \item{x}{MIGSAres object.}
 
-\item{name}{as used in \code{\link[base]{$}}.}
+\item{name}{as used in \code{$}.}
 
-\item{n}{as used in \code{\link[utils]{head}} and \code{\link[utils]{tail}}.}
+\item{n}{as used in \code{\link[utils]{head}} and \code{tail}.}
 
-\item{i}{as used in \code{\link[base]{[}}.}
+\item{i}{as used in \code{[}.}
 
-\item{j}{as used in \code{\link[base]{[}}.}
+\item{j}{as used in \code{[}.}
 
-\item{drop}{as used in \code{\link[base]{[}} (default: FALSE).}
+\item{drop}{as used in \code{[} (default: FALSE).}
 
 \item{object}{MIGSAres object.}
 
