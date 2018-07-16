@@ -3,14 +3,14 @@
 \docType{methods}
 \name{summary}
 \alias{summary}
-\alias{summary,GSEAparams-method}
-\alias{summary,IGSAinput-method}
-\alias{summary,MIGSAres-method}
+\alias{summary.SEAparams}
 \alias{summary,SEAparams-method}
 \alias{summary.GSEAparams}
+\alias{summary,GSEAparams-method}
 \alias{summary.IGSAinput}
+\alias{summary,IGSAinput-method}
 \alias{summary.MIGSAres}
-\alias{summary.SEAparams}
+\alias{summary,MIGSAres-method}
 \title{Summary functions for some MIGSA classes}
 \usage{
 \method{summary}{SEAparams}(object, ...)
@@ -70,4 +70,3 @@ migsaResWCoff <- setEnrCutoff(migsaRes, 0.01);
 summary(migsaResWCoff);
 
 }
-

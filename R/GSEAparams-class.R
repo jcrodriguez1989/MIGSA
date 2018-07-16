@@ -61,3 +61,5 @@ GSEAparams <- setClass(
             vc_ok);
     }
 )
+
+setClassUnion("GSEAparamsOrNULL", c("GSEAparams", "NULL"));

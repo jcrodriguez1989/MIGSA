@@ -22,10 +22,10 @@ experiment_name = gene_set_name = NULL;
 
 #'@importFrom data.table as.data.table data.table setkey
 #'@include GenesetsRes.R
-as.data.table.IGSAres <- function(x, wGenesInfo=FALSE, ...) {
+as.data.table.IGSAres <- function(x, ...) {
     # convert to data.table each GenesetsRes
     to <- do.call(rbind, lapply(x@gene_sets_res, function(gsetsRes) {
-        actRes <- as.data.table(gsetsRes, wGenesInfo=wGenesInfo);
+        actRes <- as.data.table(gsetsRes);
         return(actRes);
     }));
     

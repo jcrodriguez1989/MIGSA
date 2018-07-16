@@ -33,4 +33,3 @@ ccGSets <- loadGo("CC");
 
 \code{\link{geneSetsFromFile}}
 }
-

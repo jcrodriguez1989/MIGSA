@@ -8,11 +8,6 @@
 #'tested for enrichment (names must be unique). If provided then it will be 
 #'tested in every IGSAinput, if not, each IGSAinput object must have its own 
 #'list of GeneSetCollection.
-#'@param bp_param (optional) BiocParallelParam to execute MIGSA 
-#'in parallel.
-#'@param saveResults logical indicating if back up of each individual 
-#'experiment analysis should be saved. It will be saved in 
-#'getwd()"/migsaResults/"experimentName".RData". (default: FALSE).
 #'@param ... not in use.
 #'
 #'@return A MIGSAres object.
@@ -33,7 +28,7 @@ setGeneric(name="MIGSA", def=function(igsaInputs, ...) {
 #'@rdname MIGSA
 #'@aliases MIGSA,list
 #'
-#'@importFrom futile.logger flog.info
+#'@importFrom futile.logger flog.info flog.warn
 #'@include IGSA.R
 #'@include IGSAinput.R
 #'@include IGSAinput-class.R
@@ -95,8 +90,7 @@ setGeneric(name="MIGSA", def=function(igsaInputs, ...) {
 setMethod(
     f="MIGSA",
     signature=c("list"),
-    definition=function(igsaInputs, geneSets=list(), bp_param=bpparam(),
-        saveResults=FALSE) {
+    definition=function(igsaInputs, geneSets=list()) {
         flog.info("*************************************");
         flog.info("Starting MIGSA analysis.");
         
@@ -113,29 +107,51 @@ setMethod(
         if (length(exprs_names) != length(unique(exprs_names))) {
             stop("IGSAinput names must be unique");
         }
-        rm(exprs_names);
         
         # todo: check that geneSets is a list of GeneSetCollection, however 
         # this might be already evaluated by IGSAinput's setter
         
+        resDir <- tempdir();
+        
         # for each IGSAinput
-        actRes <- lapply(igsaInputs, function(igsaInput) {
+        actRes <- lapply(seq_along(igsaInputs), function(i) {
+            igsaInput <- igsaInputs[[i]];
+            resFile <- paste0(resDir, '/', igsaInput@name, '.RData');
+            
             # if gene sets were provided then these must be used
             if (length(geneSets) > 0) {
                 geneSetsList(igsaInput) <- geneSets;
             }
             
-            igsaRes <- try({ IGSA(igsaInput, bp_param); });
-            if (inherits(igsaRes, 'try-error')) return(NA);
+            # if it was already ran ok, then just return
+            if (file.exists(resFile)) return(TRUE);
             
-            # if intermediate results must be saved
-            if (saveResults) {
-                dir.create("migsaResults", showWarnings=FALSE);
-                save(igsaRes, file=paste("migsaResults/", name(igsaInput),
-                    ".RData", sep=""));
+            igsaRes <- try({ IGSA(igsaInput); });
+            
+            ranOk <- !inherits(igsaRes, 'try-error');
+            if (ranOk) {
+                # save intermediate results
+                save(igsaRes, file=resFile);
             }
-            return(igsaRes);
+            return(ranOk);
         });
+        
+        if (!all(unlist(actRes))) {
+            flog.warn(paste(sum(!unlist(actRes)), 'experiments had errors'));
+        }
+        
+        actRes <- lapply(seq_along(igsaInputs), function(i) {
+            igsaInput <- igsaInputs[[i]];
+            resFile <- paste0(resDir, '/', igsaInput@name, '.RData');
+            igsaRes <- NA;
+            if (file.exists(resFile)) {
+                igsaRes <- get(load(resFile));
+            } else {
+                flog.warn(paste(igsaInput@name, 'had errors'));
+            }
+            
+            return(igsaRes);
+        })
         
         # delete results which gave errors
         actRes <- actRes[!is.na(unlist(actRes))];

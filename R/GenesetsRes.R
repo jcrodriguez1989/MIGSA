@@ -14,10 +14,10 @@ GenesetsRes <- setClass(
 )
 
 #'@importFrom data.table as.data.table data.table
-as.data.table.GenesetsRes <- function(x, wGenesInfo=FALSE, ...) {
+as.data.table.GenesetsRes <- function(x, ...) {
     # convert to data.table SEA and GSEA results
-    seaRes  <- as.data.table(x@sea_res, wGenesInfo=wGenesInfo);
-    gseaRes <- as.data.table(x@gsea_res, wGenesInfo=wGenesInfo);
+    seaRes  <- as.data.table(x@sea_res);
+    gseaRes <- as.data.table(x@gsea_res);
     
     # merge them and fill the data.table with Genesets info
     to <- merge(seaRes, gseaRes, by=c("id", "name"), all=!FALSE);

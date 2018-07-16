@@ -15,23 +15,29 @@ GSEAres <- setClass(
 )
 
 #'@importFrom data.table as.data.table data.table setkey
-as.data.table.GSEAres <- function(x, wGenesInfo=FALSE, ...) {
+as.data.table.GSEAres <- function(x, ...) {
     # convert each gene set result to character vector
     to <- do.call(rbind, lapply(x@gene_sets_res, function(res) {
-        actInfo <- asCharacter(res, wGenesInfo=wGenesInfo);
+        actInfo <- asCharacter(res);
         return(actInfo);
     }))
     
-    # make it a data.table and put the colname
+    if (is.null(to)) return(
+        data.table(id=character(),
+        name=character(),
+        GSEA_enriched=logical(),
+        GSEA_score=logical(),
+        GSEA_pval=logical(),
+        GSEA_enriching_genes=character(),
+        GSEA_GS_genes=character()
+        ));
+    
+    # make it a data.table and put the colnames
     to <- data.table(to);
-    if (wGenesInfo) {
-        colnames(to) <- c("id", "name", "GSEA_enriched", "GSEA_score",
-                            "GSEA_pval", "GSEA_enriching_genes",
-                            "GSEA_GS_genes");
-    } else {
-        colnames(to) <- c("id", "name", "GSEA_enriched", "GSEA_score",
-                            "GSEA_pval");
-    }
+    colnames(to) <- c("id", "name", "GSEA_enriched", "GSEA_score",
+                        "GSEA_pval", "GSEA_enriching_genes",
+                        "GSEA_GS_genes");
+    
     # set data.table keys, to merge faster
     setkey(to, id, name);
     

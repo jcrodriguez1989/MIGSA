@@ -55,4 +55,3 @@ unlink(geneSetsFile);
 
 \code{\link{loadGo}}
 }
-

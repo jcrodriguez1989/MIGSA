@@ -283,8 +283,9 @@ setMethod(
         # name.fontsize: node name size
         # name.lwd: vert spessor
         # this is for pretty printing, well the best I could do :P
-        vertSpessor <- 100/checkEnrichment(gotree)[[ont]];
-        fontSize <- max(11, checkEnrichment(gotree)[[ont]] / 16);
+        # vertSpessor: connectors and outter circles
+        vertSpessor <- 50/checkEnrichment(gotree)[[ont]];
+        fontSize <- max(50, checkEnrichment(gotree)[[ont]] / 16);
         size <- c(name.legend.pt=8, name.legend.text=3, name.height=1.9,
                 name.width=0.9, name.fontsize.full=11, name.fontsize=fontSize,
                 name.lwd=vertSpessor);
@@ -357,6 +358,10 @@ setMethod(
         # shape
         importantGO <- rownames(ontology[ontology$Important,]);
         shapes <- ifelse(names(terms) %in% importantGO, "box", "ellipse");
+#         shape: The shape of the node. Current acceptable values are circle, 
+#         rectangle, rect, box and ellipse. The circle shape is the default. 
+#         Note that box, rect and rectangle all correspond to the same actual 
+#         shape
         names(width) <- names(height) <- names(shapes) <- names(terms);
         
         nodeAttrs <- list(width=width, height=height, shape=shapes);
@@ -366,7 +371,11 @@ setMethod(
         graph <- layoutGraph(graph, nodeAttrs=nodeAttrs, attrs=node);
         edgeRenderInfo(graph) <- list(lwd=size[["name.lwd"]], 
                                         arrowhead="none");
-        
+# other possible ways of encoding info
+# color: Basic drawing color for the node, corresponding to the outside edge 
+# of the node.
+# fontcolor: Color used for text. This defaults to black.
+# fontname: Font used for text. The default of this is Times Roman.
         # others
         nodeRenderInfo(graph) <- list(label=terms, fill=color,
                                     fontsize=size[["name.fontsize"]],
@@ -377,6 +386,32 @@ setMethod(
         graph <- renderGraph(graph);
         
         return(graph)
+    }
+)
+
+setGeneric(name="mixColors", def=function(colorList) {
+    standardGeneric("mixColors")
+})
+
+setMethod(
+    f="mixColors",
+    signature=c("character"),
+    definition=function(colorList) {
+    #     if (length(colorList) == 1) {
+    #         return(colorList);
+    #     }
+    #     colMeans(do.call(rbind, lapply(colorList, function(actColor) {
+    #         newColor <- t(col2rgb(actColor, alpha=TRUE)/255);
+    #         newColor <- newColor * newColor[, "alpha"];
+    #         return(newColor[,1:3])
+    #     })))
+        newColors <- colSums(do.call(rbind, 
+            lapply(colorList, function(actColor) {
+                newColor <- t(col2rgb(actColor, alpha=TRUE)/255);
+                newColor <- newColor * (newColor[, "alpha"] != 0);
+                return(newColor[,1:3])
+        })))
+        unlist(lapply(newColors, min, 1));
     }
 )
 
@@ -391,7 +426,7 @@ setMethod(
         # bp, mf and cc ids
         fstTerms <- c("GO:0008150", "GO:0003674", "GO:0005575");
         actualHeight <- 1;
-        actualParents <- unlist(allParents[term]);
+        actualParents <- allParents[[term]];
         
         if (term %in% fstTerms) {
             return(0);
@@ -403,15 +438,15 @@ setMethod(
             # while we dont get to the root node sum 1 to the result.
             # remember we are starting from our node, finding its parents 
             # pseudo recursively
-            while ((!fstTerms %in% actualParents) && 
+            while ((!any(fstTerms %in% actualParents)) && 
                     (actualParents != "all")) {
                 actualHeight <- actualHeight +1;
-                actualParents <- unlist(allParents[unlist(actualParents)]);
+                actualParents <- unique(unlist(allParents[actualParents]));
             }
         } else {
             while (!all(actualParents %in% as.list(c("all", fstTerms)))) {
                 actualHeight <- actualHeight +1;
-                actualParents <- unlist(allParents[unlist(actualParents)]);
+                actualParents <- unique(unlist(allParents[actualParents]));
             }
         }
         

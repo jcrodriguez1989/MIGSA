@@ -2,8 +2,8 @@
 % Please edit documentation in R/GSEAparams-class.R
 \docType{methods}
 \name{GSEAparams-class}
-\alias{GSEAparams}
 \alias{GSEAparams-class}
+\alias{GSEAparams}
 \title{GSEAparams S4 class implementation in R}
 \description{
 This S4 class contains the parameters to provide for GSEA.
@@ -32,6 +32,7 @@ expected to be reasonable (default: 0.5).}
 
 \item{\code{vc}}{size of the reference class used with wgt1. (default: 10).}
 }}
+
 \examples{
 ## Lets create the default GSEAparams object.
 myGseaParams <- GSEAparams();
@@ -45,4 +46,3 @@ myGseaParams500Perms <- GSEAparams(perm_number=500);
 
 \code{\link{summary}}
 }
-

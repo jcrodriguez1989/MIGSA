@@ -27,4 +27,3 @@ rownames(maData) <- 1:nrow(maData); # It must have rownames (gene names).
 maExprData <- new("MAList",list(M=maData));
 
 }
-

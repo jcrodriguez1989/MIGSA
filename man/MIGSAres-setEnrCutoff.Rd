@@ -43,4 +43,3 @@ migsaResWCoff <- setEnrCutoff(migsaRes, 0.1);
 table(migsaResWCoff[, c("igsaInput1", "igsaInput2")]);
 
 }
-

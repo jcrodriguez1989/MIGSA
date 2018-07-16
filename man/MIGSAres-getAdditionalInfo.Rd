@@ -3,8 +3,8 @@
 \docType{methods}
 \name{getAdditionalInfo}
 \alias{getAdditionalInfo}
-\alias{getAdditionalInfo,MIGSAres}
 \alias{getAdditionalInfo,MIGSAres-method}
+\alias{getAdditionalInfo,MIGSAres}
 \title{Gets additional information about enrichment results}
 \usage{
 getAdditionalInfo(migsaRes)
@@ -40,4 +40,3 @@ dim(adtnlInfo);
 \seealso{
 \code{\link{setEnrCutoff}}
 }
-

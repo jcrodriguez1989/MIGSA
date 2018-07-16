@@ -2,7 +2,6 @@
 #'
 #'This S4 class represents the results of one MIGSA execution in R.
 #'
-#'@importClassesFrom BiocParallel BiocParallelParam
 #'@importFrom data.table data.table
 #'@name MIGSAres-class
 #'@rdname MIGSAres-class

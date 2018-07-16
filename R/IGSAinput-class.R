@@ -7,15 +7,17 @@
 #'
 #'@slot name character indicating the name of this experiment.
 #'@slot expr_data ExprData object with the expression data (MicroArray or 
-#'RNAseq).
+#'RNAseq). Note: expr_data can be a 0x0 matrix only if gsea_params=NULL and 
+#'de_genes and br slots from sea_params are correctly set (vectors of gene 
+#'names), in this case only SEA will be run.
 #'@slot fit_options FitOptions object with the parameters to be used when 
 #'fitting the model.
 #'@slot gene_sets_list named list of GeneSetCollection objects to be 
 #'tested for enrichment (names must be unique).
 #'@slot sea_params SEAparams object with the parameters to be used 
-#'by SEA.
+#'by SEA, if NULL then SEA wont be run.
 #'@slot gsea_params GSEAparams object with the parameters to be used 
-#'by GSEA.
+#'by GSEA, if NULL then GSEA wont be run.
 #'
 #'@docType methods
 #'@name IGSAinput-class
@@ -58,6 +60,13 @@
 #'igsaInput <- IGSAinput(name="igsaInput", expr_data=maExprData, 
 #'fit_options=myFOpts, gene_sets_list=list(myGSs=myGSs));
 #'
+#'## Valid IGSAinput object with no expr_data (only run SEA).
+#'igsaInput <- IGSAinput(name="igsaInput", gene_sets_list=list(myGSs=myGSs),
+#'gsea_params=NULL, 
+#'sea_params=SEAparams(de_genes=rownames(maExprData)[1:10],
+#'br=rownames(maExprData)));
+#'validObject(igsaInput);
+#'
 IGSAinput <- setClass(
     Class="IGSAinput",
     slots=c(
@@ -65,10 +74,12 @@ IGSAinput <- setClass(
         expr_data="ExprData",
         fit_options="FitOptions",
         gene_sets_list="list",
-        sea_params="SEAparams",
-        gsea_params="GSEAparams"
+        sea_params="SEAparamsOrNULL",
+        gsea_params="GSEAparamsOrNULL"
     ),
     prototype=list(
+        sea_params=SEAparams(),
+        gsea_params=GSEAparams()
     ),
     validity=function(object) {
         # must have name
@@ -79,9 +90,19 @@ IGSAinput <- setClass(
                             ncol(object@expr_data) > 1 &&
                             nrow(object@expr_data) > 1;
         
+        # check that the FitOptions and the ExprData are concordant
+        fit_opts_ok <- nrow(MIGSA:::designMatrix(object@fit_options)) ==
+                                                    ncol(object@expr_data);
+        
         # gene_sets_list is a list of GeneSetCollection
         gene_sets_list_ok <- all(unlist(lapply(object@gene_sets_list,
                                     function(x) is(x, "GeneSetCollection"))));
+        
+        only_sea <- FALSE;
+        if (!is.null(object@sea_params)) {
+            only_sea <- length(MIGSA:::br(object@sea_params)) > 1 &&
+            length(MIGSA:::de_genes(object@sea_params)) > 1;
+        }
         
         # GeneSetCollection names must be unique
         if (gene_sets_list_ok) {
@@ -98,10 +119,7 @@ IGSAinput <- setClass(
             }
         }
         
-        # check that the FitOptions and the ExprData are concordant
-        fit_opts_ok <- nrow(designMatrix(object@fit_options)) ==
-                                                    ncol(object@expr_data);
-        
-        return(name_ok && expr_data_ok && gene_sets_list_ok && fit_opts_ok);
+        return(name_ok && (only_sea || (expr_data_ok && gene_sets_list_ok)) &&
+            fit_opts_ok);
     }
 )

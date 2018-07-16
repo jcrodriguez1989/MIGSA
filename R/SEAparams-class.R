@@ -3,7 +3,7 @@
 #'This S4 class contains the parameters to provide for SEA.
 #'
 #'@slot treat_lfc numeric, lfc parameter passed to 
-#'\code{\link[limma]{treat}} function (default: 0).
+#'\code{treat} function (default: 0).
 #'@slot de_cutoff numeric, cutoff value to define a gene as differentialy
 #'expressed (default: 0.01).
 #'@slot adjust_method character, method parameter passed to 
@@ -24,8 +24,8 @@
 #'@docType methods
 #'@name SEAparams-class
 #'@rdname SEAparams-class
-#'@seealso \code{\link{GSEAparams-class}}
-#'@seealso \code{\link{summary}}
+#'@seealso \code{GSEAparams-class}
+#'@seealso \code{summary}
 #'
 #'@export SEAparams
 #'@examples
@@ -86,3 +86,5 @@ SEAparams <- setClass(
             test_ok);
     }
 )
+
+setClassUnion("SEAparamsOrNULL", c("SEAparams", "NULL"));

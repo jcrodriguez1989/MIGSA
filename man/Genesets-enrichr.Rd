@@ -3,12 +3,12 @@
 \docType{methods}
 \name{Genesets-enrichr}
 \alias{Genesets-enrichr}
-\alias{downloadEnrichrGeneSets}
-\alias{downloadEnrichrGeneSets,ANY-method}
-\alias{downloadEnrichrGeneSets,character-method}
 \alias{enrichrGeneSets}
-\alias{enrichrGeneSets,ANY-method}
 \alias{enrichrGeneSets,character-method}
+\alias{enrichrGeneSets,ANY-method}
+\alias{downloadEnrichrGeneSets}
+\alias{downloadEnrichrGeneSets,character-method}
+\alias{downloadEnrichrGeneSets,ANY-method}
 \title{List and download gene sets from enrichr database}
 \usage{
 "Genesets-enrichr"(pattern)
@@ -69,4 +69,3 @@ biocartaGSs <- downloadEnrichrGeneSets(c("BioCarta_2015"));
 
 \code{\link{loadGo}}
 }
-

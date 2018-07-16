@@ -3,8 +3,8 @@
 \docType{methods}
 \name{getDEGenes}
 \alias{getDEGenes}
-\alias{getDEGenes,IGSAinput}
 \alias{getDEGenes,IGSAinput-method}
+\alias{getDEGenes,IGSAinput}
 \title{Calculate differentialy expressed genes of an IGSAinput object}
 \usage{
 getDEGenes(igsaInput)
@@ -44,4 +44,3 @@ aux <- getDEGenes(myIgsaInput);
 \seealso{
 \code{\link{IGSAinput-class}}
 }
-

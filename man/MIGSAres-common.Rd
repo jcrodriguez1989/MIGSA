@@ -2,22 +2,22 @@
 % Please edit documentation in R/MIGSAres-common.R
 \docType{methods}
 \name{MIGSAres-common}
-\alias{$,MIGSAres-method}
 \alias{MIGSAres-common}
-\alias{[,MIGSAres,ANY,ANY,ANY-method}
-\alias{as.data.frame,MIGSAres}
-\alias{as.data.frame,MIGSAres-method}
-\alias{colnames,MIGSAres}
-\alias{colnames,MIGSAres-method}
 \alias{dim,MIGSAres-method}
-\alias{head,MIGSAres}
+\alias{$,MIGSAres-method}
+\alias{colnames,MIGSAres-method}
+\alias{colnames,MIGSAres}
 \alias{head,MIGSAres-method}
-\alias{merge,MIGSAres,MIGSAres}
-\alias{merge,MIGSAres,MIGSAres-method}
-\alias{show,MIGSAres}
-\alias{show,MIGSAres-method}
-\alias{tail,MIGSAres}
+\alias{head,MIGSAres}
 \alias{tail,MIGSAres-method}
+\alias{tail,MIGSAres}
+\alias{[,MIGSAres,ANY,ANY,ANY-method}
+\alias{show,MIGSAres-method}
+\alias{show,MIGSAres}
+\alias{as.data.frame,MIGSAres-method}
+\alias{as.data.frame,MIGSAres}
+\alias{merge,MIGSAres,MIGSAres-method}
+\alias{merge,MIGSAres,MIGSAres}
 \title{MIGSAres exploratory functions}
 \usage{
 \S4method{dim}{MIGSAres}(x)
@@ -41,15 +41,15 @@
 \arguments{
 \item{x}{MIGSAres object.}
 
-\item{name}{as used in \code{\link[base]{$}}.}
+\item{name}{as used in \code{$}.}
 
-\item{n}{as used in \code{\link[utils]{head}} and \code{\link[utils]{tail}}.}
+\item{n}{as used in \code{\link[utils]{head}} and \code{tail}.}
 
-\item{i}{as used in \code{\link[base]{[}}.}
+\item{i}{as used in \code{[}.}
 
-\item{j}{as used in \code{\link[base]{[}}.}
+\item{j}{as used in \code{[}.}
 
-\item{drop}{as used in \code{\link[base]{[}} (default: FALSE).}
+\item{drop}{as used in \code{[} (default: FALSE).}
 
 \item{object}{MIGSAres object.}
 
@@ -115,4 +115,3 @@ migsaRes2 <- migsaRes[,c(1:3,5)];
 migsaResMerged <- merge(migsaRes1, migsaRes2);
 
 }
-

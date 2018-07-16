@@ -9,11 +9,11 @@
 #'@param x MIGSAres object.
 #'@param y MIGSAres object.
 #'@param object MIGSAres object.
-#'@param name as used in \code{\link[base]{$}}.
-#'@param n as used in \code{\link[utils]{head}} and \code{\link[utils]{tail}}.
-#'@param i as used in \code{\link[base]{[}}.
-#'@param j as used in \code{\link[base]{[}}.
-#'@param drop as used in \code{\link[base]{[}} (default: FALSE).
+#'@param name as used in \code{$}.
+#'@param n as used in \code{\link[utils]{head}} and \code{tail}.
+#'@param i as used in \code{[}.
+#'@param j as used in \code{[}.
+#'@param drop as used in \code{[} (default: FALSE).
 #'
 #'@return Desired object.
 #'
@@ -109,6 +109,8 @@ setMethod("colnames",
         return(colnames(x@migsa_res_summary));
     }
 )
+
+## todo: define colnames(migsaRes) <-
 
 #'@inheritParams MIGSAres exploratory functions
 #'@rdname MIGSAres-common

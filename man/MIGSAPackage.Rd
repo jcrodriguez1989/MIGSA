@@ -19,11 +19,6 @@ facilitate the data mining task over huge information sources.
 MIGSA package also provides several functions that allow to easily load the 
 most updated gene sets from several repositories.
 }
-\author{
-Juan C. Rodriguez \email{jcrodriguez@bdmg.com.ar}, Cristobal Fresno 
-\email{cfresno@bdmg.com.ar}, Andrea S. Llera \email{allera@leloir.org.ar} 
-and Elmer A. Fernandez \email{efernandez@bdmg.com.ar}
-}
 \references{
 \enumerate{
 \item Rodriguez, J. C., Gonzalez, G. A., Fresno, C., Llera, A. S., & 
@@ -31,6 +26,10 @@ Fernandez, E. A. (2016). Improving information retrieval in functional
 analysis. Computers in Biology and Medicine, 79, 10-20.
 }
 }
+\author{
+Juan C. Rodriguez \email{jcrodriguez@bdmg.com.ar}, Cristobal Fresno 
+\email{cfresno@bdmg.com.ar}, Andrea S. Llera \email{allera@leloir.org.ar} 
+and Elmer A. Fernandez \email{efernandez@bdmg.com.ar}
+}
 \keyword{Analysis}
 \keyword{Functional}
-

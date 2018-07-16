@@ -2,8 +2,8 @@
 % Please edit documentation in R/SEAparams-class.R
 \docType{methods}
 \name{SEAparams-class}
-\alias{SEAparams}
 \alias{SEAparams-class}
+\alias{SEAparams}
 \title{SEAparams S4 class implementation in R}
 \description{
 This S4 class contains the parameters to provide for SEA.
@@ -12,7 +12,7 @@ This S4 class contains the parameters to provide for SEA.
 
 \describe{
 \item{\code{treat_lfc}}{numeric, lfc parameter passed to 
-\code{\link[limma]{treat}} function (default: 0).}
+\code{treat} function (default: 0).}
 
 \item{\code{de_cutoff}}{numeric, cutoff value to define a gene as differentialy
 expressed (default: 0.01).}
@@ -35,6 +35,7 @@ reference.
 \item{\code{test}}{character indicating which test to use, it must be one of 
 "FisherTest", "HypergeoTest" or "BinomialTest" (default: "FisherTest").}
 }}
+
 \examples{
 ## Lets create the default SEAparams object.
 mySeaParams <- SEAparams();
@@ -57,8 +58,7 @@ adjust_method="none");
 
 }
 \seealso{
-\code{\link{GSEAparams-class}}
+\code{GSEAparams-class}
 
-\code{\link{summary}}
+\code{summary}
 }
-

@@ -3,14 +3,15 @@
 \docType{methods}
 \name{MIGSAres-plots}
 \alias{MIGSAres-plots}
-\alias{geneSetBarplot}
-\alias{geneSetBarplot,MIGSAres-method}
-\alias{genesBarplot}
-\alias{genesBarplot,MIGSAres-method}
 \alias{genesHeatmap}
 \alias{genesHeatmap,MIGSAres-method}
+\alias{genesBarplot}
+\alias{genesBarplot,MIGSAres-method}
 \alias{migsaHeatmap}
 \alias{migsaHeatmap,MIGSAres-method}
+\alias{migsaHeatmap,matrix-method}
+\alias{geneSetBarplot}
+\alias{geneSetBarplot,MIGSAres-method}
 \title{MIGSAres plots}
 \usage{
 "MIGSAres-plots"(migsaRes)
@@ -18,7 +19,8 @@
 genesHeatmap(migsaRes, ...)
 
 \S4method{genesHeatmap}{MIGSAres}(migsaRes, enrFilter = 0, gsFilter = 0,
-...)
+colPal = c("white", "red"), col.dist = NA, row.dist = NA, layout = NA,
+dendrogram = "row")
 
 genesBarplot(migsaRes, ...)
 
@@ -27,7 +29,13 @@ genesBarplot(migsaRes, ...)
 migsaHeatmap(migsaRes, ...)
 
 \S4method{migsaHeatmap}{MIGSAres}(migsaRes, enrFilter = 0, expFilter = 0,
-col.dist = "jaccard", row.dist = col.dist, ...)
+categories = list(), categLabels = TRUE, colPal = c("white", "red"),
+col.dist = NA, row.dist = NA, layout = NA, remove0Rows = TRUE,
+breaks = NA)
+
+\S4method{migsaHeatmap}{matrix}(migsaRes, categories = list(),
+categLabels = TRUE, colPal = c("white", "red"), col.dist = NA,
+row.dist = NA, layout = NA)
 
 geneSetBarplot(migsaRes, ...)
 
@@ -36,22 +44,44 @@ geneSetBarplot(migsaRes, ...)
 \arguments{
 \item{migsaRes}{MIGSAres object.}
 
-\item{...}{In heatmap functions, ... are additional parameters passed to 
-heatmap.2 function. In other functions it is not in use.}
+\item{...}{not in use.}
 
 \item{enrFilter}{numeric. Keep gene sets enriched in at least enrFilter 
 experiments.}
 
 \item{gsFilter}{numeric. Keep genes enriched in at least gsFilter gene sets.}
 
+\item{colPal}{vector. Character vector of two colors, first value will 
+represent FALSE/1 on heatmap, and second value TRUE/0.}
+
+\item{col.dist}{character. Distance algorithm to be used in columns, passed 
+to vegdist function. If migsaRes has cutoff then default is jaccard, else, 
+default is euclidean.}
+
+\item{row.dist}{character. Distance algorithm to be used in rows, passed to 
+vegdist function. If migsaRes has cutoff then default is jaccard, else, 
+default is euclidean.}
+
+\item{layout}{matrix. The layout used for heatmaps.}
+
+\item{dendrogram}{character. Wheter to plot "row", "col", "none" or "both"
+dendrograms.}
+
 \item{expFilter}{numeric. Keep experiments which enriched at least expFilter 
 gene sets.}
 
-\item{col.dist}{character. Distance algorithm to be used in columns, passed 
-to vegdist function.}
+\item{categories}{list. List of character vectors, each vector must have the
+same length as the number of experiments (ncol(migsaRes)-3). It will plot 
+for each category/column a color representing its category.}
 
-\item{row.dist}{character. Distance algorithm to be used in rows, passed to 
-vegdist function.}
+\item{categLabels}{logical. Indicates if labels should be plotted for each 
+category.}
+
+\item{remove0Rows}{logical. Whether remove gene sets that are not enriched in 
+any experiment.}
+
+\item{breaks}{numeric. If migsaRes does not have cutoff then break P-values 
+in breaks intervals.}
 }
 \value{
 In heatmap functions: A list returned by heatmap.2 function 
@@ -115,4 +145,3 @@ geneSetBarplot(migsaResWCoff, enrFilter=1);
 \seealso{
 \code{\link{setEnrCutoff}}
 }
-

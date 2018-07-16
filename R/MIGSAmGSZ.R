@@ -12,7 +12,6 @@
 #'"Cond2","Cond2")).
 #'@param use.voom logical indicating wether use voom or not (if RNAseq data we 
 #'recommend using use.voom=TRUE).
-#'@param bp.param BiocParallel param to use as BPPARAM in bplapply.
 #'@param rankFunction internal use.
 #'@param min.sz minimum size of gene sets (number of genes in a gene set) to 
 #'be included in the analysis.
@@ -86,24 +85,23 @@ setGeneric(name="MIGSAmGSZ", def=function(x, y, l, ...) {
 setMethod(
     f="MIGSAmGSZ",
     signature=c("matrix", "list", "vector"),
-    definition=function (x, y, l, use.voom=FALSE,
-    bp.param=bpparam(), rankFunction=NA,
+    definition=function (x, y, l, use.voom=FALSE, rankFunction=NA,
     min.sz=5, pv=0, w1=0.2, w2=0.5, vc=10, p=200) {
         # it formats almost the same inputs as mGSZ and uses MIGSAs mGSZ.
         # setting all MIGSA parameters
         
         if (use.voom) {
-            M <- DGEList(counts=x);
+            exprData <- DGEList(counts=x);
             if (!is(rankFunction, "function")) {
                 rankFunction <- voomLimaRank;
             }
         } else {
-            M <- new("MAList", list(M=x));
+            exprData <- new("MAList", list(M=x));
             if (!is(rankFunction, "function")) {
                 rankFunction <- mGszEbayes;
             }
         }
-        fit_options <- FitOptions(l);
+        fitOptions <- FitOptions.default(l);
         
         params <- GSEAparams(
             perm_number=p,
@@ -113,9 +111,10 @@ setMethod(
             w2=w2,
             vc=vc
         );
+        gSets <- y;
         
-        mgszRes <- MIGSA_mGSZ(M, fit_options, y, rankFunction, params,
-                        bp.param);
+        mgszRes <- MIGSA_mGSZ(exprData, fitOptions, gSets,
+            rankFunction, params);
         return(mgszRes);
     }
 )

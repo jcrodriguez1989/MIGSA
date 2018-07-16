@@ -27,7 +27,7 @@ MIGSAres.list <- function(x, ... ) {
     
     # convert each IGSAres to a data.table and rbind them
     migsa_res_dtable <- do.call(rbind, lapply(x, function(igsaRes) {
-        actRes <- as.data.table(igsaRes, wGenesInfo=!FALSE);
+        actRes <- as.data.table(igsaRes);
         return(actRes);
     }));
     

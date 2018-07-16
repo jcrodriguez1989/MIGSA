@@ -2,10 +2,10 @@
 % Please edit documentation in R/FitOptions-class.R
 \docType{methods}
 \name{FitOptions-class}
-\alias{FitOptions}
 \alias{FitOptions-class}
-\alias{FitOptions.data.frame}
+\alias{FitOptions}
 \alias{FitOptions.default}
+\alias{FitOptions.data.frame}
 \title{FitOptions S4 class implementation in R}
 \usage{
 FitOptions(x, ...)
@@ -55,4 +55,3 @@ myContrast <- c(-1, 1);
 fit_options <- FitOptions(myData, myFormula, myContrast);
 
 }
-
