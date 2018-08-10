@@ -172,7 +172,7 @@ setMethod(
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
         # lets get just gene sets enriched in at least one dataset
-        actRes <- migsaRes[ rowSums(migsaRes[,-(1:3)], na.rm=!FALSE) > 0, ];
+        actRes <- migsaRes[ rowSums(migsaRes[,-(seq_len(3))], na.rm=!FALSE) > 0, ];
         
         if (!is(actRes, "MIGSAres")) {
             warning("No enriched gene set with used cutOff.");

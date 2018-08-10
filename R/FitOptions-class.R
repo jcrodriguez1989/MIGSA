@@ -40,7 +40,10 @@
 #'
 #'@importFrom futile.logger flog.error
 #'@importFrom stats model.matrix
-#'@exportClass FitOptions
+#'@export
+#'@export FitOptions
+#'@S3method FitOptions data.frame
+#'@S3method FitOptions default
 #'
 setClass(
     Class="FitOptions",
@@ -74,7 +77,6 @@ setClass(
 
 #'@inheritParams FitOptions-class
 #'@rdname FitOptions-class
-#'@export FitOptions
 #'
 FitOptions <- function(x, ...) {
     UseMethod("FitOptions", x);
@@ -83,7 +85,6 @@ FitOptions <- function(x, ...) {
 #'@inheritParams FitOptions-class
 #'@rdname FitOptions-class
 #'@aliases FitOptions.default
-#'@export FitOptions.default
 #'@importFrom stats model.matrix
 #'
 FitOptions.default <- function(x, ...) {
@@ -108,7 +109,6 @@ FitOptions.default <- function(x, ...) {
 #'@inheritParams FitOptions-class
 #'@rdname FitOptions-class
 #'@aliases FitOptions.data.frame
-#'@export FitOptions.data.frame
 #'@importFrom stats model.matrix
 #'
 FitOptions.data.frame <- function(x, formula, contrast, ...) {

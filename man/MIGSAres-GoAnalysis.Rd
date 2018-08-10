@@ -16,13 +16,14 @@
 
 migsaGoTree(migsaRes, ...)
 
-\S4method{migsaGoTree}{MIGSAres}(migsaRes, categories = rep(NA, ncol(migsaRes)
-- 3), categColors = "red", ont = "BP", legendPos = "topleft")
+\S4method{migsaGoTree}{MIGSAres}(migsaRes, categories = rep(NA,
+  ncol(migsaRes) - 3), categColors = "red", ont = "BP",
+  legendPos = "topleft")
 
 goTree(treeInfo, ...)
 
 \S4method{goTree}{data.frame}(treeInfo, ont = "BP", legends = NA,
-legendPos = "topleft")
+  legendPos = "topleft")
 
 getHeights(ids, ...)
 

@@ -122,7 +122,7 @@ setMethod("head",
     function(x, n=6L) {
         stopifnot(validObject(x));
         n <- min(nrow(x@migsa_res_summary), n);
-        return(x[1:n,, drop=FALSE]);
+        return(x[seq_len(n),, drop=FALSE]);
     }
 )
 

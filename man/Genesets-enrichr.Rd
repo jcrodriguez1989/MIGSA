@@ -20,7 +20,7 @@ enrichrGeneSets(pattern = ".*")
 downloadEnrichrGeneSets(geneSetNames, ...)
 
 \S4method{downloadEnrichrGeneSets}{character}(geneSetNames,
-deleteMultipleEntrez = !FALSE)
+  deleteMultipleEntrez = !FALSE)
 }
 \arguments{
 \item{pattern}{character indicating a pattern to filter the database names.}
@@ -30,8 +30,8 @@ download. Must be listed at \code{\link{enrichrGeneSets}}.}
 
 \item{...}{not in use.}
 
-\item{deleteMultipleEntrez}{logical indicating if multiple Entrez IDs should 
-be deleted or repeated.
+\item{deleteMultipleEntrez}{logical indicating if multiple Entrez IDs
+should be deleted or repeated.
 Note: Enrichr uses Gene Symbol, if org.Hs.eg translates it into several 
 Entrez IDs then if deleteMultipleEntrez == FALSE all Entrez are removed else 
 all are included.}

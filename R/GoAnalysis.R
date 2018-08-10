@@ -409,7 +409,7 @@ setMethod(
             lapply(colorList, function(actColor) {
                 newColor <- t(col2rgb(actColor, alpha=TRUE)/255);
                 newColor <- newColor * (newColor[, "alpha"] != 0);
-                return(newColor[,1:3])
+                return(newColor[,seq_len(3)])
         })))
         unlist(lapply(newColors, min, 1));
     }

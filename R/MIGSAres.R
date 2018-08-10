@@ -88,7 +88,7 @@ setMethod(
                 # pvalue of SEA/GSEA
                 actRes <- data.table(actRes[, list(id, name, gene_set_name)],
                                         enrichments);
-                colnames(actRes)[1:3] <- c("id", "Name", "GS_Name");
+                colnames(actRes)[seq_len(3)] <- c("id", "Name", "GS_Name");
                 setkey(actRes, id, Name, GS_Name);
                 
                 return(actRes);
@@ -133,7 +133,7 @@ setMethod(
         
         if (!is.na(enr_cutoff)) {
             # if we have cutoff then lets return a logical (enriched or not)
-            res[, -(1:3)] <- res[, -(1:3)] < enr_cutoff;
+            res[, -(seq_len(3))] <- res[, -(seq_len(3))] < enr_cutoff;
         }
         return(res);
     }

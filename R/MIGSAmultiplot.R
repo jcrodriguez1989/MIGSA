@@ -29,7 +29,7 @@ setMethod(
                 ncol(layout))))
             
             # Make each plot, in the correct location
-            for (i in 1:numPlots) {
+            for (i in seq_len(numPlots)) {
                 # Get the i,j matrix positions of the regions that contain this 
                 # subplot
                 matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))

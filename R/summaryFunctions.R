@@ -51,7 +51,8 @@
 #'@include SEAparams-class.R
 #'@method summary SEAparams
 #'@aliases summary,SEAparams-method
-#'@export summary.SEAparams
+#'@S3method summary SEAparams
+#'
 summary.SEAparams <- function(object, ...) {
     stopifnot(validObject(object));
     
@@ -76,7 +77,7 @@ summary.SEAparams <- function(object, ...) {
 #'@include GSEAparams-class.R
 #'@method summary GSEAparams
 #'@aliases summary,GSEAparams-method
-#'@export summary.GSEAparams
+#'@S3method summary GSEAparams
 #'
 summary.GSEAparams <- function(object, ...) {
     stopifnot(validObject(object));
@@ -94,7 +95,7 @@ summary.GSEAparams <- function(object, ...) {
 #'@include IGSAinput-class.R
 #'@method summary IGSAinput
 #'@aliases summary,IGSAinput-method
-#'@export summary.IGSAinput
+#'@S3method summary IGSAinput
 #'
 summary.IGSAinput <- function(object, ...) {
     validObject(object);
@@ -136,12 +137,12 @@ summary.IGSAinput <- function(object, ...) {
 #'@importFrom futile.logger flog.info
 #'@method summary MIGSAres
 #'@aliases summary,MIGSAres-method
-#'@export summary.MIGSAres
+#'@S3method summary MIGSAres
 #'
 summary.MIGSAres <- function(object, ...) {
     stopifnot(validObject(object));
     
-    pvals <- object@migsa_res_summary[,-(1:3), drop=FALSE];
+    pvals <- object@migsa_res_summary[,-(seq_len(3)), drop=FALSE];
     
     if (is.na(object@enr_cutoff)) {
         # if there is no cutoff then give results with these three cutoffs
@@ -162,8 +163,8 @@ summary.MIGSAres <- function(object, ...) {
         numExps <- ncol(pvals);
         # lets get the gene sets enriched between each pair of experiments
         enrInters <- do.call(rbind, 
-        lapply(1:ncol(pvals), function(actExp1) {
-            lapply(1:ncol(pvals), function(actExp2) {
+        lapply(seq_len(ncol(pvals)), function(actExp1) {
+            lapply(seq_len(ncol(pvals)), function(actExp2) {
                 sum(
                     pvals[,actExp1] < object@enr_cutoff &
                     pvals[,actExp2] < object@enr_cutoff,

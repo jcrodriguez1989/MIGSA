@@ -85,8 +85,10 @@ setGeneric(name="migsaGoTree", def=function(migsaRes, ...) {
 setMethod(
     f="migsaGoTree",
     signature=c("MIGSAres"),
-    definition=function(migsaRes, categories=rep(NA, ncol(migsaRes)-3),
-        categColors="red", ont="BP", legendPos="topleft") {
+    definition=function(migsaRes,
+        categories=rep(NA, ncol(migsaRes)-3),
+        categColors="red", ont="BP",
+        legendPos="topleft") {
         stopifnot(validObject(migsaRes));
         stopifnot(length(categories) == ncol(migsaRes)-3);
         stopifnot(length(unique(categories))
@@ -98,7 +100,7 @@ setMethod(
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
         if (any(!is.na(categories))) {
-            migsaRes <- migsaRes[,c(1:3, 3+which(!is.na(categories)))];
+            migsaRes <- migsaRes[,c(seq_len(3), 3+which(!is.na(categories)))];
             categories <- categories[!is.na(categories)];
         } else {
             categories[is.na(categories)] <- "Enriched";
@@ -127,7 +129,7 @@ setMethod(
         ontsPresent <- unique(as.character(plotRes$ont));
         
         # for each condition, the times it gets enriched
-        enrichedPerc <- do.call(cbind, by(t(actRes[,-(1:3)]), 
+        enrichedPerc <- do.call(cbind, by(t(actRes[,-(seq_len(3))]), 
             categories, colMeans, na.rm=TRUE));
         enrichedPerc[is.nan(enrichedPerc)] <- 0;
         
@@ -185,7 +187,8 @@ setGeneric(name="goTree", def=function(treeInfo, ...) {
 setMethod(
     f="goTree",
     signature=c("data.frame"),
-    definition=function(treeInfo, ont="BP", legends=NA, legendPos="topleft") {
+    definition=function(treeInfo, ont="BP", legends=NA,
+                        legendPos="topleft") {
         stopifnot(ont %in% c("BP", "CC", "MF"));
         stopifnot(colnames(treeInfo) == c("Enriched", "Important", "Color"));
         stopifnot(unlist(lapply(seq_len(ncol(treeInfo)), function(i) {

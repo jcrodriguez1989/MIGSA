@@ -129,7 +129,7 @@ setMethod(f="genesHeatmap",
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
         # keep gene sets enriched in more than enrFilter experiments
-        actRes <- migsaRes[ rowSums(migsaRes[,-(1:3)], na.rm=TRUE) >
+        actRes <- migsaRes[ rowSums(migsaRes[,-(seq_len(3))], na.rm=TRUE) >
                                     enrFilter, ];
         plotGenes <- genesInSets(actRes);
         
@@ -271,7 +271,7 @@ setMethod(
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
         # keep gene sets enriched in more than enrFilter experiments
-        actRes <- migsaRes[ rowSums(migsaRes[,-(1:3)], na.rm=TRUE) >
+        actRes <- migsaRes[ rowSums(migsaRes[,-(seq_len(3))], na.rm=TRUE) >
                                     enrFilter, ];
         plotGenes <- genesInSets(actRes);
         
@@ -335,12 +335,12 @@ setMethod(
         
         cOff <- enrCutoff(migsaRes);
         if (is.na(cOff)) {
-            plotMigsaRes <- as.matrix(migsaRes[,-(1:3)]);
+            plotMigsaRes <- as.matrix(migsaRes[,-(seq_len(3))]);
             rownames(plotMigsaRes) <- migsaRes$id;
             if (!is.na(breaks)) {
                 limits <- seq(0, 1, length.out=breaks+1);
                 limits[length(limits)] <- 1.1;
-                limits <- cbind(limits[1:(length(limits)-1)],
+                limits <- cbind(limits[seq_len((length(limits)-1))],
                                 limits[-1]);
                 
                 aux <- plotMigsaRes;
@@ -350,20 +350,20 @@ setMethod(
             }
         } else {
             if (remove0Rows) {
-                migsaRes <- migsaRes[rowSums(migsaRes[,-(1:3)], 
+                migsaRes <- migsaRes[rowSums(migsaRes[,-(seq_len(3))], 
                     na.rm=TRUE) > 0,];
             }
             # terms filtering by enrFilter and expFilter
-            keepRows <- which(rowSums(migsaRes[,-(1:3)], na.rm=TRUE) >= 
+            keepRows <- which(rowSums(migsaRes[,-(seq_len(3))], na.rm=TRUE) >= 
                 enrFilter);
-            keepCols <- which(colSums(migsaRes[,-(1:3)], na.rm=TRUE) >= 
+            keepCols <- which(colSums(migsaRes[,-(seq_len(3))], na.rm=TRUE) >= 
                 expFilter);
-            migsaRes <- migsaRes[ keepRows, c(1:3, 3+keepCols) ];
+            migsaRes <- migsaRes[ keepRows, c(seq_len(3), 3+keepCols) ];
             
             flog.debug(paste("In migsaHeatmap, after filtering, dim=",
                             dim(migsaRes)));
 
-            plotMigsaRes <- as.matrix(migsaRes[,-(1:3)]);
+            plotMigsaRes <- as.matrix(migsaRes[,-(seq_len(3))]);
             rownames(plotMigsaRes) <- migsaRes$id;
         }
         
@@ -460,7 +460,7 @@ setMethod(
         # now each category plot
         categPlots <- lapply(categories, function(actCategory) {
             actCategory <- actCategory[colInd];
-            actCategory <- data.frame(x=factor(1:length(actCategory)), 
+            actCategory <- data.frame(x=factor(seq_along(actCategory)), 
                             y=factor(1), cat=actCategory);
             
             p_actCat <- ggplot(actCategory, aes(x, y));
@@ -479,7 +479,7 @@ setMethod(
             p_actCat <- p_actCat + guides(fill=guide_legend(nrow=1));
             
             n <- length(levels(actCategory$cat));
-            actColors <- hcl(h=seq(15, 375, length=n+1), l=65, c=100)[1:n];
+            actColors <- hcl(h=seq(15, 375, length=n+1), l=65, c=100)[seq_len(n)];
             p_actCat <- p_actCat + 
                 scale_fill_manual(values=actColors, drop=FALSE)
             
@@ -537,10 +537,10 @@ setMethod(
         migsaRes <- setDefaultEnrCutoff(migsaRes);
         
         # keep gene sets enriched in more than enrFilter experiments
-        actRes <- migsaRes[ rowSums(migsaRes[,-(1:3)], na.rm=TRUE) >
+        actRes <- migsaRes[ rowSums(migsaRes[,-(seq_len(3))], na.rm=TRUE) >
                                 enrFilter, ];
-        plotRes <- data.frame(actRes[,1:3],
-                                number=rowSums(actRes[,-(1:3)], na.rm=TRUE));
+        plotRes <- data.frame(actRes[,seq_len(3)],
+                                number=rowSums(actRes[,-(seq_len(3))], na.rm=TRUE));
         
         # reordering bars
         plotRes$id <- factor(plotRes$id,

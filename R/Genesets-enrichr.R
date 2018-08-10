@@ -8,8 +8,8 @@
 #'@param pattern character indicating a pattern to filter the database names.
 #'@param geneSetNames list of characters with the names of the gene sets to 
 #'download. Must be listed at \code{\link{enrichrGeneSets}}.
-#'@param deleteMultipleEntrez logical indicating if multiple Entrez IDs should 
-#'be deleted or repeated.
+#'@param deleteMultipleEntrez logical indicating if multiple Entrez IDs
+#'should be deleted or repeated.
 #'Note: Enrichr uses Gene Symbol, if org.Hs.eg translates it into several 
 #'Entrez IDs then if deleteMultipleEntrez == FALSE all Entrez are removed else 
 #'all are included.

@@ -145,7 +145,7 @@ setMethod(
                     if (maxI > nGenes) {
                         impGenes <- names(diffScores)[(nGenes+1):maxI];
                     } else {
-                        impGenes <- names(diffScores)[1:maxI];
+                        impGenes <- names(diffScores)[seq_len(maxI)];
                     }
                     impGenes <- intersect(impGenes, actGset);
                     actES <- abs(rawES);
@@ -262,7 +262,7 @@ filterInputs <- function(exprData, gSets, minGsetSize) {
 
 getRankings <- function(exprData, fitOptions, nPerm, rankFunction) {
     # generate permutations
-    perms <- replicate(nPerm, sample(1:ncol(exprData), replace=FALSE));
+    perms <- replicate(nPerm, sample(seq_len(ncol(exprData)), replace=FALSE));
     conds <- col_data(fitOptions);
     permsConds <- do.call(cbind, lapply(seq_len(ncol(perms)), function(i) {
         as.character(conds[perms[,i],]);
@@ -358,7 +358,7 @@ getEnrichScore <- function(ranking, actGset, zM_d, zM_i, zV_d, zV_i) {
     es_dec <- cumsum(ranking) - zM_d;
     es_inc <- cumsum(rev(ranking)) - zM_i;
     
-    es_dec[1:startVal] <- 0; es_inc[1:startVal] <- 0;
+    es_dec[seq_len(startVal)] <- 0; es_inc[seq_len(startVal)] <- 0;
     
     es_dec <- es_dec/zV_d;
     es_inc <- es_inc/zV_i;

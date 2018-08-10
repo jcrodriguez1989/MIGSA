@@ -86,7 +86,8 @@ setMethod(
     f="MIGSAmGSZ",
     signature=c("matrix", "list", "vector"),
     definition=function (x, y, l, use.voom=FALSE, rankFunction=NA,
-    min.sz=5, pv=0, w1=0.2, w2=0.5, vc=10, p=200) {
+    min.sz=5, pv=0, w1=0.2, w2=0.5,
+    vc=10, p=200) {
         # it formats almost the same inputs as mGSZ and uses MIGSAs mGSZ.
         # setting all MIGSA parameters
         
