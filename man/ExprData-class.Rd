@@ -5,9 +5,15 @@
 \alias{ExprData-class}
 \title{ExprData S4 class implementation in R}
 \description{
-This S4 class contains the expression data, it can be a MAList or DGEList.
+This S4 class contains the expression data, it can be a MAList, DGEList,
+or IsoDataSet.
 Important: Rownames are going to be used as gene identifiers, make sure that 
 this IDs are the same used in your gene sets.
+If x is an IsoDataSet, then gene_id column from isoGeneRel(x) will be used
+as rownames.
+If the ExprData is a matrix, then MIGSA will use it only for mGSZ. And it 
+will consider first column as the gene's ranking for the real data, and each
+remaining column for the permutations.
 }
 \examples{
 ## Lets create a ExprData object from counts data (DGEList).

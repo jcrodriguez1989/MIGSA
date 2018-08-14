@@ -58,6 +58,7 @@ Imports:
     ismev,
     limma,
     matrixStats,
+    NBSplice,
     org.Hs.eg.db,
     RBGL,
     reshape2,
@@ -104,6 +105,7 @@ Collate:
     'MIGSAres-genesManipulation.R'
     'MIGSAres-getAdditionalInfo.R'
     'MIGSAres-plotting.R'
+    'NBSplice-private.R'
     'data-bcMigsaRes.R'
     'data-migsaRes.R'
     'summaryFunctions.R'

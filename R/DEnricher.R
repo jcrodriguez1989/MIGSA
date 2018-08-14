@@ -18,6 +18,10 @@ setMethod(
     signature=c("SEAparams", "ExprData", "FitOptions", "GeneSetCollection"),
     definition=function(params, M, fit_options, gene_sets) {
         if (length(de_genes(params)) == 1 && is.na(de_genes(params)[[1]])) {
+            if (is.matrix(M)) {
+              # if M is a matrix then SEA must have defined DE genes
+              return(SEAres(gene_sets_res=list()));
+            }
             # if there are not set the DE genes then calculate them
             dif <- igsaGetDEGenes(params, M, fit_options);
         } else {

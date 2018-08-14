@@ -85,24 +85,18 @@ IGSAinput <- setClass(
         # must have name
         name_ok <- length(object@name) == 1 && object@name != "";
         
-        # must have genes and samples
-        expr_data_ok <- (!is.null(object@expr_data)) &&
-                            ncol(object@expr_data) > 1 &&
-                            nrow(object@expr_data) > 1;
+        # must have genes and samples or 0 (when using just SEA)
+        expr_data_ok <- ncol(object@expr_data) == 0 || 
+          (ncol(object@expr_data) > 1 && nrow(object@expr_data) > 1);
         
         # check that the FitOptions and the ExprData are concordant
-        fit_opts_ok <- nrow(MIGSA:::designMatrix(object@fit_options)) ==
-                                                    ncol(object@expr_data);
+        # if expr_data is a matrix then it wont use FitOptions
+        fit_opts_ok <- is.matrix(object@expr_data) ||
+          nrow(designMatrix(object@fit_options)) ==  ncol(object@expr_data);
         
         # gene_sets_list is a list of GeneSetCollection
         gene_sets_list_ok <- all(unlist(lapply(object@gene_sets_list,
                                     function(x) is(x, "GeneSetCollection"))));
-        
-        only_sea <- FALSE;
-        if (!is.null(object@sea_params)) {
-            only_sea <- length(MIGSA:::br(object@sea_params)) > 1 &&
-            length(MIGSA:::de_genes(object@sea_params)) > 1;
-        }
         
         # GeneSetCollection names must be unique
         if (gene_sets_list_ok) {
@@ -119,7 +113,7 @@ IGSAinput <- setClass(
             }
         }
         
-        return(name_ok && (only_sea || (expr_data_ok && gene_sets_list_ok)) &&
+        return(name_ok && expr_data_ok && gene_sets_list_ok &&
             fit_opts_ok);
     }
 )

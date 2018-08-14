@@ -29,7 +29,8 @@ setMethod(
         merged_gene_sets <- merge_gene_sets(actGeneSets);
         flog.info(paste(length(merged_gene_sets), "Gene Sets."));
         
-        if (is.null(seaParams(igsaInput)) && is.null(gseaParams(igsaInput))) {
+        if (is.null(seaParams(igsaInput)) && is.null(gseaParams(igsaInput)) &&
+            !is.matrix(expr_data)) {
             stop("SEAparams and GSEAparams are both NULL");
         }
         
@@ -58,9 +59,14 @@ setMethod(
         
         if (ncol(expr_data) > 0) {
             # get the genes rank to give more information in the results object
-            genes_rank <- get_fit(expr_data, fit_options, SEAparams());
-            genes_rank <- data.frame(geneID=rownames(genes_rank),
-                                        rank=genes_rank$t);
+            if (is.matrix(expr_data)) {
+              genes_rank <- data.frame(gene=rownames(expr_data),
+                                       rank=expr_data[,1]);
+            } else {
+              genes_rank <- get_fit(expr_data, fit_options, SEAparams());
+            }
+            genes_rank <- data.frame(geneID=genes_rank$gene,
+                                        rank=genes_rank$rank);
             colnames(genes_rank)[2] <- name(igsaInput);
         }
         

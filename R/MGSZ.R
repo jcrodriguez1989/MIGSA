@@ -18,11 +18,17 @@ setMethod(
         # mGSZ uses the gene sets as a list
         mgsz.gene.sets <- asList(genesets);
         
-        # check the ranking function depending if we use voom or not
-        if(is(M, "DGEList")) {
-            rankFunc <- voomLimaRank;
+        # check which ranking function to use
+        if (is(M, "IsoDataSet")) {
+          rankFunc <- nbspliceRank;
+        } else if (is(M, "DGEList")) {
+          rankFunc <- voomLimaRank;
+        } else if (is(M, "MAList")) {
+          rankFunc <- mGszEbayes;
+        } else if (is.matrix(M)) {
+          rankFunc <- function() {};
         } else {
-            rankFunc <- mGszEbayes;
+          stop("Invalid ExprData");
         }
         
         # run faster version of mGSZ
@@ -84,7 +90,7 @@ setMethod(
             stopifnot(all(rownames(exprData$samples) == 
                                 colnames(exprData$counts)));
         }
-        
+      browser()
         # filtering inputs, as required
         filteredInputs <- filterInputs(exprData, gSets, minSz(params));
         exprData <- filteredInputs$exprData;
@@ -97,7 +103,11 @@ setMethod(
         wgt2 <- w2(params);
         varConstant <- vc(params);
         
-        rankings <- getRankings(exprData, fitOptions, nPerm, rankFunction);
+        if (is.matrix(exprData)) {
+          rankings <- exprData;
+        } else {
+          rankings <- getRankings(exprData, fitOptions, nPerm, rankFunction);
+        }
         rownames(rankings) <- rownames(exprData);
         rm(nPerm);
         
@@ -118,7 +128,7 @@ setMethod(
         
         # get extra info for real data
         realRank <- rankings[,1];
-        realRank <- sort(realRank, decreasing=!FALSE);
+        realRank <- sort(realRank, decreasing=TRUE);
         sVMC_dec <- sumVarMeanCalc(realRank, preVar, normFactors);
         sVMC_inc <- sumVarMeanCalc(rev(realRank), preVar, normFactors);
         zVars_dec <- zVarCalc(sVMC_dec$Z_vars, wgt2, varConstant);
@@ -166,7 +176,7 @@ setMethod(
             function(i) {
     #         i <- 2;
             ranking <- rankings[,i];
-            ranking <- sort(ranking, decreasing=!FALSE);
+            ranking <- sort(ranking, decreasing=TRUE);
             sVMC_dec <- sumVarMeanCalc(ranking, preVar, normFactors);
             sVMC_inc <- sumVarMeanCalc(rev(ranking), preVar, normFactors);
             
@@ -244,6 +254,38 @@ voomLimaRank <- function(exprMatrix, fit_options) {
     
     res <- fit2$t;
     return(res);
+}
+
+## it requires that the expData(exprMatrix) matrix has the contrasted 
+## condition as the second column
+#'@importFrom NBSplice isoCounts isoGeneRel expData IsoDataSet buildLowExpIdx
+#'@importFrom NBSplice NBTest results
+#'@include FitOptions.R
+nbspliceRank <- function(exprMatrix, fit_options) {
+  isoC <- isoCounts(exprMatrix);
+  geneI <- isoGeneRel(exprMatrix);
+  expD <- expData(exprMatrix);
+  contrast <- levels(expD[,1]);
+  expD[,1] <- as.factor(as.character(col_data(fit_options)[,]));
+  
+  colName <- colnames(expD)[[1]];
+  isoDataSet <- IsoDataSet(isoC, expD, colName, geneI);
+  isoDataSet <- buildLowExpIdx(isoDataSet);
+  
+  dsRes <- NBTest(isoDataSet, colName, test='F', contrast=contrast);
+  resMatrix <- results(dsRes, filter=F);
+  
+  # sum(stat*sign(odd))
+  resRank <- as.matrix(c(by(resMatrix, resMatrix$gene, function(x)
+    sum(x$stat*sign(x$odd), na.rm=TRUE))));
+  
+  aux <- unlist(resRank[,1]);
+  res <- matrix(NA, ncol=1, nrow=nrow(resRank));
+  rownames(res) <- rownames(resRank);
+  res[names(aux),1] <- aux;
+  res <- res[rownames(exprMatrix),,drop=FALSE]
+  
+  return(res);
 }
 
 filterInputs <- function(exprData, gSets, minGsetSize) {
@@ -345,7 +387,7 @@ sumVarMeanCalc <- function(ranking, preVar, normFactors) {
 
 zVarCalc <- function(z_vars, wgt2, varConstant) {
     medianPart <- matrix(matrixStats::rowMedians(t(z_vars)) * 
-                    wgt2, nrow=nrow(z_vars), ncol=ncol(z_vars), byrow=!FALSE);
+                    wgt2, nrow=nrow(z_vars), ncol=ncol(z_vars), byrow=TRUE);
     z_var <- (z_vars + medianPart + varConstant)^0.5;
     return(z_var);
 }
@@ -401,6 +443,14 @@ getPvalues <- function(realES, permESs) {
     rm(mean.prof); rm(std.prof);
 
     col.ind <- colVars(permESs) > 0;
+    
+    if (all(!col.ind)) {
+      # there is no enriched gene set
+      pvals <- rep(1, length(realES));
+      names(pvals) <- names(realES);
+      return(pvals);
+    }
+    
     permESs <- permESs[, col.ind];
     realES <- realES[col.ind];
     ev.p.val.class <- rep(0, length(realES))
