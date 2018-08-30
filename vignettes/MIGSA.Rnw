@@ -133,7 +133,7 @@ http://www.bioconductor.org. (Prior to R 3.4).
 <<eval=FALSE>>=
 ## try http:// if https:// URLs are not supported
 source("https://bioconductor.org/biocLite.R");
-biocLite("MIGSA");
+BiocManager::install("MIGSA");
 @
 
 \subsection{Class definitions}
