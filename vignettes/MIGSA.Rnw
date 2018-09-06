@@ -132,7 +132,8 @@ http://www.bioconductor.org. (Prior to R 3.4).
 \\To get \pkg{MIGSA} package you can type in an R session:
 <<eval=FALSE>>=
 ## try http:// if https:// URLs are not supported
-source("https://bioconductor.org/biocLite.R");
+if (!requireNamespace("BiocManager", quietly=TRUE));
+    install.packages("BiocManager");
 BiocManager::install("MIGSA");
 @
 
