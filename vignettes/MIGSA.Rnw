@@ -132,7 +132,7 @@ http://www.bioconductor.org. (Prior to R 3.4).
 \\To get \pkg{MIGSA} package you can type in an R session:
 <<eval=FALSE>>=
 ## try http:// if https:// URLs are not supported
-if (!requireNamespace("BiocManager", quietly=TRUE));
+if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager");
 BiocManager::install("MIGSA");
 @
@@ -774,7 +774,7 @@ bcMigsaRes <- bcMigsaRes[ rowSums(bcMigsaRes[,-(1:3)], na.rm=TRUE) > 0, ];
 dim(bcMigsaRes);
 @
 
-<<echo=FALSE,results=hide>>=
+<<echo=FALSE, results=hide>>=
 # it is the same code as below, but saving the pdf to correctly load it in tex
 pdf("bcMigsaResMigsaHeatmap.pdf");
 aux <- migsaHeatmap(bcMigsaRes);
@@ -801,7 +801,7 @@ dim(consensusGsets);
 table(consensusGsets$GS_Name);
 @
 
-<<echo=FALSE,results=hide>>=
+<<echo=FALSE, results=hide>>=
 # it is the same code as below, but saving the pdf to correctly load it in tex
 pdf("bcMigsaResGenesHeatmap.pdf");
 aux <- genesHeatmap(bcMigsaRes, enrFilter=6.4, gsFilter=70,

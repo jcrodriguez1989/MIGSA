@@ -16,13 +16,14 @@
 
 migsaGoTree(migsaRes, ...)
 
-\S4method{migsaGoTree}{MIGSAres}(migsaRes, categories = rep(NA, ncol(migsaRes)
-- 3), categColors = "red", ont = "BP", legendPos = "topleft")
+\S4method{migsaGoTree}{MIGSAres}(migsaRes, categories = rep(NA,
+  ncol(migsaRes) - 3), categColors = "red", ont = "BP",
+  legendPos = "topleft")
 
 goTree(treeInfo, ...)
 
 \S4method{goTree}{data.frame}(treeInfo, ont = "BP", legends = NA,
-legendPos = "topleft")
+  legendPos = "topleft")
 
 getHeights(ids, ...)
 
@@ -76,7 +77,7 @@ fst40goRes <- goRes[1:40,];
 
 ## And lets plot the results GO trees.
 \dontrun{
-aux <- migsaGoTree(fst40goRes);
+aux <- migsaGoTree(fst40goRes, ont="CC");
 }
 
 ###### getHeights

@@ -316,7 +316,7 @@ setMethod(
         
         # change the id for the Name
         terms <- sapply(plotNodes, function(id) {
-            if(!is.null(GOTERM[[id]])) {
+            if (!is.null(GOTERM[[id]])) {
                 Term(GOTERM[[id]]);
             } else {
                 id; # database version issue!!!!
