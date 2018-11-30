@@ -18,24 +18,25 @@
 
 genesHeatmap(migsaRes, ...)
 
-\S4method{genesHeatmap}{MIGSAres}(migsaRes, enrFilter = 0, gsFilter = 0,
-colPal = c("white", "red"), col.dist = NA, row.dist = NA, layout = NA,
-dendrogram = "row")
+\S4method{genesHeatmap}{MIGSAres}(migsaRes, enrFilter = 0,
+  gsFilter = 0, colPal = c("white", "red"), col.dist = NA,
+  row.dist = NA, layout = NA, dendrogram = "row")
 
 genesBarplot(migsaRes, ...)
 
-\S4method{genesBarplot}{MIGSAres}(migsaRes, enrFilter = 0, gsFilter = 0)
+\S4method{genesBarplot}{MIGSAres}(migsaRes, enrFilter = 0,
+  gsFilter = 0)
 
 migsaHeatmap(migsaRes, ...)
 
-\S4method{migsaHeatmap}{MIGSAres}(migsaRes, enrFilter = 0, expFilter = 0,
-categories = list(), categLabels = TRUE, colPal = c("white", "red"),
-col.dist = NA, row.dist = NA, layout = NA, remove0Rows = TRUE,
-breaks = NA)
+\S4method{migsaHeatmap}{MIGSAres}(migsaRes, enrFilter = 0,
+  expFilter = 0, categories = list(), categLabels = TRUE,
+  colPal = c("white", "red"), col.dist = NA, row.dist = NA,
+  layout = NA, remove0Rows = TRUE, breaks = NA)
 
 \S4method{migsaHeatmap}{matrix}(migsaRes, categories = list(),
-categLabels = TRUE, colPal = c("white", "red"), col.dist = NA,
-row.dist = NA, layout = NA)
+  categLabels = TRUE, colPal = c("white", "red"), col.dist = NA,
+  row.dist = NA, layout = NA)
 
 geneSetBarplot(migsaRes, ...)
 

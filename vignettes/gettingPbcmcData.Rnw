@@ -74,7 +74,7 @@ URL: \url{http://www.bdmg.com.ar/}\\
 \section{Getting the data}
 Following we give the used code to download this data and their PAM50 subtypes.
 
-<<gettingData, eval=TRUE>>=
+<<gettingData, eval=FALSE>>=
 library(limma);
 library(pbcmc);
 
@@ -132,7 +132,7 @@ names(pbcmcData) <- libNames;
 @
 
 And let's check it is the same data.
-<<validateData, eval=TRUE>>=
+<<validateData, eval=FALSE>>=
 # save the just created pbcmcData to newPbcmcData
 newPbcmcData <- pbcmcData;
 

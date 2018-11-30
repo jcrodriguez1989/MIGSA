@@ -20,7 +20,7 @@ enrichrGeneSets(pattern = ".*")
 downloadEnrichrGeneSets(geneSetNames, ...)
 
 \S4method{downloadEnrichrGeneSets}{character}(geneSetNames,
-deleteMultipleEntrez = !FALSE)
+  deleteMultipleEntrez = !FALSE)
 }
 \arguments{
 \item{pattern}{character indicating a pattern to filter the database names.}

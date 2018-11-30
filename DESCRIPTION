@@ -35,7 +35,6 @@ Suggests:
     breastCancerUPP,
     breastCancerVDX,
     mGSZ,
-    pbcmc,
     MIGSAdata
 Imports:
     AnnotationDbi,
@@ -106,3 +105,4 @@ Collate:
     'data-bcMigsaRes.R'
     'data-migsaRes.R'
     'summaryFunctions.R'
+RoxygenNote: 6.1.1

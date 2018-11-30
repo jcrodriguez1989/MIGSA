@@ -15,7 +15,7 @@ loadGo(ontology)
 Must be one of BP, MF or CC.}
 }
 \value{
-A GeneSetCollection object(Genes are with their EntrezGene ID).
+A GeneSetCollection object  (Genes are with their EntrezGene ID).
 }
 \description{
 \code{loadGo} creates a GeneSetCollection object from the data present at 
