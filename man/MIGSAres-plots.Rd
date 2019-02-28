@@ -95,7 +95,11 @@ each gene contributed to enrich each gene set.
 each gene contributed to enrich. Each gene set counts 1 regardless if it was 
 enriched in many experiments. x-axis each gene, y-axis number of gene sets 
 in which it contributed to enrich.
-\code{migsaHeatmap} plots the enrichment heatmap of the MIGSAres object.
+\code{migsaHeatmap} plots the enrichment heatmap of the MIGSAres object. 
+Additionally, given the categories list, for each set of categories, it is 
+shown the number of experiments that make up each category (#exps), the 
+number of gene sets enriched by at least one experiment (>= 1), and the 
+number of gene sets enriched by at least 25, 50, 75, and 100%.
 \code{geneSetBarplot} generates a barplot of the number of experiments in 
 which each gene set was enriched. x-axis each gene set, y-axis times it was 
 enriched (0 to #experiments).

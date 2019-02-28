@@ -9,7 +9,11 @@ Cols = Rows = number = gene = geneset = Count = Value = x = y = NULL;
 #'each gene contributed to enrich. Each gene set counts 1 regardless if it was 
 #'enriched in many experiments. x-axis each gene, y-axis number of gene sets 
 #'in which it contributed to enrich.
-#'\code{migsaHeatmap} plots the enrichment heatmap of the MIGSAres object.
+#'\code{migsaHeatmap} plots the enrichment heatmap of the MIGSAres object. 
+#'Additionally, given the categories sets list, for each set of categories, it 
+#'is shown the number of experiments that make up each category (#exps), the 
+#'number of gene sets enriched by at least one experiment (>= 1), and the 
+#'number of gene sets enriched by at least 25, 50, 75, and 100%.
 #'\code{geneSetBarplot} generates a barplot of the number of experiments in 
 #'which each gene set was enriched. x-axis each gene set, y-axis times it was 
 #'enriched (0 to #experiments).
@@ -457,8 +461,37 @@ setMethod(
                                 axis.text.y=element_blank(), 
                                 plot.margin=unit(c(0,0,0,0),"mm"));
         
+        if (is.null(names(categories)) && length(categories) > 0)
+          names(categories) <- seq_along(categories);
+        
         # now each category plot
-        categPlots <- lapply(categories, function(actCategory) {
+        categPlots <- lapply(names(categories), function(actCategName) {
+            actCategory <- categories[[actCategName]];
+            # get category overlap degree
+            categOverlap <- do.call(
+              rbind, lapply(unique(actCategory), function(actCateg) {
+                # actCateg <- unique(actCategory)[[1]];
+                actCategIdxs <- which(actCategory == actCateg);
+                categRes <- migsaRes[, actCategIdxs, drop=FALSE];
+                categRowSums <- rowSums(categRes, na.rm=!FALSE);
+                nEnr <- unlist(lapply(c(1, c(.25, .5, .75, 1)*ncol(categRes)),
+                       function(i) {
+                         sum(categRowSums >= i);
+                }));
+                nAnalyzed <- nEnr[[1]];
+                nEnr <- nEnr[-1];
+                nEnr <- paste(nEnr, " (", round((nEnr / nEnr[[1]])*100), "%)",
+                              sep="");
+                res <- c(length(actCategIdxs), nAnalyzed, nEnr);
+                return(res);
+            }))
+            rownames(categOverlap) <- unique(actCategory);
+            colnames(categOverlap) <- c(
+              "#exps", ">= 1", "> 25%", "> 50%", "> 75%", ">= 100%");
+            print.noquote(paste0("Category: ", actCategName));
+            print.noquote(categOverlap);
+            cat("\n");
+            
             actCategory <- actCategory[colInd];
             actCategory <- data.frame(x=factor(1:length(actCategory)), 
                             y=factor(1), cat=actCategory);
