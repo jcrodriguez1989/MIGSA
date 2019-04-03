@@ -19,7 +19,7 @@ setMethod(
         mgsz.gene.sets <- asList(genesets);
         
         # check the ranking function depending if we use voom or not
-        if(is(M, "DGEList")) {
+        if (is(M, "DGEList")) {
             rankFunc <- voomLimaRank;
         } else {
             rankFunc <- mGszEbayes;
@@ -262,12 +262,16 @@ filterInputs <- function(exprData, gSets, minGsetSize) {
 
 getRankings <- function(exprData, fitOptions, nPerm, rankFunction) {
     # generate permutations
-    perms <- replicate(nPerm, sample(1:ncol(exprData), replace=FALSE));
-    conds <- col_data(fitOptions);
-    permsConds <- do.call(cbind, lapply(seq_len(ncol(perms)), function(i) {
-        as.character(conds[perms[,i],]);
-    }))
-    perms <- t(perms[,!duplicated(t(permsConds))]);
+    perms <- matrix();
+    while (nrow(perms) < 2) {
+        # we need at least 2 perms
+        perms <- replicate(nPerm, sample(1:ncol(exprData), replace=FALSE));
+        conds <- col_data(fitOptions);
+        permsConds <- do.call(cbind, lapply(seq_len(ncol(perms)), function(i) {
+            as.character(conds[perms[,i],]);
+        }))
+        perms <- t(perms[,!duplicated(t(permsConds))]);
+    }
     rm(permsConds);
     
     nPerm <- nrow(perms);
