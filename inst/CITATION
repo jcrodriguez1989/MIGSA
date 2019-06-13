@@ -1,0 +1,31 @@
+citHeader("To cite package 'MIGSA' in publications use:")
+
+citEntry(
+  entry="article",
+  title = paste0(
+  "Massive integrative gene set analysis enables functional characterization ",
+  "of breast cancer subtypes"),
+  author = c(
+    person(given = "Juan", middle = "C", family = "Rodriguez"),
+    person(given = "Gabriela", middle = "A", family = "Merino"),
+    person(given = "Andrea", middle = "S", family = "Llera"),
+    person(given = "Elmer", middle = "A", family = "Fernandez")
+  ),
+  journal = "Journal of Biomedical Informatics",
+  pages = "103157",
+  volume = "93",
+  year = 2019,
+  publisher = "Elsevier",
+  textVersion = paste0(
+    "Rodriguez, J. C., Merino, G. A., Llera, A. S., & Fernandez, E. A. ",
+    "(2019). Massive integrative gene set analysis enables functional ",
+    "characterization of breast cancer subtypes. Journal of Biomedical ",
+    "Informatics, 103157."
+  )
+)
+
+citFooter(paste0(
+  "This free open-source software implements academic research by the authors ",
+  "and co-workers. If you use it, please support the project by citing the ",
+  "appropriate journal article."
+))

@@ -118,6 +118,11 @@ hypothesis understanding.
 co-workers. Citations are the main means by which the authors receive 
 professional credit for their work. The \pkg{MIGSA} package can be cited as:
 \\
+\\ Rodriguez JC, Merino GA, Llera AS, Fern\'{a}ndez EA (2019).
+\\“Massive integrative gene set analysis enables functional characterization of 
+breast cancer subtypes.” \textit{Journal of Biomedical Informatics}, 
+\textbf{93}, 103157.
+\\
 \\ Rodriguez JC, Gonz\'{a}lez GA, Fresno C, Llera AS, Fern\'{a}ndez EA (2016).
 \\“Improving information retrieval in functional analysis.”
 \textit{Computers in Biology and Medicine}, \textbf{79}, 10–20.
