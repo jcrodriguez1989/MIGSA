@@ -3,7 +3,7 @@
 #'\code{enrichrGeneSets} lists the database names present at enrichr.
 #'\code{downloadEnrichrGeneSets} creates a list of GeneSetCollection 
 #'objects downloading the specified ones from enrichr website
-#' (http://amp.pharm.mssm.edu /Enrichr/).
+#' (https://amp.pharm.mssm.edu/Enrichr3/).
 #'
 #'@param pattern character indicating a pattern to filter the database names.
 #'@param geneSetNames list of characters with the names of the gene sets to 
@@ -69,7 +69,7 @@ setMethod(
         
         # enrichr url
         datasetStatisticsUrl <-
-                    "http://amp.pharm.mssm.edu/Enrichr/datasetStatistics";
+                    "https://amp.pharm.mssm.edu/Enrichr3/datasetStatistics";
         
         # donwload genesets list (basic info)
         datasetStatistics <- do.call(rbind,
@@ -121,7 +121,7 @@ setMethod(
     deleteMultipleEntrez=!FALSE) {
         # enrichr url
         downloadUrlFst <-
-"http://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=";
+"https://amp.pharm.mssm.edu/Enrichr3/geneSetLibrary?mode=text&libraryName=";
         
         # filtering invalid gene sets
         if (length(geneSetNames) < 1) {
