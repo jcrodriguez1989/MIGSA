@@ -3,7 +3,7 @@
 #'\code{enrichrGeneSets} lists the database names present at enrichr.
 #'\code{downloadEnrichrGeneSets} creates a list of GeneSetCollection 
 #'objects downloading the specified ones from enrichr website
-#' (https://amp.pharm.mssm.edu/Enrichr3/).
+#' (https://amp.pharm.mssm.edu/Enrichr/).
 #'
 #'@param pattern character indicating a pattern to filter the database names.
 #'@param geneSetNames list of characters with the names of the gene sets to 
@@ -69,7 +69,7 @@ setMethod(
         
         # enrichr url
         datasetStatisticsUrl <-
-                    "https://amp.pharm.mssm.edu/Enrichr3/datasetStatistics";
+                    "https://amp.pharm.mssm.edu/Enrichr/datasetStatistics";
         
         # donwload genesets list (basic info)
         datasetStatistics <- do.call(rbind,
@@ -78,17 +78,18 @@ setMethod(
         datasetStatistics <- data.frame(datasetStatistics);
         
         # giving some format
-        datasetStatistics[,2:4] <- apply(datasetStatistics[,2:4], 2,
-                                                                as.numeric);
-        datasetStatistics[,c(1,5)] <- apply(datasetStatistics[,c(1,5)], 2,
-                                                                as.character);
+        datasetStatistics[, c(1, 2, 5)] <- 
+            apply(datasetStatistics[, c(1, 2, 5)], 2, as.numeric);
+        datasetStatistics[, 3:4] <- 
+            apply(datasetStatistics[, 3:4], 2, as.character);
         
         # filtering with pattern (by default returns all)
         datasetStatistics <- datasetStatistics[
-            grep(pattern, datasetStatistics[,1], ignore.case=!FALSE), ];
+            grep(pattern, datasetStatistics$libraryName, ignore.case=!FALSE), ];
         
         # order by gene set name
-        datasetStatistics <- datasetStatistics[order(datasetStatistics[,1]),];
+        datasetStatistics <- 
+            datasetStatistics[order(datasetStatistics$libraryName),];
         
         return(datasetStatistics);
     }
@@ -121,7 +122,7 @@ setMethod(
     deleteMultipleEntrez=!FALSE) {
         # enrichr url
         downloadUrlFst <-
-"https://amp.pharm.mssm.edu/Enrichr3/geneSetLibrary?mode=text&libraryName=";
+"https://amp.pharm.mssm.edu/Enrichr/geneSetLibrary?mode=text&libraryName=";
         
         # filtering invalid gene sets
         if (length(geneSetNames) < 1) {
