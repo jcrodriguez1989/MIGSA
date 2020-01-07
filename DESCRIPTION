@@ -19,6 +19,7 @@ Description: Massive and Integrative Gene Set Analysis.
     to facilitate the data mining task over huge information sources.
     MIGSA package also provides several functions that allow to easily load 
     the most updated gene sets from several repositories.
+URL: https://jcrodriguez.rbind.io/
 biocViews: Software, GeneSetEnrichment, Visualization, GeneExpression, 
     Microarray, RNASeq, KEGG
 License: GPL (>= 2)
