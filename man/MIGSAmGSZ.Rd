@@ -8,9 +8,19 @@
 \usage{
 MIGSAmGSZ(x, y, l, ...)
 
-\S4method{MIGSAmGSZ}{matrix,list,vector}(x, y, l, use.voom = FALSE,
-  rankFunction = NA, min.sz = 5, pv = 0, w1 = 0.2, w2 = 0.5,
-  vc = 10, p = 200)
+\S4method{MIGSAmGSZ}{matrix,list,vector}(
+  x,
+  y,
+  l,
+  use.voom = FALSE,
+  rankFunction = NA,
+  min.sz = 5,
+  pv = 0,
+  w1 = 0.2,
+  w2 = 0.5,
+  vc = 10,
+  p = 200
+)
 }
 \arguments{
 \item{x}{gene expression data matrix (rows as genes and columns as samples).}

@@ -11,7 +11,7 @@
 \alias{downloadEnrichrGeneSets,ANY-method}
 \title{List and download gene sets from enrichr database}
 \usage{
-"Genesets-enrichr"(pattern)
+`Genesets-enrichr`(pattern)
 
 enrichrGeneSets(pattern = ".*")
 
@@ -19,8 +19,7 @@ enrichrGeneSets(pattern = ".*")
 
 downloadEnrichrGeneSets(geneSetNames, ...)
 
-\S4method{downloadEnrichrGeneSets}{character}(geneSetNames,
-  deleteMultipleEntrez = !FALSE)
+\S4method{downloadEnrichrGeneSets}{character}(geneSetNames, deleteMultipleEntrez = !FALSE)
 }
 \arguments{
 \item{pattern}{character indicating a pattern to filter the database names.}
@@ -45,7 +44,7 @@ their EntrezGene ID).
 \code{enrichrGeneSets} lists the database names present at enrichr.
 \code{downloadEnrichrGeneSets} creates a list of GeneSetCollection 
 objects downloading the specified ones from enrichr website
-(http://amp.pharm.mssm.edu /Enrichr/).
+(https://amp.pharm.mssm.edu/Enrichr/).
 }
 \examples{
 ## Lets list all the gene sets that can be downloaded from Enichr website.

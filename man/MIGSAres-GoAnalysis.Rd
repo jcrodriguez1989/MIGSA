@@ -12,18 +12,21 @@
 \alias{getHeights,character-method}
 \title{Explore Gene Ontology gene sets in MIGSAres}
 \usage{
-"MIGSAres-GOanalysis"(migsaRes)
+`MIGSAres-GOanalysis`(migsaRes)
 
 migsaGoTree(migsaRes, ...)
 
-\S4method{migsaGoTree}{MIGSAres}(migsaRes, categories = rep(NA,
-  ncol(migsaRes) - 3), categColors = "red", ont = "BP",
-  legendPos = "topleft")
+\S4method{migsaGoTree}{MIGSAres}(
+  migsaRes,
+  categories = rep(NA, ncol(migsaRes) - 3),
+  categColors = "red",
+  ont = "BP",
+  legendPos = "topleft"
+)
 
 goTree(treeInfo, ...)
 
-\S4method{goTree}{data.frame}(treeInfo, ont = "BP", legends = NA,
-  legendPos = "topleft")
+\S4method{goTree}{data.frame}(treeInfo, ont = "BP", legends = NA, legendPos = "topleft")
 
 getHeights(ids, ...)
 

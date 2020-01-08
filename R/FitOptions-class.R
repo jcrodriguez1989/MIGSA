@@ -122,3 +122,12 @@ FitOptions.data.frame <- function(x, formula, contrast, ...) {
                     contrast=contrast, design_matrix=act_design);
     return(.Object);
 }
+
+#'@inheritParams FitOptions-class
+#'@rdname FitOptions-class
+#'@aliases FitOptions.character
+#'@export FitOptions.character
+#'
+FitOptions.character <- function(x) {
+    FitOptions.default(x)
+}

@@ -9,7 +9,7 @@
 \alias{filterByGenes,MIGSAres,character-method}
 \title{Get or edit MIGSAres with/by genes that contributed to enrichment}
 \usage{
-"MIGSAres-genes"(migsaRes)
+`MIGSAres-genes`(migsaRes)
 
 genesInSets(migsaRes)
 

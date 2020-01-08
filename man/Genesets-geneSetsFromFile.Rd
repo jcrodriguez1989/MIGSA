@@ -38,7 +38,7 @@ gsets <- data.frame(
 
 ## And save this file as a tab separated file.
 geneSetsFile <- paste(tempdir(), "/fakeGsets.tsv", sep="");
-write.table(gsets, file=geneSetsFile, sep="\\t",
+write.table(gsets, file=geneSetsFile, sep="\t",
     col.names=FALSE, row.names=FALSE, quote=FALSE);
 
 ## Now lets load this tsv file as a GeneSetCollection object.

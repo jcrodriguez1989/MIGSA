@@ -29,7 +29,7 @@
 \alias{seaParams<-,IGSAinput-method}
 \title{Accessors for IGSAinput class}
 \usage{
-"IGSAinput-getterSetters"(object)
+`IGSAinput-getterSetters`(object)
 
 name(object)
 

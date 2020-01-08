@@ -3,7 +3,6 @@
 \docType{package}
 \name{MIGSAPackage}
 \alias{MIGSAPackage}
-\alias{MIGSAPackage-package}
 \title{MIGSA package}
 \description{
 The MIGSA package allows to perform a massive and integrative gene set 

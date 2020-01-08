@@ -14,29 +14,50 @@
 \alias{geneSetBarplot,MIGSAres-method}
 \title{MIGSAres plots}
 \usage{
-"MIGSAres-plots"(migsaRes)
+`MIGSAres-plots`(migsaRes)
 
 genesHeatmap(migsaRes, ...)
 
-\S4method{genesHeatmap}{MIGSAres}(migsaRes, enrFilter = 0,
-  gsFilter = 0, colPal = c("white", "red"), col.dist = NA,
-  row.dist = NA, layout = NA, dendrogram = "row")
+\S4method{genesHeatmap}{MIGSAres}(
+  migsaRes,
+  enrFilter = 0,
+  gsFilter = 0,
+  colPal = c("white", "red"),
+  col.dist = NA,
+  row.dist = NA,
+  layout = NA,
+  dendrogram = "row"
+)
 
 genesBarplot(migsaRes, ...)
 
-\S4method{genesBarplot}{MIGSAres}(migsaRes, enrFilter = 0,
-  gsFilter = 0)
+\S4method{genesBarplot}{MIGSAres}(migsaRes, enrFilter = 0, gsFilter = 0)
 
 migsaHeatmap(migsaRes, ...)
 
-\S4method{migsaHeatmap}{MIGSAres}(migsaRes, enrFilter = 0,
-  expFilter = 0, categories = list(), categLabels = TRUE,
-  colPal = c("white", "red"), col.dist = NA, row.dist = NA,
-  layout = NA, remove0Rows = TRUE, breaks = NA)
+\S4method{migsaHeatmap}{MIGSAres}(
+  migsaRes,
+  enrFilter = 0,
+  expFilter = 0,
+  categories = list(),
+  categLabels = TRUE,
+  colPal = c("white", "red"),
+  col.dist = NA,
+  row.dist = NA,
+  layout = NA,
+  remove0Rows = TRUE,
+  breaks = NA
+)
 
-\S4method{migsaHeatmap}{matrix}(migsaRes, categories = list(),
-  categLabels = TRUE, colPal = c("white", "red"), col.dist = NA,
-  row.dist = NA, layout = NA)
+\S4method{migsaHeatmap}{matrix}(
+  migsaRes,
+  categories = list(),
+  categLabels = TRUE,
+  colPal = c("white", "red"),
+  col.dist = NA,
+  row.dist = NA,
+  layout = NA
+)
 
 geneSetBarplot(migsaRes, ...)
 
@@ -96,8 +117,8 @@ each gene contributed to enrich. Each gene set counts 1 regardless if it was
 enriched in many experiments. x-axis each gene, y-axis number of gene sets 
 in which it contributed to enrich.
 \code{migsaHeatmap} plots the enrichment heatmap of the MIGSAres object. 
-Additionally, given the categories list, for each set of categories, it is 
-shown the number of experiments that make up each category (#exps), the 
+Additionally, given the categories sets list, for each set of categories, it 
+is shown the number of experiments that make up each category (#exps), the 
 number of gene sets enriched by at least one experiment (>= 1), and the 
 number of gene sets enriched by at least 25, 50, 75, and 100%.
 \code{geneSetBarplot} generates a barplot of the number of experiments in 

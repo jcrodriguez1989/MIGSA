@@ -6,6 +6,7 @@
 \alias{FitOptions}
 \alias{FitOptions.default}
 \alias{FitOptions.data.frame}
+\alias{FitOptions.character}
 \title{FitOptions S4 class implementation in R}
 \usage{
 FitOptions(x, ...)
@@ -13,6 +14,8 @@ FitOptions(x, ...)
 \method{FitOptions}{default}(x, ...)
 
 \method{FitOptions}{data.frame}(x, formula, contrast, ...)
+
+\method{FitOptions}{character}(x)
 }
 \arguments{
 \item{x}{There are two options for x:
