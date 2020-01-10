@@ -24,7 +24,6 @@ setGeneric(name="MIGSA", def=function(igsaInputs, ...) {
     standardGeneric("MIGSA")
 })
 
-#'@inheritParams MIGSA
 #'@rdname MIGSA
 #'@aliases MIGSA,list
 #'

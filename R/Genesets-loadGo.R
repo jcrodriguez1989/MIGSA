@@ -21,7 +21,6 @@ setGeneric(name="loadGo", def=function(ontology) {
 })
 
 #'@rdname Genesets-loadGo
-#'@inheritParams loadGo
 #'@aliases loadGo,character-method
 #'
 #'@importFrom AnnotationDbi as.list mappedkeys Ontology Term

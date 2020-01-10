@@ -81,7 +81,6 @@ setMethod("dim",
     }
 )
 
-#'@inheritParams MIGSAres exploratory functions
 #'@rdname MIGSAres-common
 #'@aliases $,MIGSAres-method
 #'@include MIGSAres.R
@@ -97,7 +96,6 @@ setMethod("$",
     }
 )
 
-#'@inheritParams MIGSAres exploratory functions
 #'@rdname MIGSAres-common
 #'@aliases colnames,MIGSAres
 #'@exportMethod colnames
@@ -112,7 +110,6 @@ setMethod("colnames",
 
 ## todo: define colnames(migsaRes) <-
 
-#'@inheritParams MIGSAres exploratory functions
 #'@rdname MIGSAres-common
 #'@aliases head,MIGSAres
 #'@exportMethod head
@@ -126,7 +123,6 @@ setMethod("head",
     }
 )
 
-#'@inheritParams MIGSAres exploratory functions
 #'@rdname MIGSAres-common
 #'@aliases tail,MIGSAres
 #'@exportMethod tail
@@ -140,7 +136,6 @@ setMethod("tail",
     }
 )
 
-#'@inheritParams MIGSAres exploratory functions
 #'@rdname MIGSAres-common
 #'@aliases [,MIGSAres,ANY,ANY,ANY-method
 #'@include MIGSAres.R
@@ -186,7 +181,6 @@ setMethod("[",
     }
 )
 
-#'@inheritParams MIGSAres exploratory functions
 #'@rdname MIGSAres-common
 #'@aliases show,MIGSAres
 #'@include MIGSAres.R
@@ -202,7 +196,6 @@ setMethod("show",
     }
 )
 
-#'@inheritParams MIGSAres exploratory functions
 #'@rdname MIGSAres-common
 #'@aliases as.data.frame,MIGSAres
 #'@include MIGSAres.R
@@ -217,7 +210,6 @@ setMethod(
     }
 )
 
-#'@inheritParams MIGSAres exploratory functions
 #'@rdname MIGSAres-common
 #'@aliases merge,MIGSAres,MIGSAres
 #'@include MIGSAres.R

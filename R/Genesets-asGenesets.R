@@ -25,7 +25,6 @@ setGeneric("as.Genesets", def=function(x, ...) {
 })
 
 #'@rdname Genesets-as.Genesets
-#'@inheritParams as.Genesets
 #'@aliases as.Genesets,list-method
 #'
 #'@importFrom GSEABase GeneSet GeneSetCollection GOCollection NullCollection

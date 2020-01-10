@@ -45,7 +45,6 @@ setGeneric(name="Genesets-enrichr", def=function(pattern) {
 })
 
 #'@name enrichrGeneSets
-#'@inheritParams Genesets-enrichr
 #'@rdname Genesets-enrichr
 #'@aliases enrichrGeneSets,character-method
 #'@exportMethod enrichrGeneSets
@@ -54,7 +53,6 @@ setGeneric(name="enrichrGeneSets", def=function(pattern=".*") {
     standardGeneric("enrichrGeneSets")
 })
 
-#'@inheritParams Genesets-enrichr
 #'@rdname Genesets-enrichr
 #'@aliases enrichrGeneSets,character-method
 #'
@@ -96,7 +94,6 @@ setMethod(
 )
 
 #'@name downloadEnrichrGeneSets
-#'@inheritParams Genesets-enrichr
 #'@rdname Genesets-enrichr
 #'@aliases downloadEnrichrGeneSets,character-method
 #'@exportMethod downloadEnrichrGeneSets
@@ -105,7 +102,6 @@ setGeneric(name="downloadEnrichrGeneSets", def=function(geneSetNames, ...) {
     standardGeneric("downloadEnrichrGeneSets")
 })
 
-#'@inheritParams Genesets-enrichr
 #'@rdname Genesets-enrichr
 #'@aliases downloadEnrichrGeneSets,ANY-method
 #'

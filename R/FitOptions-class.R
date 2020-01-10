@@ -72,7 +72,6 @@ setClass(
     }
 )
 
-#'@inheritParams FitOptions-class
 #'@rdname FitOptions-class
 #'@export FitOptions
 #'
@@ -80,10 +79,10 @@ FitOptions <- function(x, ...) {
     UseMethod("FitOptions", x);
 }
 
-#'@inheritParams FitOptions-class
 #'@rdname FitOptions-class
 #'@aliases FitOptions.default
 #'@export FitOptions.default
+#'@rawNamespace S3method(FitOptions, default)
 #'@importFrom stats model.matrix
 #'
 FitOptions.default <- function(x, ...) {
@@ -105,10 +104,10 @@ FitOptions.default <- function(x, ...) {
     return(.Object);
 }
 
-#'@inheritParams FitOptions-class
 #'@rdname FitOptions-class
 #'@aliases FitOptions.data.frame
 #'@export FitOptions.data.frame
+#'@rawNamespace S3method(FitOptions, data.frame)
 #'@importFrom stats model.matrix
 #'
 FitOptions.data.frame <- function(x, formula, contrast, ...) {
@@ -121,13 +120,4 @@ FitOptions.data.frame <- function(x, formula, contrast, ...) {
     .Object <- new("FitOptions", col_data=x, formula=formula, 
                     contrast=contrast, design_matrix=act_design);
     return(.Object);
-}
-
-#'@inheritParams FitOptions-class
-#'@rdname FitOptions-class
-#'@aliases FitOptions.character
-#'@export FitOptions.character
-#'
-FitOptions.character <- function(x) {
-    FitOptions.default(x)
 }

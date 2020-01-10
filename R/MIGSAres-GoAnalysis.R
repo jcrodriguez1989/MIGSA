@@ -61,7 +61,6 @@ setGeneric(name="MIGSAres-GOanalysis", def=function(migsaRes) {
 })
 
 #'@name migsaGoTree
-#'@inheritParams MIGSAres-GOanalysis
 #'@rdname MIGSAres-GoAnalysis
 #'@aliases migsaGoTree,MIGSAres-method
 #'@exportMethod migsaGoTree
@@ -70,7 +69,6 @@ setGeneric(name="migsaGoTree", def=function(migsaRes, ...) {
     standardGeneric("migsaGoTree")
 })
 
-#'@inheritParams MIGSAres-GOanalysis
 #'@rdname MIGSAres-GoAnalysis
 #'@aliases migsaGoTree,MIGSAres-method
 #'
@@ -166,7 +164,6 @@ setMethod(
 )
 
 #'@name goTree
-#'@inheritParams MIGSAres-GOanalysis
 #'@rdname MIGSAres-GoAnalysis
 #'@aliases goTree,MIGSAres-method
 #'@exportMethod goTree
@@ -175,7 +172,6 @@ setGeneric(name="goTree", def=function(treeInfo, ...) {
     standardGeneric("goTree")
 })
 
-#'@inheritParams MIGSAres-GOanalysis
 #'@rdname MIGSAres-GoAnalysis
 #'@aliases goTree,MIGSAres-method
 #'
@@ -209,7 +205,6 @@ setMethod(
 )
 
 #'@name getHeights
-#'@inheritParams MIGSAres-GOanalysis
 #'@rdname MIGSAres-GoAnalysis
 #'@aliases getHeights,character-method
 #'@exportMethod getHeights
@@ -218,7 +213,6 @@ setGeneric(name="getHeights", def=function(ids, ...) {
     standardGeneric("getHeights")
 })
 
-#'@inheritParams MIGSAres-GOanalysis
 #'@rdname MIGSAres-GoAnalysis
 #'@aliases getHeights,character-method
 #'

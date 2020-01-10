@@ -52,6 +52,8 @@
 #'@method summary SEAparams
 #'@aliases summary,SEAparams-method
 #'@export summary.SEAparams
+#'@rawNamespace S3method(summary, SEAparams)
+#'
 summary.SEAparams <- function(object, ...) {
     stopifnot(validObject(object));
     
@@ -71,12 +73,12 @@ summary.SEAparams <- function(object, ...) {
     return(res);
 }
 
-#'@inheritParams summary
 #'@rdname summaryFunctions
 #'@include GSEAparams-class.R
 #'@method summary GSEAparams
 #'@aliases summary,GSEAparams-method
 #'@export summary.GSEAparams
+#'@rawNamespace S3method(summary, GSEAparams)
 #'
 summary.GSEAparams <- function(object, ...) {
     stopifnot(validObject(object));
@@ -89,12 +91,12 @@ summary.GSEAparams <- function(object, ...) {
     return(res);
 }
 
-#'@inheritParams summary
 #'@rdname summaryFunctions
 #'@include IGSAinput-class.R
 #'@method summary IGSAinput
 #'@aliases summary,IGSAinput-method
 #'@export summary.IGSAinput
+#'@rawNamespace S3method(summary, IGSAinput)
 #'
 summary.IGSAinput <- function(object, ...) {
     validObject(object);
@@ -130,13 +132,13 @@ summary.IGSAinput <- function(object, ...) {
     return(res);
 }
 
-#'@inheritParams summary
 #'@rdname summaryFunctions
 #'@include MIGSAres-class.R
 #'@importFrom futile.logger flog.info
 #'@method summary MIGSAres
 #'@aliases summary,MIGSAres-method
 #'@export summary.MIGSAres
+#'@rawNamespace S3method(summary, MIGSAres)
 #'
 summary.MIGSAres <- function(object, ...) {
     stopifnot(validObject(object));

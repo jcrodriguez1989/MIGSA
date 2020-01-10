@@ -22,7 +22,6 @@ setGeneric(name="getDEGenes", def=function(igsaInput) {
     standardGeneric("getDEGenes")
 })
 
-#'@inheritParams getDEGenes
 #'@rdname IGSAinput-getDEGenes
 #'@aliases getDEGenes,IGSAinput
 #'@examples

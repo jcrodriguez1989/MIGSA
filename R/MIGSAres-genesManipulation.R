@@ -50,7 +50,6 @@ setGeneric(name="MIGSAres-genes", def=function(migsaRes) {
 })
 
 #'@name genesInSets
-#'@inheritParams MIGSAres-genes
 #'@rdname MIGSAres-genesManipulation
 #'@aliases genesInSets,MIGSAres-method
 #'@exportMethod genesInSets
@@ -59,7 +58,6 @@ setGeneric(name="genesInSets", def=function(migsaRes) {
     standardGeneric("genesInSets")
 })
 
-#'@inheritParams MIGSAres-genes
 #'@rdname MIGSAres-genesManipulation
 #'@aliases genesInSets,MIGSAres-method
 #'@include MIGSAres-setEnrCutoff.R
@@ -147,7 +145,6 @@ setMethod(
 )
 
 #'@name filterByGenes
-#'@inheritParams MIGSAres-genes
 #'@rdname MIGSAres-genesManipulation
 #'@aliases filterByGenes,MIGSAres,character-method
 #'@exportMethod filterByGenes
@@ -156,7 +153,6 @@ setGeneric(name="filterByGenes", def=function(migsaRes, genes) {
     standardGeneric("filterByGenes")
 })
 
-#'@inheritParams MIGSAres-genes
 #'@rdname MIGSAres-genesManipulation
 #'@aliases filterByGenes,MIGSAres,character-method
 #'@include MIGSAres-setEnrCutoff.R

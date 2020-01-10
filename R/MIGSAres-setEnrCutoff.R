@@ -20,7 +20,6 @@ setGeneric(name="setEnrCutoff", def=function(object, newEnrCutoff) {
     standardGeneric("setEnrCutoff");
 })
 
-#'@inheritParams setEnrCutoff
 #'@rdname MIGSAres-setEnrCutoff
 #'@aliases setEnrCutoff,MIGSAres,numeric-method
 #'@examples

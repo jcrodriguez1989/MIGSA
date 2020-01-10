@@ -16,7 +16,6 @@ setGeneric(name="getAdditionalInfo", def=function(migsaRes) {
     standardGeneric("getAdditionalInfo")
 })
 
-#'@inheritParams getAdditionalInfo
 #'@rdname MIGSAres-getAdditionalInfo
 #'@aliases getAdditionalInfo,MIGSAres
 #'@include MIGSAres-class.R

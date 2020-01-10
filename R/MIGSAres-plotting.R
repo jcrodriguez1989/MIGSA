@@ -101,7 +101,6 @@ setGeneric(name="MIGSAres-plots", def=function(migsaRes) {
 })
 
 #'@name genesHeatmap
-#'@inheritParams MIGSAres-plots
 #'@rdname MIGSAres-plots
 #'@aliases genesHeatmap,MIGSAres-method
 #'@exportMethod genesHeatmap
@@ -110,7 +109,6 @@ setGeneric(name="genesHeatmap", def=function(migsaRes, ...) {
     standardGeneric("genesHeatmap")
 })
 
-#'@inheritParams MIGSAres-plots
 #'@rdname MIGSAres-plots
 #'@aliases genesHeatmap,MIGSAres-method
 #'
@@ -248,7 +246,6 @@ setMethod(f="genesHeatmap",
 )
 
 #'@name genesBarplot
-#'@inheritParams MIGSAres-plots
 #'@rdname MIGSAres-plots
 #'@aliases genesBarplot,MIGSAres-method
 #'@exportMethod genesBarplot
@@ -257,7 +254,6 @@ setGeneric(name="genesBarplot", def=function(migsaRes, ...) {
     standardGeneric("genesBarplot")
 })
 
-#'@inheritParams MIGSAres-plots
 #'@rdname MIGSAres-plots
 #'@aliases genesBarplot,MIGSAres-method
 #'
@@ -304,7 +300,6 @@ setMethod(
 )
 
 #'@name migsaHeatmap
-#'@inheritParams MIGSAres-plots
 #'@rdname MIGSAres-plots
 #'@aliases migsaHeatmap,MIGSAres-method
 #'@exportMethod migsaHeatmap
@@ -313,7 +308,6 @@ setGeneric(name="migsaHeatmap", def=function(migsaRes, ...) {
     standardGeneric("migsaHeatmap")
 })
 
-#'@inheritParams MIGSAres-plots
 #'@rdname MIGSAres-plots
 #'@aliases migsaHeatmap,MIGSAres-method
 #'
@@ -378,7 +372,6 @@ setMethod(
     }
 )
 
-#'@inheritParams MIGSAres-plots
 #'@rdname MIGSAres-plots
 #'@aliases migsaHeatmap,matrix-method
 #'
@@ -544,7 +537,6 @@ setMethod(
 )
 
 #'@name geneSetBarplot
-#'@inheritParams MIGSAres-plots
 #'@rdname MIGSAres-plots
 #'@aliases geneSetBarplot,MIGSAres-method
 #'@exportMethod geneSetBarplot
@@ -553,7 +545,6 @@ setGeneric(name="geneSetBarplot", def=function(migsaRes, ...) {
     standardGeneric("geneSetBarplot")
 })
 
-#'@inheritParams MIGSAres-plots
 #'@rdname MIGSAres-plots
 #'@aliases geneSetBarplot,MIGSAres-method
 #'

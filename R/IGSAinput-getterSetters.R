@@ -41,7 +41,6 @@ setGeneric(name="IGSAinput-getterSetters", def=function(object) {
 })
 
 #'@name name
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases name,IGSAinput-method
 #'@exportMethod name
@@ -50,7 +49,6 @@ setGeneric(name="name", def=function(object) {
     standardGeneric("name")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases name,IGSAinput-method
 #'
@@ -61,7 +59,6 @@ setMethod(f="name", signature="IGSAinput",
 )
 
 #'@name name<-
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases name<-,IGSAinput-method
 #'@exportMethod name<-
@@ -70,7 +67,6 @@ setGeneric(name="name<-", def=function(object, value) {
     standardGeneric("name<-")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases name<-,IGSAinput-method
 #'
@@ -83,7 +79,6 @@ setReplaceMethod(f="name", signature="IGSAinput",
 )
 
 #'@name fitOptions
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases fitOptions,IGSAinput-method
 #'@exportMethod fitOptions
@@ -92,7 +87,6 @@ setGeneric(name="fitOptions", def=function(object) {
     standardGeneric("fitOptions")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases fitOptions,IGSAinput-method
 #'
@@ -103,7 +97,6 @@ setMethod(f="fitOptions", signature="IGSAinput",
 )
 
 #'@name fitOptions<-
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases fitOptions<-,IGSAinput-method
 #'@exportMethod fitOptions<-
@@ -112,7 +105,6 @@ setGeneric(name="fitOptions<-", def=function(object, value) {
     standardGeneric("fitOptions<-")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases fitOptions<-,IGSAinput-method
 #'
@@ -125,7 +117,6 @@ setReplaceMethod(f="fitOptions", signature="IGSAinput",
 )
 
 #'@name exprData
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases exprData,IGSAinput-method
 #'@exportMethod exprData
@@ -134,7 +125,6 @@ setGeneric(name="exprData", def=function(object) {
     standardGeneric("exprData")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases exprData,IGSAinput-method
 #'
@@ -145,7 +135,6 @@ setMethod(f="exprData", signature="IGSAinput",
 )
 
 #'@name exprData<-
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases exprData<-,IGSAinput-method
 #'@exportMethod exprData<-
@@ -154,7 +143,6 @@ setGeneric(name="exprData<-", def=function(object, value) {
     standardGeneric("exprData<-")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases exprData<-,IGSAinput-method
 #'
@@ -167,7 +155,6 @@ setReplaceMethod(f="exprData", signature="IGSAinput",
 )
 
 #'@name geneSetsList
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases geneSetsList,IGSAinput-method
 #'@exportMethod geneSetsList
@@ -176,7 +163,6 @@ setGeneric(name="geneSetsList", def=function(object) {
     standardGeneric("geneSetsList")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases geneSetsList,IGSAinput-method
 #'
@@ -187,7 +173,6 @@ setMethod(f="geneSetsList", signature="IGSAinput",
 )
 
 #'@name geneSetsList<-
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases geneSetsList<-,IGSAinput-method
 #'@exportMethod geneSetsList<-
@@ -196,7 +181,6 @@ setGeneric(name="geneSetsList<-", def=function(object, value) {
     standardGeneric("geneSetsList<-")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases geneSetsList<-,IGSAinput-method
 #'
@@ -209,7 +193,6 @@ setReplaceMethod(f="geneSetsList", signature="IGSAinput",
 )
 
 #'@name gseaParams
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases gseaParams,IGSAinput-method
 #'@exportMethod gseaParams
@@ -218,7 +201,6 @@ setGeneric(name="gseaParams", def=function(object) {
     standardGeneric("gseaParams")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases gseaParams,IGSAinput-method
 #'
@@ -229,7 +211,6 @@ setMethod(f="gseaParams", signature="IGSAinput",
 )
 
 #'@name gseaParams<-
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases gseaParams<-,IGSAinput-method
 #'@exportMethod gseaParams<-
@@ -238,7 +219,6 @@ setGeneric(name="gseaParams<-", def=function(object, value) {
     standardGeneric("gseaParams<-")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases gseaParams<-,IGSAinput-method
 #'
@@ -251,7 +231,6 @@ setReplaceMethod(f="gseaParams", signature="IGSAinput",
 )
 
 #'@name seaParams
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases seaParams,IGSAinput-method
 #'@exportMethod seaParams
@@ -260,7 +239,6 @@ setGeneric(name="seaParams", def=function(object) {
     standardGeneric("seaParams")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases seaParams,IGSAinput-method
 #'
@@ -271,7 +249,6 @@ setMethod(f="seaParams", signature="IGSAinput",
 )
 
 #'@name seaParams<-
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases seaParams<-,IGSAinput-method
 #'@exportMethod seaParams<-
@@ -280,7 +257,6 @@ setGeneric(name="seaParams<-", def=function(object, value) {
     standardGeneric("seaParams<-")
 })
 
-#'@inheritParams IGSAinput-getterSetters
 #'@rdname IGSAinput-getterSetters
 #'@aliases seaParams<-,IGSAinput-method
 #'

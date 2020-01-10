@@ -45,7 +45,6 @@ setGeneric(name="geneSetsFromFile", def=function(filePath, ... ) {
 })
 
 #'@rdname Genesets-geneSetsFromFile
-#'@inheritParams geneSetsFromFile
 #'@aliases geneSetsFromFile,character-method
 #'
 #'@importFrom futile.logger flog.error

@@ -39,7 +39,6 @@ setGeneric(name="MIGSAmGSZ", def=function(x, y, l, ...) {
     standardGeneric("MIGSAmGSZ")
 })
 
-#'@inheritParams MIGSAmGSZ
 #'@rdname MIGSAmGSZ
 #'@aliases MIGSAmGSZ,matrix,list,vector-method
 #'
