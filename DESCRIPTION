@@ -1,7 +1,7 @@
 Package: MIGSA
 Type: Package
 Title: Massive and Integrative Gene Set Analysis
-Version: 1.11.5
+Version: 1.11.6
 Date: 2016-03-02
 Author: Juan C. Rodriguez, Cristobal Fresno, Andrea S. Llera and Elmer A. 
     Fernandez
@@ -28,12 +28,14 @@ Depends:
     methods,
     BiocGenerics
 Suggests:
+    BiocStyle,
     breastCancerMAINZ,
     breastCancerNKI,
     breastCancerTRANSBIG,
     breastCancerUNT,
     breastCancerUPP,
     breastCancerVDX,
+    knitr,
     mGSZ,
     MIGSAdata
 Imports:
