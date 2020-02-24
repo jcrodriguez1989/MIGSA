@@ -9,6 +9,6 @@
 see \code{\link{MIGSA}}
 }
 \description{
-A MIGSA results object (MIGSAres) obtained using the code present as example 
+A MIGSA results object (MIGSAres) obtained using the code present as example
 in \link{MIGSA} man page.
 }

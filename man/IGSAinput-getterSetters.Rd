@@ -93,26 +93,25 @@ Getters and setters functions to access IGSAinput object slots.
 \examples{
 ## Lets create a basic IGSAinput object.
 ## First create a expression matrix.
-maData <- matrix(rnorm(10000),ncol=4);
-rownames(maData) <- 1:nrow(maData); # It must have rownames (gene names).
-maExprData <- new("MAList",list(M=maData));
-
+maData <- matrix(rnorm(10000), ncol = 4)
+rownames(maData) <- 1:nrow(maData)
+# It must have rownames (gene names).
+maExprData <- new("MAList", list(M = maData))
 ## Now lets create the FitOptions object.
-myFOpts <- FitOptions(c("Cond1", "Cond1", "Cond2", "Cond2"));
-
+myFOpts <- FitOptions(c("Cond1", "Cond1", "Cond2", "Cond2"))
 ## And now we can create our IGSAinput ready for MIGSA.
-igsaInput <- IGSAinput(name="igsaInput", expr_data=maExprData, 
-fit_options=myFOpts);
-
+igsaInput <- IGSAinput(
+  name = "igsaInput", expr_data = maExprData,
+  fit_options = myFOpts
+)
 ## Lets get igsaInput values, and modify its name.
-name(igsaInput);
-name(igsaInput) <- "newName";
-fitOptions(igsaInput); 
-exprData(igsaInput);
-geneSetsList(igsaInput);
-gseaParams(igsaInput);
-seaParams(igsaInput);
-
+name(igsaInput)
+name(igsaInput) <- "newName"
+fitOptions(igsaInput)
+exprData(igsaInput)
+geneSetsList(igsaInput)
+gseaParams(igsaInput)
+seaParams(igsaInput)
 }
 \seealso{
 \code{\link{IGSAinput-class}}

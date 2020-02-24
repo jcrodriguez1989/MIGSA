@@ -68,20 +68,20 @@ geneSetBarplot(migsaRes, ...)
 
 \item{...}{not in use.}
 
-\item{enrFilter}{numeric. Keep gene sets enriched in at least enrFilter 
+\item{enrFilter}{numeric. Keep gene sets enriched in at least enrFilter
 experiments.}
 
 \item{gsFilter}{numeric. Keep genes enriched in at least gsFilter gene sets.}
 
-\item{colPal}{vector. Character vector of two colors, first value will 
+\item{colPal}{vector. Character vector of two colors, first value will
 represent FALSE/1 on heatmap, and second value TRUE/0.}
 
-\item{col.dist}{character. Distance algorithm to be used in columns, passed 
-to vegdist function. If migsaRes has cutoff then default is jaccard, else, 
+\item{col.dist}{character. Distance algorithm to be used in columns, passed
+to vegdist function. If migsaRes has cutoff then default is jaccard, else,
 default is euclidean.}
 
-\item{row.dist}{character. Distance algorithm to be used in rows, passed to 
-vegdist function. If migsaRes has cutoff then default is jaccard, else, 
+\item{row.dist}{character. Distance algorithm to be used in rows, passed to
+vegdist function. If migsaRes has cutoff then default is jaccard, else,
 default is euclidean.}
 
 \item{layout}{matrix. The layout used for heatmaps.}
@@ -89,84 +89,75 @@ default is euclidean.}
 \item{dendrogram}{character. Wheter to plot "row", "col", "none" or "both"
 dendrograms.}
 
-\item{expFilter}{numeric. Keep experiments which enriched at least expFilter 
+\item{expFilter}{numeric. Keep experiments which enriched at least expFilter
 gene sets.}
 
 \item{categories}{list. List of character vectors, each vector must have the
-same length as the number of experiments (ncol(migsaRes)-3). It will plot 
+same length as the number of experiments (ncol(migsaRes)-3). It will plot
 for each category/column a color representing its category.}
 
-\item{categLabels}{logical. Indicates if labels should be plotted for each 
+\item{categLabels}{logical. Indicates if labels should be plotted for each
 category.}
 
-\item{remove0Rows}{logical. Whether remove gene sets that are not enriched in 
+\item{remove0Rows}{logical. Whether remove gene sets that are not enriched in
 any experiment.}
 
-\item{breaks}{numeric. If migsaRes does not have cutoff then break P-values 
+\item{breaks}{numeric. If migsaRes does not have cutoff then break P-values
 in breaks intervals.}
 }
 \value{
-In heatmap functions: A list returned by heatmap.2 function 
+In heatmap functions: A list returned by heatmap.2 function
 (plotted data). In other functions: A ggplot object used as graphic.
 }
 \description{
-\code{genesHeatmap} plots a heatmap with the number of experiments in which 
+\code{genesHeatmap} plots a heatmap with the number of experiments in which
 each gene contributed to enrich each gene set.
-\code{genesBarplot} generates a barplot of the number of gene sets in which 
-each gene contributed to enrich. Each gene set counts 1 regardless if it was 
-enriched in many experiments. x-axis each gene, y-axis number of gene sets 
+\code{genesBarplot} generates a barplot of the number of gene sets in which
+each gene contributed to enrich. Each gene set counts 1 regardless if it was
+enriched in many experiments. x-axis each gene, y-axis number of gene sets
 in which it contributed to enrich.
-\code{migsaHeatmap} plots the enrichment heatmap of the MIGSAres object. 
-Additionally, given the categories sets list, for each set of categories, it 
-is shown the number of experiments that make up each category (#exps), the 
-number of gene sets enriched by at least one experiment (>= 1), and the 
+\code{migsaHeatmap} plots the enrichment heatmap of the MIGSAres object.
+Additionally, given the categories sets list, for each set of categories, it
+is shown the number of experiments that make up each category (#exps), the
+number of gene sets enriched by at least one experiment (>= 1), and the
 number of gene sets enriched by at least 25, 50, 75, and 100%.
-\code{geneSetBarplot} generates a barplot of the number of experiments in 
-which each gene set was enriched. x-axis each gene set, y-axis times it was 
+\code{geneSetBarplot} generates a barplot of the number of experiments in
+which each gene set was enriched. x-axis each gene set, y-axis times it was
 enriched (0 to #experiments).
 }
 \examples{
-data(migsaRes);
+data(migsaRes)
 ## For this example lets work with the first 50 results
-migsaRes <- migsaRes[1:50,];
-
+migsaRes <- migsaRes[1:50, ]
 #### genesHeatmap
 ## First lets set a cutoff of 0.1
-migsaResWCoff <- setEnrCutoff(migsaRes, 0.1);
-
-## Lets check what genes contributed to enrich the highest number of gene 
+migsaResWCoff <- setEnrCutoff(migsaRes, 0.1)
+## Lets check what genes contributed to enrich the highest number of gene
 ## sets (in more than one gene set).
-genesHeatmap(migsaResWCoff, gsFilter=1);
-
-## Moreover we can keep gene sets which where enriched in more than 
+genesHeatmap(migsaResWCoff, gsFilter = 1)
+## Moreover we can keep gene sets which where enriched in more than
 ## enrFilter experiments. To do this, we can use the enrFilter parameter.
 
 #### genesBarplot
 ## Lets set a cutoff of 0.01
-migsaResWCoff <- setEnrCutoff(migsaRes, 0.01);
-
-## Lets check what genes contributed to enrich the highest number of gene 
+migsaResWCoff <- setEnrCutoff(migsaRes, 0.01)
+## Lets check what genes contributed to enrich the highest number of gene
 ## sets (in more than one gene set).
-genesBarplot(migsaResWCoff, gsFilter=1);
-
-## Moreover we can keep gene sets which where enriched in more than 
+genesBarplot(migsaResWCoff, gsFilter = 1)
+## Moreover we can keep gene sets which where enriched in more than
 ## enrFilter experiments. To do this, we can use the enrFilter parameter.
 
 #### migsaHeatmap
 ## Lets set a cutoff of 0.1
-migsaResWCoff <- setEnrCutoff(migsaRes, 0.1);
-
+migsaResWCoff <- setEnrCutoff(migsaRes, 0.1)
 ## Lets visually check enriched gene sets shared between experiments.
-migsaHeatmap(migsaResWCoff);
-
+migsaHeatmap(migsaResWCoff)
 #### geneSetBarplot
 ## Lets set a cutoff of 0.1
-migsaResWCoff <- setEnrCutoff(migsaRes, 0.1);
-
-## Lets check in how many experiments each gene set was enriched (in more 
+migsaResWCoff <- setEnrCutoff(migsaRes, 0.1)
+## Lets check in how many experiments each gene set was enriched (in more
 ## than one experiment).
-geneSetBarplot(migsaResWCoff, enrFilter=1);
-
+geneSetBarplot(migsaResWCoff, enrFilter = 1)
 }
 \seealso{
 \code{\link{setEnrCutoff}}

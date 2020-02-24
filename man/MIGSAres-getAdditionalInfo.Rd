@@ -18,24 +18,23 @@ getAdditionalInfo(migsaRes)
 data.frame with additional information for each analyzed gene set.
 }
 \description{
-\code{getAdditionalInfo} gets additional enrichment information of the 
+\code{getAdditionalInfo} gets additional enrichment information of the
 analysis done.
 }
 \examples{
-data(migsaRes);
-
+data(migsaRes)
 ## Lets get additional enrichment information of the MIGSAres object.
-adtnlInfo <- getAdditionalInfo(migsaRes);
-dim(adtnlInfo); # it is a huge data.frame
+adtnlInfo <- getAdditionalInfo(migsaRes)
+dim(adtnlInfo)
+# it is a huge data.frame
 
-## This huge amount of information commonly is not that interesting. Lets 
-## keep the gene sets that were enriched in every experiment and check that 
+## This huge amount of information commonly is not that interesting. Lets
+## keep the gene sets that were enriched in every experiment and check that
 ## information. Lets set a cutoff of 0.1.
-migsaResWCoff <- setEnrCutoff(migsaRes, 0.1);
-migsaResFiltered <- migsaResWCoff[rowSums(migsaResWCoff[,4:5]) == 2,];
-adtnlInfo <- getAdditionalInfo(migsaResFiltered);
-dim(adtnlInfo);
-
+migsaResWCoff <- setEnrCutoff(migsaRes, 0.1)
+migsaResFiltered <- migsaResWCoff[rowSums(migsaResWCoff[, 4:5]) == 2, ]
+adtnlInfo <- getAdditionalInfo(migsaResFiltered)
+dim(adtnlInfo)
 }
 \seealso{
 \code{\link{setEnrCutoff}}

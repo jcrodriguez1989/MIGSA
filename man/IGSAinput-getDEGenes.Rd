@@ -18,28 +18,27 @@ getDEGenes(igsaInput)
 A IGSAinput object with the updated slots and DE genes calculated.
 }
 \description{
-\code{getDEGenes} calculates the differentialy expressed genes of an 
-IGSAinput object using the expression matrix, the FitOtions and the 
+\code{getDEGenes} calculates the differentialy expressed genes of an
+IGSAinput object using the expression matrix, the FitOtions and the
 SEAparams..
 }
 \examples{
 ## Lets create a basic IGSAinput object.
 ## First create a expression matrix.
-maData <- matrix(rnorm(10000),ncol=4);
-rownames(maData) <- 1:nrow(maData); # It must have rownames (gene names).
-maExprData <- new("MAList",list(M=maData));
-
+maData <- matrix(rnorm(10000), ncol = 4)
+rownames(maData) <- 1:nrow(maData)
+# It must have rownames (gene names).
+maExprData <- new("MAList", list(M = maData))
 ## Now lets create the FitOptions object.
-myFOpts <- FitOptions(c("Cond1", "Cond1", "Cond2", "Cond2"));
-
+myFOpts <- FitOptions(c("Cond1", "Cond1", "Cond2", "Cond2"))
 ## Lets create our IGSAinput object.
-myIgsaInput <- IGSAinput(name="myIgsaInput", expr_data=maExprData, 
-fit_options=myFOpts);
-
+myIgsaInput <- IGSAinput(
+  name = "myIgsaInput", expr_data = maExprData,
+  fit_options = myFOpts
+)
 ## And check how many differentialy expressed genes does it get with actual
 ## parameters.
-aux <- getDEGenes(myIgsaInput);
-
+aux <- getDEGenes(myIgsaInput)
 }
 \seealso{
 \code{\link{IGSAinput-class}}

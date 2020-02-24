@@ -24,22 +24,18 @@ A MIGSAres object with the updated slots.
 order to get detailed enrichment results.
 }
 \examples{
-data(migsaRes);
-## After executing MIGSA, the MIGSAres object does not have an enrichment 
+data(migsaRes)
+## After executing MIGSA, the MIGSAres object does not have an enrichment
 ## cutoff set, so it will be shown as follows:
-head(migsaRes);
-
+head(migsaRes)
 ## Now lets set an enrichment cutoff, and then show again the object.
-migsaResWCoff <- setEnrCutoff(migsaRes, 0.01);
-head(migsaResWCoff);
-
-## So now we can do stuff like check how many gene sets are enriched in both 
-## experiments, in each one, etc. Moreover now we can do different MIGSAres 
+migsaResWCoff <- setEnrCutoff(migsaRes, 0.01)
+head(migsaResWCoff)
+## So now we can do stuff like check how many gene sets are enriched in both
+## experiments, in each one, etc. Moreover now we can do different MIGSAres
 ## plots available in MIGSA package.
-table(migsaResWCoff[, c("igsaInput1", "igsaInput2")]);
-
+table(migsaResWCoff[, c("igsaInput1", "igsaInput2")])
 ## And with different cutoffs.
-migsaResWCoff <- setEnrCutoff(migsaRes, 0.1);
-table(migsaResWCoff[, c("igsaInput1", "igsaInput2")]);
-
+migsaResWCoff <- setEnrCutoff(migsaRes, 0.1)
+table(migsaResWCoff[, c("igsaInput1", "igsaInput2")])
 }

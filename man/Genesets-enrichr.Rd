@@ -24,42 +24,40 @@ downloadEnrichrGeneSets(geneSetNames, ...)
 \arguments{
 \item{pattern}{character indicating a pattern to filter the database names.}
 
-\item{geneSetNames}{list of characters with the names of the gene sets to 
+\item{geneSetNames}{list of characters with the names of the gene sets to
 download. Must be listed at \code{\link{enrichrGeneSets}}.}
 
 \item{...}{not in use.}
 
-\item{deleteMultipleEntrez}{logical indicating if multiple Entrez IDs should 
+\item{deleteMultipleEntrez}{logical indicating if multiple Entrez IDs should
 be deleted or repeated.
-Note: Enrichr uses Gene Symbol, if org.Hs.eg translates it into several 
-Entrez IDs then if deleteMultipleEntrez == FALSE all Entrez are removed else 
+Note: Enrichr uses Gene Symbol, if org.Hs.eg translates it into several
+Entrez IDs then if deleteMultipleEntrez == FALSE all Entrez are removed else
 all are included.}
 }
 \value{
 enrichrGeneSets: character with present database names.
-downloadEnrichrGeneSets: list of GeneSetCollection objects (Genes are with 
+downloadEnrichrGeneSets: list of GeneSetCollection objects (Genes are with
 their EntrezGene ID).
 }
 \description{
 \code{enrichrGeneSets} lists the database names present at enrichr.
-\code{downloadEnrichrGeneSets} creates a list of GeneSetCollection 
+\code{downloadEnrichrGeneSets} creates a list of GeneSetCollection
 objects downloading the specified ones from enrichr website
 (https://amp.pharm.mssm.edu/Enrichr/).
 }
 \examples{
 ## Lets list all the gene sets that can be downloaded from Enichr website.
-enrichrGeneSets();
-
+enrichrGeneSets()
 \dontrun{
-## Now lets list only the gene sets that have BioCarta in their names 
+## Now lets list only the gene sets that have BioCarta in their names
 ## (different BioCarta versions).
-enrichrGeneSets("BioCarta");
+enrichrGeneSets("BioCarta")
 }
 
 ## And lets download the latest BioCarta gene sets from Enrichr.
 ## Make sure you use the same names as listed with enrichrGeneSets() .
-biocartaGSs <- downloadEnrichrGeneSets(c("BioCarta_2015"));
-
+biocartaGSs <- downloadEnrichrGeneSets(c("BioCarta_2015"))
 }
 \seealso{
 \code{\link{as.Genesets}}

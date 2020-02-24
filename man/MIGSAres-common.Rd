@@ -59,59 +59,47 @@
 Desired object.
 }
 \description{
-Several R base overwritten functions to manipulate a MIGSAres object as a 
+Several R base overwritten functions to manipulate a MIGSAres object as a
 data.frame way.
-NOTE: When subsetting a MIGSAres object, if it does not have the id, GS_Name 
-and (at least) one experiment columns, then it wont be a MIGSAres object, 
+NOTE: When subsetting a MIGSAres object, if it does not have the id, GS_Name
+and (at least) one experiment columns, then it wont be a MIGSAres object,
 i.e., migsaRes[,c("id","igsaInput1")] is no longer a MIGSAres object.
 }
 \examples{
-data(migsaRes);
-## As we ran MIGSA for two experiments and 200 gene sets, it must have 200 
+data(migsaRes)
+## As we ran MIGSA for two experiments and 200 gene sets, it must have 200
 ## rows, and five columns (id, Name, GS_Name, and the experiments names).
-dim(migsaRes);
-
-## migsaRes shown as data.frame has these column names: id, Name, GS_Name, 
-## and the experiments names. As we ran two experiments, names igsaInput1 
+dim(migsaRes)
+## migsaRes shown as data.frame has these column names: id, Name, GS_Name,
+## and the experiments names. As we ran two experiments, names igsaInput1
 ## and igsaInput2, we can use $ in these ways:
-head(migsaRes$id);
-table(migsaRes$Name);
-table(migsaRes$GS_Name);
-head(migsaRes$igsaInput1);
-head(migsaRes$igsaInput2);
-
-colnames(migsaRes);
-
-head(migsaRes);
-
+head(migsaRes$id)
+table(migsaRes$Name)
+table(migsaRes$GS_Name)
+head(migsaRes$igsaInput1)
+head(migsaRes$igsaInput2)
+colnames(migsaRes)
+head(migsaRes)
 ## Or see the first 10
-head(migsaRes, n=10);
-
-tail(migsaRes);
-
+head(migsaRes, n = 10)
+tail(migsaRes)
 ## Or see the last 10
-tail(migsaRes, n=10);
-
-## migsaRes shown as data.frame has these column names: id, Name, GS_Name, 
-## and the experiments names. As we ran two experiments, names igsaInput1 
+tail(migsaRes, n = 10)
+## migsaRes shown as data.frame has these column names: id, Name, GS_Name,
+## and the experiments names. As we ran two experiments, names igsaInput1
 ## and igsaInput2, we can use [ in these ways:
 
 ## Lets get the first 5 rows and 4 columns (the result is a MIGSAres object).
-migsaRes[1:5, 1:4];
-class(migsaRes[1:5, 1:4]);
-
-## Lets get the experiments results. Note that this is not any more a 
+migsaRes[1:5, 1:4]
+class(migsaRes[1:5, 1:4])
+## Lets get the experiments results. Note that this is not any more a
 ## MIGSAres object.
-migsaRes[, c("igsaInput1", "igsaInput2")];
-class(migsaRes[, c("igsaInput1", "igsaInput2")]);
-
-migsaRes;
-
-migsaResDFrame <- as.data.frame(migsaRes);
-head(migsaResDFrame);
-
-migsaRes1 <- migsaRes[,1:4];
-migsaRes2 <- migsaRes[,c(1:3,5)];
-migsaResMerged <- merge(migsaRes1, migsaRes2);
-
+migsaRes[, c("igsaInput1", "igsaInput2")]
+class(migsaRes[, c("igsaInput1", "igsaInput2")])
+migsaRes
+migsaResDFrame <- as.data.frame(migsaRes)
+head(migsaResDFrame)
+migsaRes1 <- migsaRes[, 1:4]
+migsaRes2 <- migsaRes[, c(1:3, 5)]
+migsaResMerged <- merge(migsaRes1, migsaRes2)
 }

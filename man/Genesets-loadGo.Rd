@@ -11,20 +11,19 @@ loadGo(ontology)
 \S4method{loadGo}{character}(ontology)
 }
 \arguments{
-\item{ontology}{character indicating which ontology must be loaded. 
+\item{ontology}{character indicating which ontology must be loaded.
 Must be one of BP, MF or CC.}
 }
 \value{
 A GeneSetCollection object  (Genes are with their EntrezGene ID).
 }
 \description{
-\code{loadGo} creates a GeneSetCollection object from the data present at 
+\code{loadGo} creates a GeneSetCollection object from the data present at
 the Gene Ontology data base (org.Hs.eg.db R package).
 }
 \examples{
 ## Lets load the Cellular Components gene sets from the Gene Ontology.
-ccGSets <- loadGo("CC");
-
+ccGSets <- loadGo("CC")
 }
 \seealso{
 \code{\link{as.Genesets}}

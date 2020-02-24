@@ -37,11 +37,11 @@ getHeights(ids, ...)
 
 \item{...}{not in use.}
 
-\item{categories}{vector. Each experiment category, it will print different 
-node color for each. Can have NAs. Must have length equal to number of 
+\item{categories}{vector. Each experiment category, it will print different
+node color for each. Can have NAs. Must have length equal to number of
 experiments, i.e. length(categories) == ncol(migsaRes)-3}
 
-\item{categColors}{character. Color for each category. Must have the same 
+\item{categColors}{character. Color for each category. Must have the same
 length as the number of different categories.}
 
 \item{ont}{character. One of "BP", "CC" or "MF". Selected ontology to plot.}
@@ -50,19 +50,19 @@ length as the number of different categories.}
 
 \item{treeInfo}{. Data.frame with GO ids as rownames, and three columns:
 Enriched (logical), Important (logical) and Color (character). If Enriched is
-true then it will be ploted, if Important is true then it will have another 
+true then it will be ploted, if Important is true then it will have another
 shape, Color has the color name to use.}
 
 \item{legends}{. Matrix with two columns, each col is a pair (lengend, color).}
 
 \item{ids}{character vector indicating the queried GO ids.}
 
-\item{minHeight}{logical indicating if the minimum or maximum height must be 
-calculated. If it is FALSE then the longest path to the root is calculated, 
+\item{minHeight}{logical indicating if the minimum or maximum height must be
+calculated. If it is FALSE then the longest path to the root is calculated,
 otherwise, the shortest path.}
 }
 \value{
-If migsaGoTree: A list with the used data to plot. If getHeights: A 
+If migsaGoTree: A list with the used data to plot. If getHeights: A
 list with each term height.
 }
 \description{
@@ -71,26 +71,23 @@ list with each term height.
 }
 \examples{
 ## Lets load breast cancer results.
-data(bcMigsaRes);
-
+data(bcMigsaRes)
 ###### migsaGoTree
 ## Get the first 40 Gene Ontology gene sets results from CC.
-goRes <- bcMigsaRes[bcMigsaRes$GS_Name == "CC",];
-fst40goRes <- goRes[1:40,];
-
+goRes <- bcMigsaRes[bcMigsaRes$GS_Name == "CC", ]
+fst40goRes <- goRes[1:40, ]
 ## And lets plot the results GO trees.
 \dontrun{
-aux <- migsaGoTree(fst40goRes, ont="CC");
+aux <- migsaGoTree(fst40goRes, ont = "CC")
 }
 
 ###### getHeights
 ## Get the first 40 Gene Ontology gene sets IDs.
-goIds <- bcMigsaRes[bcMigsaRes$GS_Name \%in\% c("BP", "CC", "MF"), "id"];
-fst40goIds <- goIds[1:40,];
-
+goIds <- bcMigsaRes[bcMigsaRes$GS_Name \%in\% c("BP", "CC", "MF"), "id"]
+fst40goIds <- goIds[1:40, ]
 \dontrun{
 ## And lets get the heights in the GO tree structure.
-getHeights(fst40goIds);
+getHeights(fst40goIds)
 }
 
 }

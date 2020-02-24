@@ -34,39 +34,33 @@ R base summary overwritten functions to manipulate MIGSA objects.
 }
 \examples{
 ## Lets get the summary of the default SEAparams object
-seaParams <- SEAparams();
-summary(seaParams);
-
+seaParams <- SEAparams()
+summary(seaParams)
 ## Lets get the summary of the default GSEAparams object
-gseaParams <- GSEAparams();
-summary(gseaParams);
-
+gseaParams <- GSEAparams()
+summary(gseaParams)
 ## Lets create a basic valid IGSAinput object to get its summary.
 ## First create a expression matrix.
-maData <- matrix(rnorm(10000),ncol=4);
-rownames(maData) <- 1:nrow(maData); # It must have rownames (gene names).
-maExprData <- new("MAList",list(M=maData));
-
+maData <- matrix(rnorm(10000), ncol = 4)
+rownames(maData) <- 1:nrow(maData)
+# It must have rownames (gene names).
+maExprData <- new("MAList", list(M = maData))
 ## Now lets create the FitOptions object.
-myFOpts <- FitOptions(c("Cond1", "Cond1", "Cond2", "Cond2"));
-
+myFOpts <- FitOptions(c("Cond1", "Cond1", "Cond2", "Cond2"))
 ## And now we can create our IGSAinput ready for MIGSA.
-igsaInput <- IGSAinput(name="myIgsaInput", expr_data=maExprData, 
-fit_options=myFOpts);
-summary(igsaInput);
-
+igsaInput <- IGSAinput(
+  name = "myIgsaInput", expr_data = maExprData,
+  fit_options = myFOpts
+)
+summary(igsaInput)
 ## Now lets get the summary of out migsaRes data object.
-data(migsaRes);
-
-### As enrichment cutoff is not set then we will get for each experiment the 
+data(migsaRes)
+### As enrichment cutoff is not set then we will get for each experiment the
 ### number of enriched gene sets at different cutoff values.
-summary(migsaRes);
-
+summary(migsaRes)
 ### Lets set the enrichment cutoff at 0.01
-migsaResWCoff <- setEnrCutoff(migsaRes, 0.01);
-
-### Now as summary we will get the number of enriched gene sets per 
+migsaResWCoff <- setEnrCutoff(migsaRes, 0.01)
+### Now as summary we will get the number of enriched gene sets per
 ### experiment and their intersections.
-summary(migsaResWCoff);
-
+summary(migsaResWCoff)
 }

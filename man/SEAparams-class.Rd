@@ -11,51 +11,49 @@ This S4 class contains the parameters to provide for SEA.
 \section{Slots}{
 
 \describe{
-\item{\code{treat_lfc}}{numeric, lfc parameter passed to 
+\item{\code{treat_lfc}}{numeric, lfc parameter passed to
 \code{treat} function (default: 0).}
 
 \item{\code{de_cutoff}}{numeric, cutoff value to define a gene as differentialy
 expressed (default: 0.01).}
 
-\item{\code{adjust_method}}{character, method parameter passed to 
+\item{\code{adjust_method}}{character, method parameter passed to
 \code{\link[stats]{p.adjust}} function (default: "fdr").}
 
-\item{\code{de_genes}}{(optional) character vector of differentialy expressed 
+\item{\code{de_genes}}{(optional) character vector of differentialy expressed
 genes,
 if not provided it will be filled using the other parameters.}
 
-\item{\code{br}}{background reference to use, there are two possible options 
+\item{\code{br}}{background reference to use, there are two possible options
 for this slot (default: "briii"):
 \itemize{
 \item character indicating to use "bri" or "briii".
-\item character vector indicating the genes to use as background 
+\item character vector indicating the genes to use as background
 reference.
 }}
 
-\item{\code{test}}{character indicating which test to use, it must be one of 
+\item{\code{test}}{character indicating which test to use, it must be one of
 "FisherTest", "HypergeoTest" or "BinomialTest" (default: "FisherTest").}
 }}
 
 \examples{
 ## Lets create the default SEAparams object.
-mySeaParams <- SEAparams();
-
-## Lets create another SEAparams object with my default br genes. Make sure 
+mySeaParams <- SEAparams()
+## Lets create another SEAparams object with my default br genes. Make sure
 ## these genes are present in the analyzed expression matrix rownames.
-myBr <- as.character(1:10);
-mySeaParamsOwnBr <- SEAparams(br=myBr);
-
-## Lets create another SEAparams object with my default differentialy 
-## expressed genes. Make sure these genes are present in the analyzed 
+myBr <- as.character(1:10)
+mySeaParamsOwnBr <- SEAparams(br = myBr)
+## Lets create another SEAparams object with my default differentialy
+## expressed genes. Make sure these genes are present in the analyzed
 ## expression matrix rownames.
-myDEGenes <- as.character(3:15);
-mySeaParamsOwnDEG <- SEAparams(de_genes=myDEGenes);
-
-## Lets create another SEAparams object changing the differentialy 
+myDEGenes <- as.character(3:15)
+mySeaParamsOwnDEG <- SEAparams(de_genes = myDEGenes)
+## Lets create another SEAparams object changing the differentialy
 ## expressed genes parameters.
-mySeaParamsOwnParams <- SEAparams(treat_lfc=0.25, de_cutoff=0.05, 
-adjust_method="none");
-
+mySeaParamsOwnParams <- SEAparams(
+  treat_lfc = 0.25, de_cutoff = 0.05,
+  adjust_method = "none"
+)
 }
 \seealso{
 \code{GSEAparams-class}

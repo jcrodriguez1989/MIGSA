@@ -6,9 +6,9 @@
 \alias{IGSAinput}
 \title{IGSAinput S4 class implementation in R}
 \description{
-This S4 class contains all the necessary inputs to execute a functional 
+This S4 class contains all the necessary inputs to execute a functional
 analysis (SEA and GSEA) on one experiment.
-Important: Make sure that gene IDs are concordant between the expression 
+Important: Make sure that gene IDs are concordant between the expression
 matrix and the provided gene sets.
 }
 \section{Slots}{
@@ -16,53 +16,59 @@ matrix and the provided gene sets.
 \describe{
 \item{\code{name}}{character indicating the name of this experiment.}
 
-\item{\code{expr_data}}{ExprData object with the expression data (MicroArray or 
-RNAseq). Note: expr_data can be a 0x0 matrix only if gsea_params=NULL and 
-de_genes and br slots from sea_params are correctly set (vectors of gene 
+\item{\code{expr_data}}{ExprData object with the expression data (MicroArray or
+RNAseq). Note: expr_data can be a 0x0 matrix only if gsea_params=NULL and
+de_genes and br slots from sea_params are correctly set (vectors of gene
 names), in this case only SEA will be run.}
 
-\item{\code{fit_options}}{FitOptions object with the parameters to be used when 
+\item{\code{fit_options}}{FitOptions object with the parameters to be used when
 fitting the model.}
 
-\item{\code{gene_sets_list}}{named list of GeneSetCollection objects to be 
+\item{\code{gene_sets_list}}{named list of GeneSetCollection objects to be
 tested for enrichment (names must be unique).}
 
-\item{\code{sea_params}}{SEAparams object with the parameters to be used 
+\item{\code{sea_params}}{SEAparams object with the parameters to be used
 by SEA, if NULL then SEA wont be run.}
 
-\item{\code{gsea_params}}{GSEAparams object with the parameters to be used 
+\item{\code{gsea_params}}{GSEAparams object with the parameters to be used
 by GSEA, if NULL then GSEA wont be run.}
 }}
 
 \examples{
 ## Lets create a basic IGSAinput object.
 ## First create a expression matrix.
-maData <- matrix(rnorm(10000),ncol=4);
-rownames(maData) <- 1:nrow(maData); # It must have rownames (gene names).
-maExprData <- new("MAList",list(M=maData));
-
+maData <- matrix(rnorm(10000), ncol = 4)
+rownames(maData) <- 1:nrow(maData)
+# It must have rownames (gene names).
+maExprData <- new("MAList", list(M = maData))
 ## Now lets create the FitOptions object.
-myFOpts <- FitOptions(c("Cond1", "Cond1", "Cond2", "Cond2"));
-
+myFOpts <- FitOptions(c("Cond1", "Cond1", "Cond2", "Cond2"))
 ## Finally lets create the Genesets to test for enrichment.
-library(GSEABase);
-myGs1 <- GeneSet(as.character(1:10), setIdentifier="fakeId1", 
-    setName="fakeName1");
-myGs2 <- GeneSet(as.character(7:15), setIdentifier="fakeId2", 
-    setName="fakeName2");
-myGSs <- GeneSetCollection(list(myGs1, myGs2));
-
+library(GSEABase)
+myGs1 <- GeneSet(as.character(1:10),
+  setIdentifier = "fakeId1",
+  setName = "fakeName1"
+)
+myGs2 <- GeneSet(as.character(7:15),
+  setIdentifier = "fakeId2",
+  setName = "fakeName2"
+)
+myGSs <- GeneSetCollection(list(myGs1, myGs2))
 ## And now we can create our IGSAinput ready for MIGSA.
-igsaInput <- IGSAinput(name="igsaInput", expr_data=maExprData, 
-fit_options=myFOpts, gene_sets_list=list(myGSs=myGSs));
-
+igsaInput <- IGSAinput(
+  name = "igsaInput", expr_data = maExprData,
+  fit_options = myFOpts, gene_sets_list = list(myGSs = myGSs)
+)
 ## Valid IGSAinput object with no expr_data (only run SEA).
-igsaInput <- IGSAinput(name="igsaInput", gene_sets_list=list(myGSs=myGSs),
-gsea_params=NULL, 
-sea_params=SEAparams(de_genes=rownames(maExprData)[1:10],
-br=rownames(maExprData)));
-validObject(igsaInput);
-
+igsaInput <- IGSAinput(
+  name = "igsaInput", gene_sets_list = list(myGSs = myGSs),
+  gsea_params = NULL,
+  sea_params = SEAparams(
+    de_genes = rownames(maExprData)[1:10],
+    br = rownames(maExprData)
+  )
+)
+validObject(igsaInput)
 }
 \seealso{
 \code{\link{ExprData-class}}

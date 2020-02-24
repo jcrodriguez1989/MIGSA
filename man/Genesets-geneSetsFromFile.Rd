@@ -22,9 +22,9 @@ If true, then each gene GeneSet setName must be a GO id.}
 A GeneSetCollection object.
 }
 \description{
-\code{geneSetsFromFile} creates a GeneSetCollection object from the data 
-present in a file. The file must be a tab separated values file (tsv). Each 
-line will parse to a GeneSet. First field will be the GeneSet setName, the 
+\code{geneSetsFromFile} creates a GeneSetCollection object from the data
+present in a file. The file must be a tab separated values file (tsv). Each
+line will parse to a GeneSet. First field will be the GeneSet setName, the
 second the setIdentifier and the remaining are the genes.
 }
 \examples{
@@ -32,21 +32,20 @@ second the setIdentifier and the remaining are the genes.
 ## load them (10 gene sets with 20 genes each (it is not neccesary that they
 ## have the same number of genes).
 gsets <- data.frame(
-    IDs=paste("set", 1:10), 
-    Names=rep("", 10), 
-    matrix(paste("gene", 1:(10*20)), nrow=10));
-
+  IDs = paste("set", 1:10),
+  Names = rep("", 10),
+  matrix(paste("gene", 1:(10 * 20)), nrow = 10)
+)
 ## And save this file as a tab separated file.
-geneSetsFile <- paste(tempdir(), "/fakeGsets.tsv", sep="");
-write.table(gsets, file=geneSetsFile, sep="\t",
-    col.names=FALSE, row.names=FALSE, quote=FALSE);
-
+geneSetsFile <- paste(tempdir(), "/fakeGsets.tsv", sep = "")
+write.table(gsets,
+  file = geneSetsFile, sep = "\t",
+  col.names = FALSE, row.names = FALSE, quote = FALSE
+)
 ## Now lets load this tsv file as a GeneSetCollection object.
-myGsets <- geneSetsFromFile(geneSetsFile);
-
+myGsets <- geneSetsFromFile(geneSetsFile)
 ## And lets delete this tsv file (so we dont have garbage in our disk).
-unlink(geneSetsFile);
-
+unlink(geneSetsFile)
 }
 \seealso{
 \code{\link{as.Genesets}}
