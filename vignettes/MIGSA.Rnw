@@ -279,16 +279,14 @@ rm(gSets)
 nCores <- c(1, 2, 4, 8, 10, 12, 14)
 allRes <- lapply(nCores, function(actCores) {
   # setting in how many cores to run
-  bp_param <- MulticoreParam(
+  register(MulticoreParam(
     workers = actCores, threshold = "DEBUG",
     progressbar = TRUE
-  )
+  ))
 
   set.seed(8818)
   newtimeSpent <- Sys.time()
-  MIGSAmGSZres <- MIGSAmGSZ(geneExpr, gSetsList, subtypes,
-    bp.param = bp_param
-  )
+  MIGSAmGSZres <- MIGSAmGSZ(geneExpr, gSetsList, subtypes)
   newtimeSpent <- Sys.time() - newtimeSpent
 
   res <- list(timeSpent = newtimeSpent, res = MIGSAmGSZres)
