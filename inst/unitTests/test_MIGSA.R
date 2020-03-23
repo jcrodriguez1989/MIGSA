@@ -48,8 +48,8 @@ test_FitOptions.data.frame_ok <- function() {
 }
 
 test_FitOptions_bothConstructorEqual <- function() {
-    conditions <- c(rep("C1", 4), rep("C2", 7));
-    myData <- data.frame(cond=c(rep("C1", 4), rep("C2", 7)));
+    conditions <- as.factor(c(rep("C1", 4), rep("C2", 7)));
+    myData <- data.frame(cond=conditions);
     myFormula <- ~cond - 1;
     myContrast <- c(-1, 1);
     
