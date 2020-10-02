@@ -461,7 +461,7 @@ setMethod(
       # remember we are starting from our node, finding its parents
       # pseudo recursively
       while ((!any(fstTerms %in% actualParents)) &&
-        (actualParents != "all")) {
+        (!"all" %in% actualParents)) {
         actualHeight <- actualHeight + 1
         actualParents <- unique(unlist(allParents[actualParents]))
       }
