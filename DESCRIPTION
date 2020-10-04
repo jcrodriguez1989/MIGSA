@@ -1,7 +1,7 @@
 Package: MIGSA
 Type: Package
 Title: Massive and Integrative Gene Set Analysis
-Version: 1.13.1
+Version: 1.13.2
 Date: 2020-10-01
 Author: Juan C. Rodriguez, Cristobal Fresno, Andrea S. Llera and Elmer A. 
     Fernandez
@@ -24,6 +24,7 @@ biocViews: Software, GeneSetEnrichment, Visualization, GeneExpression,
 License: GPL (>= 2)
 URL: https://github.com/jcrodriguez1989/MIGSA/
 BugReports: https://github.com/jcrodriguez1989/MIGSA/issues
+Encoding: UTF-8
 Depends:
     R (>= 3.4),
     methods,
@@ -58,13 +59,13 @@ Imports:
     grid,
     GSEABase,
     ismev,
+    jsonlite,
     limma,
     matrixStats,
     org.Hs.eg.db,
     RBGL,
     reshape2,
     Rgraphviz,
-    RJSONIO,
     stats,
     utils,
     vegan
@@ -109,4 +110,4 @@ Collate:
     'data-bcMigsaRes.R'
     'data-migsaRes.R'
     'summaryFunctions.R'
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1

@@ -55,7 +55,7 @@ setGeneric(name = "enrichrGeneSets", def = function(pattern = ".*") {
 #' @aliases enrichrGeneSets,character-method
 #'
 #' @importFrom Biobase testBioCConnection
-#' @importFrom RJSONIO fromJSON
+#' @importFrom jsonlite fromJSON
 #'
 setMethod(
   f = "enrichrGeneSets",
@@ -68,10 +68,10 @@ setMethod(
       "https://amp.pharm.mssm.edu/Enrichr/datasetStatistics"
 
     # donwload genesets list (basic info)
-    datasetStatistics <- do.call(
+    datasetStatistics <- t(do.call(
       rbind,
       fromJSON(datasetStatisticsUrl)$statistics
-    )
+    ))
     datasetStatistics <- apply(datasetStatistics, 2, unlist)
     datasetStatistics <- data.frame(datasetStatistics)
 
