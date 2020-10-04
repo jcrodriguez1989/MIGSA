@@ -4,7 +4,9 @@
 \name{bcMigsaRes}
 \alias{bcMigsaRes}
 \title{A MIGSA results object obtained from breast cancer data}
-\format{A MIGSAres object.}
+\format{
+A MIGSAres object.
+}
 \description{
 A MIGSA results object (MIGSAres) obtained using the datasets:
 \itemize{

@@ -4,7 +4,9 @@
 \name{migsaRes}
 \alias{migsaRes}
 \title{A MIGSA results object (MIGSAres) example}
-\format{A MIGSAres object}
+\format{
+A MIGSAres object
+}
 \source{
 see \code{\link{MIGSA}}
 }
