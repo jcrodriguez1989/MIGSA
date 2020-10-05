@@ -68,10 +68,20 @@ setMethod(
       "https://amp.pharm.mssm.edu/Enrichr/datasetStatistics"
 
     # donwload genesets list (basic info)
-    datasetStatistics <- t(do.call(
-      rbind,
-      fromJSON(datasetStatisticsUrl)$statistics
-    ))
+    datasetStatistics <- try({
+      t(do.call(
+        rbind,
+        fromJSON(datasetStatisticsUrl)$statistics
+      ))
+    })
+    # If there was an error try the unsecure protocol.
+    if (inherits(datasetStatistics, "try-error")) {
+      datasetStatistics <- t(do.call(
+        rbind,
+        fromJSON(sub("https://", "http://", datasetStatisticsUrl))$statistics
+      ))
+    }
+
     datasetStatistics <- apply(datasetStatistics, 2, unlist)
     datasetStatistics <- data.frame(datasetStatistics)
 
@@ -144,6 +154,12 @@ setMethod(
       tmp <- try({
         readLines(actUrl)
       })
+      # If there was an error try the unsecure protocol.
+      if (inherits(tmp, "try-error")) {
+        tmp <- try({
+          readLines(sub("https://", "http://", actUrl))
+        })
+      }
       if (inherits(tmp, "try-error")) {
         return(NA)
       }
