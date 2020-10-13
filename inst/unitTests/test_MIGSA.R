@@ -8,10 +8,14 @@ library(MIGSA)
 rOpts <- getOption("RUnit")
 rOpts$silent <- !FALSE
 options("RUnit" = rOpts)
-require(Biobase)
+library(Biobase)
 hasInternet <- testBioCConnection()
+https_enabled <- !inherits(
+  try(readLines(url("https://www.bioconductor.org"))[1]),
+  "try-error"
+)
 testAll <- FALSE
-require(BiocParallel)
+library(BiocParallel)
 if (.Platform$OS.type == "unix") {
   bp_param <- MulticoreParam(workers = 1)
 } else if (.Platform$OS.type == "windows") {
@@ -97,7 +101,7 @@ test_Genesets_geneSetsFromFile_ok_simpleFile <- function() {
   # Lets delete this tsv file
   unlink(geneSetsFile)
 
-  require(GSEABase)
+  library(GSEABase)
 
   checkTrue(all(unlist(lapply(myGsetsGO, function(x) {
     is(collectionType(x), "GOCollection")
@@ -144,7 +148,7 @@ test_Genesets_geneSetsFromFile_wrong_wrongPath <- function() {
 #### Correct ones
 
 test_Genesets_asGenesets_ok_complete <- function() {
-  require(GSEABase)
+  library(GSEABase)
 
   myGs1 <- GeneSet(as.character(1:10), setName = "fakeId1", setIdentifier = "")
   myGs2 <- GeneSet(as.character(7:15), setName = "fakeId2", setIdentifier = "")
@@ -161,7 +165,7 @@ test_Genesets_asGenesets_ok_complete <- function() {
 }
 
 test_Genesets_asGenesets_wrong_emptyGsetRemoved <- function() {
-  require(GSEABase)
+  library(GSEABase)
   myGs1 <- as.character(1:10)
   myGs2 <- ""
   myGs3 <- as.character(20:28)
@@ -223,8 +227,8 @@ test_Genesets_asGenesets_wrong_noGenes <- function() {
 
 test_Genesets_enrichrGeneSets_ok_wellListed <- function() {
   # if we dont have internet then dont fail the test
-  require(Biobase)
-  if (!hasInternet) {
+  library(Biobase)
+  if (!hasInternet || !https_enabled) {
     checkTrue(TRUE)
   }
 
@@ -242,8 +246,8 @@ test_Genesets_enrichrGeneSets_ok_wellListed <- function() {
 if (testAll) {
   test_Genesets_downloadEnrichrGeneSets_ok_goCC <- function() {
     # if we dont have internet then dont fail the test
-    require(Biobase)
-    if (!hasInternet) {
+    library(Biobase)
+    if (!hasInternet || !https_enabled) {
       checkTrue(TRUE)
     }
 
@@ -262,8 +266,8 @@ if (testAll) {
 
 test_Genesets_downloadEnrichrGeneSets_ok_kegg <- function() {
   # if we dont have internet then dont fail the test
-  require(Biobase)
-  if (!hasInternet) {
+  library(Biobase)
+  if (!hasInternet || !https_enabled) {
     checkTrue(TRUE)
   }
 
@@ -281,8 +285,8 @@ test_Genesets_downloadEnrichrGeneSets_ok_kegg <- function() {
 if (testAll) {
   test_Genesets_downloadEnrichrGeneSets_ok_keggGoCC <- function() {
     # if we dont have internet then dont fail the test
-    require(Biobase)
-    if (!hasInternet) {
+    library(Biobase)
+    if (!hasInternet || !https_enabled) {
       checkTrue(TRUE)
     }
 
@@ -307,8 +311,8 @@ if (testAll) {
 if (testAll) {
   test_Genesets_downloadEnrichrGeneSets_ok_keggOneFakeLib <- function() {
     # if we dont have internet then dont fail the test
-    require(Biobase)
-    if (!hasInternet) {
+    library(Biobase)
+    if (!hasInternet || !https_enabled) {
       checkTrue(TRUE)
     }
 
@@ -330,8 +334,8 @@ if (testAll) {
 if (testAll) {
   test_Genesets_downloadEnrichrGeneSets_wrong_noLibs <- function() {
     # if we dont have internet then dont fail the test
-    require(Biobase)
-    if (!hasInternet) {
+    library(Biobase)
+    if (!hasInternet || !https_enabled) {
       checkTrue(TRUE)
     }
 
@@ -345,8 +349,8 @@ if (testAll) {
 if (testAll) {
   test_Genesets_downloadEnrichrGeneSets_wrong_fakeLibs <- function() {
     # if we dont have internet then dont fail the test
-    require(Biobase)
-    if (!hasInternet) {
+    library(Biobase)
+    if (!hasInternet || !https_enabled) {
       checkTrue(TRUE)
     }
 
@@ -525,7 +529,7 @@ test_IGSAinput_ok_complete <- function() {
 }
 
 test_IGSAinput_ok_oneGSet <- function() {
-  require(GSEABase)
+  library(GSEABase)
 
   name <- "myIgsaInput"
   nSamples <- 4
@@ -554,7 +558,7 @@ test_IGSAinput_ok_oneGSet <- function() {
 }
 
 test_IGSAinput_ok_twoGSets <- function() {
-  require(GSEABase)
+  library(GSEABase)
 
   name <- "myIgsaInput"
   nSamples <- 4
@@ -667,7 +671,7 @@ test_IGSAinput_wrong_badFitExprData <- function() {
 }
 
 test_IGSAinput_wrong_repGSets <- function() {
-  require(GSEABase)
+  library(GSEABase)
   name <- "myIgsaInput"
   nSamples <- 4
   nGenes <- 10
@@ -784,7 +788,7 @@ test_IGSAinput_getDEGenes_ok_deGenes <- function() {
 
 # this check is failing in bioconductor servers
 # test_MIGSAmGSZ_ok_sameAsMgsz <- function() {
-#     require(mGSZ);
+#     library(mGSZ);
 #     perms <- 4;
 #     nGenes <- 100;
 #     nSamples <- 6;
@@ -890,7 +894,7 @@ test_MIGSAmGSZ_ok_validWithVoom <- function() {
 ###### IGSAinput-common tests
 
 test_IGSAinput_common_ok_summary <- function() {
-  require(GSEABase)
+  library(GSEABase)
   set.seed(8818)
   nGenes <- 200
   nSamples <- 6

@@ -33,11 +33,11 @@
 #' ## Now lets list only the gene sets that have BioCarta in their names
 #' ## (different BioCarta versions).
 #' enrichrGeneSets("BioCarta")
-#' }
 #'
 #' ## And lets download the latest BioCarta gene sets from Enrichr.
 #' ## Make sure you use the same names as listed with enrichrGeneSets() .
 #' biocartaGSs <- downloadEnrichrGeneSets(c("BioCarta_2015"))
+#' }
 setGeneric(name = "Genesets-enrichr", def = function(pattern) {
   standardGeneric("Genesets-enrichr")
 })
@@ -74,12 +74,8 @@ setMethod(
         fromJSON(datasetStatisticsUrl)$statistics
       ))
     })
-    # If there was an error try the unsecure protocol.
     if (inherits(datasetStatistics, "try-error")) {
-      datasetStatistics <- t(do.call(
-        rbind,
-        fromJSON(sub("https://", "http://", datasetStatisticsUrl))$statistics
-      ))
+      return(NA)
     }
 
     datasetStatistics <- apply(datasetStatistics, 2, unlist)
@@ -154,12 +150,6 @@ setMethod(
       tmp <- try({
         readLines(actUrl)
       })
-      # If there was an error try the unsecure protocol.
-      if (inherits(tmp, "try-error")) {
-        tmp <- try({
-          readLines(sub("https://", "http://", actUrl))
-        })
-      }
       if (inherits(tmp, "try-error")) {
         return(NA)
       }
