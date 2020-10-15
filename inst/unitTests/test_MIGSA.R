@@ -229,7 +229,7 @@ test_Genesets_enrichrGeneSets_ok_wellListed <- function() {
   # if we dont have internet then dont fail the test
   library(Biobase)
   if (!hasInternet || !https_enabled) {
-    checkTrue(TRUE)
+    return(checkTrue(TRUE))
   }
 
   enrichrList <- enrichrGeneSets()
@@ -248,7 +248,7 @@ if (testAll) {
     # if we dont have internet then dont fail the test
     library(Biobase)
     if (!hasInternet || !https_enabled) {
-      checkTrue(TRUE)
+      return(checkTrue(TRUE))
     }
 
     goCcName <- "GO_Cellular_Component_2013"
@@ -268,7 +268,7 @@ test_Genesets_downloadEnrichrGeneSets_ok_kegg <- function() {
   # if we dont have internet then dont fail the test
   library(Biobase)
   if (!hasInternet || !https_enabled) {
-    checkTrue(TRUE)
+    return(checkTrue(TRUE))
   }
 
   bioCartaName <- "BioCarta_2015"
@@ -287,7 +287,7 @@ if (testAll) {
     # if we dont have internet then dont fail the test
     library(Biobase)
     if (!hasInternet || !https_enabled) {
-      checkTrue(TRUE)
+      return(checkTrue(TRUE))
     }
 
     libNames <- c("KEGG_2016", "GO_Cellular_Component_2013")
@@ -313,7 +313,7 @@ if (testAll) {
     # if we dont have internet then dont fail the test
     library(Biobase)
     if (!hasInternet || !https_enabled) {
-      checkTrue(TRUE)
+      return(checkTrue(TRUE))
     }
 
     libNames <- c("KEGG_2013", "fakeLib")
@@ -336,7 +336,7 @@ if (testAll) {
     # if we dont have internet then dont fail the test
     library(Biobase)
     if (!hasInternet || !https_enabled) {
-      checkTrue(TRUE)
+      return(checkTrue(TRUE))
     }
 
     libNames <- ""
@@ -351,7 +351,7 @@ if (testAll) {
     # if we dont have internet then dont fail the test
     library(Biobase)
     if (!hasInternet || !https_enabled) {
-      checkTrue(TRUE)
+      return(checkTrue(TRUE))
     }
 
     libNames <- c("fakeLib1", "fakeLib2")
