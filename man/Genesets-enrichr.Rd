@@ -53,11 +53,11 @@ enrichrGeneSets()
 ## Now lets list only the gene sets that have BioCarta in their names
 ## (different BioCarta versions).
 enrichrGeneSets("BioCarta")
-}
 
 ## And lets download the latest BioCarta gene sets from Enrichr.
 ## Make sure you use the same names as listed with enrichrGeneSets() .
 biocartaGSs <- downloadEnrichrGeneSets(c("BioCarta_2015"))
+}
 }
 \seealso{
 \code{\link{as.Genesets}}

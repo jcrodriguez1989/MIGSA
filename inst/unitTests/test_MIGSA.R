@@ -1229,7 +1229,7 @@ test_MIGSA_ok_twoExpFourGSs <- function() {
   checkTrue(colnames(migsaRes)[[5]] == igsaInput2Name)
 }
 
-test_MIGSA_ok_noErrorWNoDE <- function() {
+test_MIGSA_ok_noIssueWNoDE <- function() {
   set.seed(8818)
   nGenes <- 200
   nSamples <- 6
@@ -1252,7 +1252,7 @@ test_MIGSA_ok_noErrorWNoDE <- function() {
   seaParams <- SEAparams(de_cutoff = 0)
   gseaParams <- GSEAparams(perm_number = 5)
 
-  igsaInputName <- "MIGSA_ok_noErrorWNoDE"
+  igsaInputName <- "MIGSA_ok_noIssueWNoDE"
   igsaInput <- IGSAinput(
     name = igsaInputName, expr_data = exprData,
     sea_params = seaParams, gsea_params = gseaParams, fit_options = fitOpts,
@@ -1270,7 +1270,7 @@ test_MIGSA_ok_noErrorWNoDE <- function() {
   checkTrue(all(migsaRes@migsa_res_all$SEA_enriching_genes == ""))
 }
 
-test_MIGSA_ok_noErrorWtwoPerm <- function() {
+test_MIGSA_ok_noIssueWtwoPerm <- function() {
   set.seed(8818)
   nGenes <- 200
   nSamples <- 6
@@ -1293,7 +1293,7 @@ test_MIGSA_ok_noErrorWtwoPerm <- function() {
   seaParams <- SEAparams(de_cutoff = 0.3)
   gseaParams <- GSEAparams(perm_number = 2)
 
-  igsaInputName <- "MIGSA_ok_noErrorWtwoPerm"
+  igsaInputName <- "MIGSA_ok_noIssueWtwoPerm"
   igsaInput <- IGSAinput(
     name = igsaInputName, expr_data = exprData,
     sea_params = seaParams, gsea_params = gseaParams, fit_options = fitOpts,
