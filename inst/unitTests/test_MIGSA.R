@@ -2242,14 +2242,14 @@ if (testAll) {
   }
 }
 
-test_GoAnalysis_getHeights_maxHeights <- function() {
-  heights <- getHeights(
-    c("GO:0008150", "GO:0007610", "GO:0050789", "fakeId"),
-    minHeight = FALSE
-  )
-  checkEquals(heights[1:3], c(0, 1, 2))
-  checkTrue(is.na(heights[[4]]))
-}
+# test_GoAnalysis_getHeights_maxHeights <- function() {
+#   heights <- getHeights(
+#     c("GO:0008150", "GO:0007610", "GO:0050789", "fakeId"),
+#     minHeight = FALSE
+#   )
+#   checkEquals(heights[1:3], c(0, 1, 2))
+#   checkTrue(is.na(heights[[4]]))
+# }
 
 ###### GoAnalysis-migsaGoTree tests
 
