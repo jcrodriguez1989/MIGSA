@@ -234,7 +234,7 @@ test_Genesets_enrichrGeneSets_ok_wellListed <- function() {
 
   enrichrList <- enrichrGeneSets()
 
-  checkEquals(class(enrichrList), "data.frame")
+  checkTrue(is(enrichrList, "data.frame"))
   checkTrue(ncol(enrichrList) > 0)
   checkTrue(nrow(enrichrList) > 0)
 }
